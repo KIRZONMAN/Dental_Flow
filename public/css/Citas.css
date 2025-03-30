@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    text-align: center;
+    background-color: #f1f6fc;
+}
+
+h2, h3 {
+    color: #0077b6;
+}
+
+label {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+input[type="date"] {
+    font-size: 16px;
+    padding: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+#horario {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.hora-btn {
+    background-color: #0096c7;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+.hora-btn:hover {
+    background-color: #023e8a;
+    transform: scale(1.1);
+}
+
+#detalle-cita {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    text-align: left;
+}
+
+.estado-btn {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    color: white;
+    transition: 0.3s;
+}
+
+.estado-btn:hover {
+    transform: scale(1.1);
+}
+
+.editar-btn {
+    margin-top: 10px;
+    background-color: #0066cc;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}

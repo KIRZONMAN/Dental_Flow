@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1233a8 !important;
+}
+
+#boton_menu{ 
+    color: #000 !important;
+    background: #0dcaf0 !important;
+    border-color: #0dcaf0 !important;
+}
+
+header,
+nav,
+main {
+    width: 80%;
+    max-width: 1000px;
+    margin: 10px 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+}
+
+.search-bar input {
+    padding: 5px;
+    width: 200px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #ddd;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+nav button,
+.estado-citas button,
+.solicitudes button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+}
+
+main {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.citas table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.citas th,
+.citas td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.estado-citas,
+.solicitudes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}

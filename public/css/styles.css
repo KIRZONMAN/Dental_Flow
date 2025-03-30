@@ -1,0 +1,22 @@
+body {
+    background-color: #0077b6 !important;
+}
+
+#errorMessage {
+    color: red;
+    display: none;
+}
+
+#imgUser {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+#contLogin {
+    background-color: #90e0ef;
+}
+
+h2 {
+    font-weight: bold !important;
+    font-family: sans-serif;
+}
