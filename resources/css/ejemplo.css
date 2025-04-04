@@ -1,0 +1,75 @@
+table {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+h1 {
+    text-align: center;
+}
+
+/* Estilo de las celdas */
+th,
+td {
+    padding: 12px 15px !important;
+    text-align: left !important;
+}
+
+th {
+    background-color: #4c6faf;
+    color: white;
+    text-transform: uppercase;
+}
+
+/* Filas alternas */
+tr:nth-child(even) {
+    background-color: #f2f2f2 !important;
+}
+
+/* Efecto hover */
+tr:hover {
+    background-color: #ddd !important;
+    transition: background-color 0.3s ease !important;
+}
+
+/* Bordes */
+th,
+td {
+    border-bottom: 1px solid #ddd !important;
+}
+
+td {
+    padding: 10px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* Redondeo de esquinas en la primera y última fila */
+tr:first-child th:first-child {
+    border-top-left-radius: 8px !important;
+}
+
+tr:first-child th:last-child {
+    border-top-right-radius: 8px !important;
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: 8px !important;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: 8px !important;
+}

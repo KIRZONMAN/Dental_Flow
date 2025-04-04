@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header img {
+    width: 30px;
+    height: 30px;
+}
+
+header .dental-icon {
+    margin-right: 10px;
+}
+
+header .print-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+header .print-button img {
+    width: 24px;
+    height: 24px;
+}
+
+h1 {
+    flex-grow: 1;
+    text-align: center;
+    color: #333;
+}
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkboxes label {
+    display: flex;
+    align-items: center;
+}
+
+.checkboxes input[type="text"] {
+    margin-left: 5px;
+    width: auto;
+}
+
+#firma_preview {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+    max-width: 300px;
+    display: block;
+}

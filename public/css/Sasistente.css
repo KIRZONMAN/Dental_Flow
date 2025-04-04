@@ -1,0 +1,133 @@
+body {
+    font-family: "Arial", sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f1f6fc;
+}
+
+header {
+    background-color: #0077b6;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-icon, .profile-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.menu-icon:hover, .profile-icon:hover {
+    transform: scale(1.1);
+}
+
+.date {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 50px; /* Se ajusta para que aparezca debajo del icono */
+    left: 10px; /* Se posiciona en la parte izquierda */
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    display: none;
+    flex-direction: column;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.show-menu {
+    display: flex;
+}
+
+
+
+.dropdown-menu a:hover {
+    background-color: #e3f2fd;
+}
+
+
+.show-menu {
+    display: flex;
+}
+
+.nav-button {
+    background-color: #0096c7;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap;
+}
+
+.nav-button:hover {
+    background-color: #023e8a;
+    transform: scale(1.05);
+}
+
+.emergency {
+    background-color: #d90429;
+}
+
+.emergency:hover {
+    background-color: #9d0208;
+}
+
+.disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+}
+
+/* Contenedor del carrusel */
+.citas-container {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.citas-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: fit-content;
+}
+
+/* Ajusta los botones dentro del carrusel */
+.citas-wrapper .nav-button {
+    flex: 0 0 200px; /* Se aumentó a 200px para más separación */
+    text-align: center;
+    margin-right: 30px; /* Se añade más espacio entre botones */
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: opacity 0.3s ease-in-out;
+}

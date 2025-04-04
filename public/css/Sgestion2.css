@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    text-align: center;
+}
+
+.titulo {
+    color: #007bff;
+    margin-top: 20px;
+}
+
+.tabla-pedidos {
+    margin: 20px auto;
+    width: 60%;
+    border-collapse: collapse;
+}
+
+.tabla-pedidos th, .tabla-pedidos td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+}
+
+.tabla-pedidos th {
+    background-color: #e3f2fd;
+}
+
+.btn-regresar {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-regresar:hover {
+    background-color: #0056b3;
+}
