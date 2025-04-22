@@ -1,131 +1,127 @@
-/* Estilos generales */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f1f6fc; /* Fondo azul claro */
+/* === GLOBAL === */
+.ordenes-body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #e0ecff, #ffffff);
     margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    padding: 30px 0;
+    font-size: 17px; /* Aumentado de 16px a 17px para texto base */
 }
 
-/* Contenedor principal */
-.container {
-    width: 80%;
-    max-width: 800px;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out;
+.ordenes-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
 }
 
-.container:hover {
-    transform: scale(1.02);
+/* === HEADER === */
+.ordenes-header {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-/* Encabezado */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #007bff;
+.ordenes-title {
+    font-size: 3rem; /* Antes 2.8rem */
+    font-weight: 800;
+    color: #007bff;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+.ordenes-subtitle {
+    font-size: 1.25rem; /* Antes 1.1rem */
+    color: #6c757d;
+    margin-top: 10px;
 }
 
 .dental-icon {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+    animation: bounce 1.2s infinite;
 }
 
-h1 {
-    color: #007bff;
-    font-size: 24px;
-}
-
-/* Sección de órdenes y recetas */
+/* === SECTIONS === */
 .order-section,
 .prescription-section {
-    margin: 20px 0;
-    padding: 15px;
     background: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 16px rgba(0, 123, 255, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.order-section:hover,
+.prescription-section:hover {
+    transform: scale(1.01);
 }
 
 h2 {
     color: #0056b3;
-    font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 1.7rem; /* Antes 1.5rem */
 }
 
-/* Formularios */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.form-group {
+    margin-bottom: 20px;
 }
 
 label {
-    font-weight: bold;
-    color: #333;
+    font-size: 1.05rem; /* Aumentado para mejor legibilidad */
+    font-weight: 600;
 }
 
-.input-field {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #007bff;
-    font-size: 16px;
-    transition: all 0.3s ease-in-out;
+/* === INPUTS === */
+.fancy-input {
+    border-radius: 10px;
+    border: 2px solid #007bff;
+    padding: 12px;
+    font-size: 1.05rem; /* Aumentado para mejor lectura */
+    transition: 0.3s ease;
 }
 
-.input-field:focus {
-    border-color: #0056b3;
-    box-shadow: 0 0 5px rgba(0, 86, 179, 0.5);
+.fancy-input:focus {
+    border-color: #6610f2;
+    box-shadow: 0 0 12px rgba(102, 16, 242, 0.3);
     outline: none;
 }
 
-/* Botones de acción */
-footer {
+/* === FOOTER BUTTONS === */
+.ordenes-footer {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding-top: 20px;
 }
 
-.action-button {
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    text-transform: uppercase;
+.btn {
+    font-size: 1.1rem; /* Botones más notorios */
+    padding: 12px 25px;
 }
 
-.green {
-    background-color: #28a745;
+.btn i {
+    margin-right: 8px;
+    font-size: 1.2rem;
 }
 
-.green:hover {
-    background-color: #218838;
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.blue {
-    background-color: #007bff;
+@keyframes bounce {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
 }
 
-.blue:hover {
-    background-color: #0056b3;
-}
-
-.gray {
-    background-color: #6c757d;
-}
-
-.gray:hover {
-    background-color: #5a6268;
+.fade-in {
+    animation: fadeIn 1s ease-in;
 }

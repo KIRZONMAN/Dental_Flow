@@ -1,66 +1,91 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
+/* ESTILO BASE GLOBAL */
+.agenda-body {
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden;
 }
 
-.container {
-    width: 80%;
-    margin: 50px auto;
-    background: white;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.agenda-title {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: #0d6efd;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-h1 {
-    text-align: center;
-    color: #333;
+.agenda-subtitle {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 10px;
 }
 
-.search-input {
-    width: 70%;
-    padding: 10px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.search-button,
-.history-button,
-.back-button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.search-button:hover,
-.history-button:hover,
-.back-button:hover {
-    background-color: #0056b3;
-}
-
-.appointment-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.appointment-table th,
-.appointment-table td {
-    border: 1px solid #ddd;
+/* FORMULARIO DE BÚSQUEDA */
+.agenda-search-input {
+    border: 2px solid #0d6efd;
+    border-radius: 12px;
     padding: 12px;
-    text-align: center;
+    font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
-.appointment-table th {
-    background-color: #f2f2f2;
+.agenda-search-input:focus {
+    border-color: #6610f2;
+    box-shadow: 0 0 10px rgba(102, 16, 242, 0.3);
 }
 
-.appointment-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+.agenda-search-button {
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #007bff, #6610f2);
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.agenda-search-button:hover {
+    background: linear-gradient(90deg, #6610f2, #007bff);
+}
+
+/* TABLA DE CITAS */
+.agenda-table {
+    border-radius: 15px;
+    overflow: hidden;
+    font-size: 1rem;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.agenda-table-body tr {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.agenda-table-body tr:hover {
+    transform: scale(1.02);
+    background-color: #f0f8ff;
+}
+
+.agenda-table td,
+.agenda-table th {
+    vertical-align: middle;
+}
+
+/* ICONOS Y BOTONES */
+.btn-outline-info {
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-info:hover {
+    background-color: #0dcaf0;
+    color: white;
+}
+
+/* ANIMACIONES */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

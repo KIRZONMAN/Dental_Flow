@@ -25,6 +25,8 @@ $app = new Illuminate\Foundation\Application(
 | incoming requests to this application from both the web and CLI.
 |
 */
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
+$dotenv->load();
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
@@ -51,5 +53,6 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
+$app->loadEnvironmentFrom('.env');
 
 return $app;

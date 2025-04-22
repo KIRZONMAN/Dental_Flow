@@ -4,20 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Insumos</title>
     <link rel="stylesheet" href="{{ asset('css/Sgestion.css') }}">
-
-    <title>Gestionar Insumos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Gestionar Insumos</h1>
-        </div>
+    <div class="main-container">
+        <header class="header">
+            <h1><i class="fas fa-dolly"></i> Gestión de Insumos</h1>
+        </header>
 
-        <div class="section">
-            <div class="section-title">Insumos Disponibles</div>
-            <table class="insumos-table">
+        <section class="card">
+            <h2 class="section-title">📦 Insumos Disponibles</h2>
+            <table class="styled-table">
                 <thead>
                     <tr>
                         <th>Insumo</th>
@@ -28,58 +30,66 @@
                 <tbody>
                     <tr>
                         <td>Guantes de látex</td>
-                        <td>Bajo Stock (5 unidades)</td>
-                        <td>Feb 5</td>
+                        <td class="bajo">Bajo Stock (5 unidades)</td>
+                        <td>05/02/27</td>
                     </tr>
                     <tr>
                         <td>Algodón</td>
-                        <td>Suficiente (20 unidades)</td>
+                        <td class="suficiente">Suficiente (20 unidades)</td>
                         <td>05/03/27</td>
                     </tr>
                     <tr>
                         <td>Anestesia Local</td>
-                        <td>Bajo Stock (3 unidades)</td>
+                        <td class="bajo">Bajo Stock (3 unidades)</td>
                         <td>05/03/27</td>
                     </tr>
                     <tr>
                         <td>Gasas Estériles</td>
-                        <td>Suficiente (30 unidades)</td>
+                        <td class="suficiente">Suficiente (30 unidades)</td>
                         <td>05/03/27</td>
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </section>
 
-        <div class="section">
-            <div class="section-title">Solicitar Nuevo Insumo</div>
-            <div class="form-section">
-                <form id="formInsumos">
+        <section class="card">
+            <h2 class="section-title">📝 Solicitar Nuevo Insumo</h2>
+            <form id="formInsumos" class="form">
+                <div class="form-group">
                     <label for="tipo">Tipo:</label>
-                    <select id="tipo" name="tipo">
-                        <option value="guantes">Guantes de látex</option>
-                        <option value="algodon">Algodón</option>
-                        <option value="anestesia">Anestesia Local</option>
-                        <option value="gasas">Gasas Estériles</option>
+                    <select id="tipo" name="tipo" required>
+                        <option value="">Seleccione un insumo</option>
+                        <option value="Guantes de látex">Guantes de látex</option>
+                        <option value="Algodón">Algodón</option>
+                        <option value="Anestesia Local">Anestesia Local</option>
+                        <option value="Gasas Estériles">Gasas Estériles</option>
                     </select>
+                </div>
 
+                <div class="form-group">
                     <label for="cantidad">Cantidad:</label>
-                    <input type="number" id="cantidad" name="cantidad" min="1">
+                    <input type="number" id="cantidad" name="cantidad" min="1" required placeholder="Ej: 10">
+                </div>
 
+                <div class="form-group">
                     <label for="proveedor">Proveedor:</label>
-                    <select id="proveedor" name="proveedor">
-                        <option value="proveedor1">Proveedor 1</option>
-                        <option value="proveedor2">Proveedor 2</option>
+                    <select id="proveedor" name="proveedor" required>
+                        <option value="">Seleccione un proveedor</option>
                     </select>
+                </div>
 
-                    <button type="submit">Solicitar</button>
-                    <button type="button" id="limpiarBtn">Limpiar</button>
-                </form>
-            </div>
-        </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-solicitar"><i class="fas fa-paper-plane"></i>
+                        Solicitar</button>
+                    <button type="button" id="limpiarBtn" class="btn btn-limpiar"><i class="fas fa-eraser"></i>
+                        Limpiar</button>
+                </div>
+            </form>
+        </section>
 
-        <div class="section">
-            <div class="section-title">Estados</div>
-            <table class="status-table">
+        <section class="card">
+            <h2 class="section-title">📋 Estados de Solicitudes</h2>
+            <table class="styled-table">
                 <thead>
                     <tr>
                         <th>Insumo</th>
@@ -89,41 +99,138 @@
                 <tbody>
                     <tr>
                         <td>Guantes de látex</td>
-                        <td>Ordenado</td>
+                        <td><span class="badge badge-enviado">Ordenado</span></td>
                     </tr>
                     <tr>
                         <td>Proteína parcial (zirconio)</td>
-                        <td>En producción</td>
+                        <td><span class="badge badge-produccion">En producción</span></td>
                     </tr>
                     <tr>
                         <td>Anestesia Local</td>
-                        <td>Listo para entregar</td>
+                        <td><span class="badge badge-listo">Listo para entregar</span></td>
                     </tr>
                     <tr>
                         <td>Gasas Estériles</td>
-                        <td>Entregado</td>
+                        <td><span class="badge badge-entregado">Entregado</span></td>
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </section>
 
-        <!-- Botón "Regresar" al final de la página -->
-        <div class="section">
-            <button id="regresarBtn">Regresar</button>
-        </div>
+        <section class="final-section">
+            <button id="regresarBtn" class="btn btn-regresar">
+                Regresar a Inicio <i class="fas fa-arrow-left"></i>
+            </button>
+        </section>
     </div>
 
     <script>
-        // Funcionalidad del botón "Limpiar"
         document.getElementById("limpiarBtn").addEventListener("click", function() {
-            document.getElementById("formInsumos").reset();
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Deseas limpiar el formulario?',
+                showCancelButton: true,
+                confirmButtonColor: '#00c3a5',
+                cancelButtonColor: '#ff6b6b',
+                confirmButtonText: 'Sí, limpiar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("formInsumos").reset();
+                }
+            });
         });
 
-        // Funcionalidad del botón "Regresar"
         document.getElementById("regresarBtn").addEventListener("click", function() {
-            window.location.href = "/odontologo";
+            const rol = @json(session('rol'));
+            if (rol === 'odontologo') {
+                window.location.href = "/odontologo";
+            } else if (rol === 'cajero') {
+                window.location.href = "/cajero";
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Rol desconocido',
+                    text: 'No se pudo determinar a dónde regresar.',
+                    confirmButtonColor: '#e53935',
+                });
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("/api/proveedores/listar")
+                .then(response => response.json())
+                .then(data => {
+                    const proveedorSelect = document.getElementById("proveedor");
+                    proveedorSelect.innerHTML = `<option value="">Seleccione un proveedor</option>`;
+                    data.forEach(proveedor => {
+                        proveedorSelect.innerHTML += `
+                            <option value="${proveedor.nit}">
+                                ${proveedor.nombre_proveedor} (${proveedor.correo_proveedor})
+                            </option>`;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar proveedores:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudieron cargar los proveedores disponibles.',
+                        confirmButtonColor: '#e53935',
+                    });
+                });
+        });
+
+        document.getElementById("formInsumos").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const tipo = document.getElementById("tipo").value;
+            const cantidad = document.getElementById("cantidad").value;
+            const proveedor = document.getElementById("proveedor").value;
+
+            fetch("http://127.0.0.1:8000/api/solicitar-insumo", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                    body: JSON.stringify({
+                        tipo: tipo,
+                        cantidad: cantidad,
+                        proveedor: proveedor,
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || "Error al enviar la solicitud.");
+                        });
+                    }
+                    return response.json();
+                })
+
+                .then(data => {
+                    console.log("Respuesta:", data);
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Solicitud enviada!',
+                        text: 'El proveedor ha sido notificado correctamente.',
+                        confirmButtonColor: '#00c3a5',
+                    });
+                    document.getElementById("formInsumos").reset();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo enviar la solicitud.',
+                        confirmButtonColor: '#e53935',
+                    });
+                });
         });
     </script>
+
 </body>
 
 </html>
