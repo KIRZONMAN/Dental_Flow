@@ -1,64 +1,178 @@
+/* Ccontable.css */
+
+/* ---------- [ Sección Base Visual General ] ---------- */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #e3f2fd, #ffffff);
     margin: 0;
-    padding: 20px;
-    text-align: center;
+    padding: 0;
+    min-height: 100vh;
+    transition: all 0.3s ease-in-out;
 }
 
-.container {
-    width: 80%;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+.contable-wrapper {
+    padding: 40px 15px;
+    animation: fadeIn 1s ease-in-out;
 }
 
-h1, h2 {
-    color: #333;
+.contable-card {
+    background-color: #fff;
+    border: 1px solid #dfe6e9;
+    border-radius: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.contable-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- [ Títulos y Secciones ] ---------- */
+h1,
+h2 {
+    font-weight: 700;
+    color: #0d47a1;
+    text-shadow: 1px 1px 2px rgba(13, 71, 161, 0.1);
+}
+
+/* ---------- [ Resumen Financiero ] ---------- */
 .resumen-financiero {
-    background: #e3f2fd;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+    border: 1px solid #cfd8dc;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+    animation: slideUp 0.7s ease-in-out;
 }
 
-.historial {
-    margin-top: 20px;
+.resumen-datos .resumen-box {
+    transition: all 0.3s ease-in-out;
 }
 
-table {
+.resumen-datos .resumen-box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- [ Tabla de Movimientos ] ---------- */
+.table {
+    background-color: #fff;
+}
+
+.table thead th {
+    background-color: #bbdefb !important;
+    color: #0d47a1;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease-in-out;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f8ff;
+    transform: scale(1.005);
+}
+
+.table-success td {
+    background-color: #e8f5e9 !important;
+}
+
+.table-danger td {
+    background-color: #ffebee !important;
+}
+
+/* ---------- [ Gráfico de Dinero ] ---------- */
+#graficoWrapper {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-table, th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
+.grafico-canvas {
+    max-width: 100% !important;
+    height: auto !important;
 }
 
-th {
-    background: #0288d1;
-    color: white;
+/* ---------- [ Botón flotante para gráfica ] ---------- */
+.floating-graph-card {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 999;
+    background-color: #ffffff;
+    border: 1px solid #cfd8dc;
+    animation: bounceIn 1.5s ease;
 }
 
-.ingreso {
-    background: #c8e6c9;
+.floating-graph-card button {
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.3s ease;
 }
 
-.egreso {
-    background: #ffcdd2;
+.floating-graph-card button:hover {
+    background-color: #1565c0;
+    transform: scale(1.05);
 }
 
-.grafico {
-    margin-top: 20px;
+/* ---------- [ Animaciones Personalizadas ] ---------- */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-canvas {
-    max-width: 400px;
-    margin: auto;
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ---------- [ Responsividad Extra ] ---------- */
+@media (max-width: 768px) {
+    .floating-graph-card {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .resumen-datos .resumen-box {
+        margin-bottom: 15px;
+    }
 }

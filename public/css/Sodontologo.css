@@ -1,52 +1,251 @@
+/* ================== RESET + BASE ================== */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f8ff;
+    font-family: 'Poppins', sans-serif;
+    background: #f4f8fb;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
-header {
-    border-bottom: 2px solid #007bff;
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
 }
 
-h3 {
-    font-weight: bold;
+a:hover {
+    color: #0077b6;
 }
 
-.estado-citas, .solicitudes {
-    background-color: #fff;
-    transition: transform 0.2s ease-in-out;
+/* ================== PALETA ================== */
+:root {
+    --primary: #0077b6;
+    --dark-blue: #023e8a;
+    --light-blue: #caf0f8;
+    --bg-gray: #f4f8fb;
+    --white: #ffffff;
+    --green: #38b000;
+    --yellow: #f9c74f;
+    --red: #ef233c;
 }
 
-.estado-citas:hover, .solicitudes:hover {
+/* ================== SIDEBAR ================== */
+.sidebar {
+    width: 240px;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: var(--white);
+    border-right: 1px solid #dee2e6;
+    z-index: 1030;
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar-heading {
+    background-color: var(--light-blue);
+    border-bottom: 1px solid #dee2e6;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.list-group-item {
+    border: none;
+    border-radius: 0;
+    padding: 16px 22px;
+    transition: all 0.4s ease;
+    font-weight: 500;
+}
+
+.list-group-item:hover,
+.list-group-item.active {
+    background: var(--primary);
+    color: var(--white);
     transform: scale(1.02);
 }
 
-button {
-    transition: all 0.2s ease-in-out;
+.list-group-item i {
+    width: 24px;
 }
 
-button:hover {
-    opacity: 0.8;
+/* ================== HEADER ================== */
+.odont-header {
+    background: var(--white);
+    border-bottom: 3px solid var(--primary);
+    padding: 20px 30px;
+    animation: fadeInDown 0.6s ease;
 }
 
-/* TABLA */
-.table-hover tbody tr:hover {
-    background-color: rgba(0, 123, 255, 0.1);
+.odont-header h4 {
+    font-weight: 700;
+    color: var(--dark-blue);
 }
 
-/* BOTONES MEJORADOS */
-.btn-outline-dark {
+/* ================== WRAPPER ================== */
+#wrapper {
+    display: flex;
+}
+
+#page-content-wrapper {
+    margin-left: 240px;
+    padding: 0;
+    width: 100%;
+    transition: margin-left 0.3s ease;
+}
+
+/* ================== STATS CARDS ================== */
+.stat-card {
     border-radius: 20px;
+    background-color: var(--white);
+    transition: transform 0.3s ease-in-out;
+    animation: fadeInUp 0.8s ease;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h2 {
+    font-size: 2.8rem;
+    font-weight: bold;
+}
+
+/* ================== CARDS GENERALES ================== */
+.card {
+    border: none;
+    border-radius: 20px;
+    background: var(--white);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* ================== TABLAS ================== */
+.table {
+    border-radius: 14px;
+    overflow: hidden;
+    animation: fadeIn 0.9s ease;
+}
+
+.table th {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    font-size: 1rem;
+}
+
+.table td {
+    vertical-align: middle;
+    border-top: 1px solid #e9ecef;
+}
+
+/* ================== BOTONES ================== */
+.btn {
+    border-radius: 14px;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+}
+
+.btn:hover {
+    transform: scale(1.05);
 }
 
 .btn-outline-dark:hover {
-    background-color: #007bff;
+    background-color: #343a40;
+    color: #fff;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.btn-outline-danger:hover {
+    background: var(--red);
     color: white;
 }
 
-/* RESPONSIVIDAD */
-@media (max-width: 768px) {
-    .d-flex {
+/* ================== ICONOS DE ESTADO ================== */
+.text-success {
+    color: var(--green);
+    font-weight: bold;
+}
+
+.text-warning {
+    color: var(--yellow);
+    font-weight: bold;
+}
+
+.text-danger {
+    color: var(--red);
+    font-weight: bold;
+}
+
+/* ================== ANIMACIONES ================== */
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeInUp {
+    from {opacity: 0; transform: translateY(30px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeInDown {
+    from {opacity: 0; transform: translateY(-30px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* ================== FOOTER ================== */
+footer {
+    background-color: var(--light-blue);
+    padding: 20px;
+    margin-top: 50px;
+    color: var(--dark-blue);
+    font-weight: 500;
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 991.98px) {
+    .sidebar {
+        left: -240px;
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+    #page-content-wrapper {
+        margin-left: 0;
+    }
+
+    .odont-header {
         flex-direction: column;
+        align-items: flex-start;
         gap: 10px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .d-flex.flex-wrap.gap-3 {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 576px) {
+    .stat-card h2 {
+        font-size: 1.8rem;
     }
 }

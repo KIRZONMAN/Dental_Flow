@@ -1,77 +1,213 @@
-/* Estilos generales */
-body {
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-    background-color: #e3f2fd;
+/* Reset General */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #e3f2fd, #bbdefb);
+    color: #333;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* Header */
-header {
+.header {
     background-color: #0d47a1;
+    padding: 30px 20px;
+    text-align: center;
     color: white;
-    padding: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     position: relative;
+    z-index: 10;
 }
 
-/* Botón de regreso */
+.titulo {
+    font-size: 2.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
 .back-button {
     position: absolute;
-    left: 20px;
-    color: white;
+    top: 30px;
+    left: 30px;
+    color: #fff;
+    font-size: 1.2rem;
     text-decoration: none;
-    font-size: 20px;
+    background-color: #1565c0;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
 }
 
-/* Dashboard */
-.dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 40px;
+.back-button:hover {
+    background-color: #1976d2;
 }
 
-/* Tarjetas */
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out;
+/* Sección Principal */
+.seccion-principal {
+    padding: 60px 40px 40px;
+}
+
+/* Tarjetas Estadísticas */
+.card-estadistica {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
     cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.card:hover {
-    transform: scale(1.05);
-    background-color: #bbdefb;
+.card-estadistica:hover {
+    transform: translateY(-8px);
+    background-color: #e3f2fd;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-h2 {
+.card-estadistica h2 {
     color: #0d47a1;
+    margin-bottom: 12px;
+    font-size: 1.5rem;
 }
 
-/* Contenedor de gráficos */
+.card-estadistica p {
+    font-size: 1.1rem;
+    margin: 6px 0;
+}
+
+.lista-odontologos {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+.lista-odontologos li {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Contenedor de Gráfico */
+.chart-section {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+}
+
 .chart-container {
-    width: 80%;
-    max-width: 600px;
-    margin: 40px auto;
+    width: 100%;
+    max-width: 800px;
+    height: 400px;
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    display: none; /* Oculto hasta que se seleccione una opción */
+    padding: 25px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: none;
 }
 
 /* Canvas */
 canvas {
     width: 100% !important;
-    height: 250px !important;
+    height: 100% !important;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .titulo {
+        font-size: 2.2rem;
+    }
+
+    .card-estadistica h2 {
+        font-size: 1.3rem;
+    }
+
+    .chart-container {
+        padding: 15px;
+        height: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .seccion-principal {
+        padding: 30px 15px;
+    }
+
+    .back-button {
+        top: 20px;
+        left: 15px;
+        font-size: 1rem;
+    }
+
+    .titulo {
+        font-size: 1.8rem;
+    }
+
+    /* Selector tipo de gráfico */
+    .tipo-grafico-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+        gap: 10px;
+        font-size: 1.2rem;
+    }
+
+    .tipo-grafico-container select {
+        font-size: 1rem;
+        padding: 5px 12px;
+        border-radius: 10px;
+        border: 2px solid #0d47a1;
+        background-color: #e3f2fd;
+        color: #0d47a1;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .tipo-grafico-container select:focus {
+        outline: none;
+        box-shadow: 0 0 5px #0d47a1;
+    }
+
+    .card-estadistica h2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    /* Estética extra */
+    .card-estadistica:hover {
+        background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+    }
+
+    .chart-container {
+        transition: all 0.4s ease-in-out;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Aumentar el título principal */
+    .titulo {
+        font-size: 3.2rem;
+        color: #fff;
+        text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+    }
 }

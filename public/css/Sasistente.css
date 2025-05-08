@@ -1,133 +1,280 @@
+/* =======================
+   Estilos Globales
+======================= */
 body {
-    font-family: "Arial", sans-serif;
     margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #f1f6fc;
-}
-
-header {
-    background-color: #0077b6;
-    color: white;
-    padding: 15px;
-    text-align: center;
-    position: relative;
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.menu-icon, .profile-icon {
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.menu-icon:hover, .profile-icon:hover {
-    transform: scale(1.1);
-}
-
-.date {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 50px; /* Se ajusta para que aparezca debajo del icono */
-    left: 10px; /* Se posiciona en la parte izquierda */
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    display: none;
-    flex-direction: column;
-    padding: 10px;
-    z-index: 1000;
-}
-
-.show-menu {
-    display: flex;
-}
-
-
-
-.dropdown-menu a:hover {
-    background-color: #e3f2fd;
-}
-
-
-.show-menu {
-    display: flex;
-}
-
-.nav-button {
-    background-color: #0096c7;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    margin: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fc;
+    color: #333;
     transition: all 0.3s ease-in-out;
-    white-space: nowrap;
 }
 
-.nav-button:hover {
-    background-color: #023e8a;
+h1, h2, h4 {
+    font-weight: 600;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* =======================
+   Header
+======================= */
+.header {
+    background: linear-gradient(90deg, #114b8d, #1976d2);
+    color: white;
+    height: 70px;
+    z-index: 1000;
+    position: sticky;
+    top: 0;
+}
+
+/* =======================
+   Sidebar
+======================= */
+.sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    height: 100%;
+    width: 240px;
+    background: #1a2a40;
+    padding-top: 20px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+}
+
+.sidebar.active {
+    transform: translateX(0);
+}
+
+.sidebar-link {
+    display: block;
+    padding: 14px 25px;
+    color: white;
+    font-weight: 500;
+    border-left: 4px solid transparent;
+    transition: background 0.3s, border 0.3s;
+}
+
+.sidebar-link:hover {
+    background: #273a58;
+    border-left: 4px solid #42a5f5;
+}
+
+/* =======================
+   Content Shrink
+======================= */
+#content {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+#content.shrink {
+    margin-left: 240px;
+}
+
+/* =======================
+   Menu Toggle
+======================= */
+.menu-toggle {
+    font-size: 26px;
+    color: white;
+    cursor: pointer;
+}
+
+/* =======================
+   Carrusel de Citas
+======================= */
+.carousel-container {
+    padding: 30px 20px 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.section-title {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #1b4f72;
+    text-align: center;
+}
+
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.carousel-scroll {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    max-width: 85%;
+}
+
+.carousel-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.carousel-scroll::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 10px;
+}
+
+.carousel-control {
+    background-color: #1976d2;
+    border: none;
+    color: white;
+    font-size: 20px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-control:hover {
+    background-color: #135ba1;
+}
+
+/* =======================
+   Botones de Citas
+======================= */
+.btn-cita {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    min-width: 130px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+.btn-cita:hover {
+    background-color: #bbdefb;
     transform: scale(1.05);
 }
 
-.emergency {
-    background-color: #d90429;
-}
-
-.emergency:hover {
-    background-color: #9d0208;
-}
-
-.disabled {
-    background-color: #adb5bd;
+.btn-cita.disabled {
+    background-color: #e0e0e0;
+    color: #9e9e9e;
+    border: none;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
-/* Contenedor del carrusel */
-.citas-container {
-    width: 100%;
-    overflow: hidden;
-    margin-top: 10px;
+.btn-cita.emergencia {
+    background-color: #ffebee;
+    border: 1px solid #ef5350;
+    color: #c62828;
 }
 
-.citas-wrapper {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    width: fit-content;
+/* =======================
+   Detalles Cita
+======================= */
+.main-section {
+    max-width: 900px;
 }
 
-/* Ajusta los botones dentro del carrusel */
-.citas-wrapper .nav-button {
-    flex: 0 0 200px; /* Se aumentó a 200px para más separación */
-    text-align: center;
-    margin-right: 30px; /* Se añade más espacio entre botones */
+#main-content {
+    background-color: #ffffff;
+    border-radius: 14px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    padding: 25px;
+    margin: 30px auto;
 }
 
-main {
-    flex-grow: 1;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Animación para mostrar la tarjeta */
+.detalles-visible {
+    animation: fadeInCard 0.6s ease forwards;
+    opacity: 0;
+    transform: translateY(30px);
 }
 
-.main-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    transition: opacity 0.3s ease-in-out;
+/* Hover animado sobre la tarjeta de detalles */
+#main-content.hoverable-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    background-color: #f0f9ff;
+}
+
+/* =======================
+   Estados
+======================= */
+.estado {
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.estado.pendiente {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.estado.en-curso {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.estado.finalizada {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* =======================
+   Responsive
+======================= */
+@media screen and (max-width: 768px) {
+    .carousel-scroll {
+        max-width: 100%;
+    }
+
+    .carousel-wrapper {
+        flex-direction: column;
+    }
+
+    .carousel-control {
+        margin-bottom: 10px;
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+
+    #content.shrink {
+        margin-left: 200px;
+    }
+}
+
+/* =======================
+   Animaciones
+======================= */
+@keyframes fadeInCard {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

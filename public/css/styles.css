@@ -16,8 +16,13 @@ body {
 }
 
 @keyframes gradientAnimation {
-    0% { background-position: left; }
-    100% { background-position: right; }
+    0% {
+        background-position: left;
+    }
+
+    100% {
+        background-position: right;
+    }
 }
 
 /* Contenedor del login */
@@ -133,4 +138,21 @@ body {
         font-size: 14px;
         padding: 10px;
     }
+    
+    .position-relative .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.75);
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .position-relative .password-toggle:hover {
+        color: #ffffff;
+    }
+
 }

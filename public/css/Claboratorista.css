@@ -1,0 +1,295 @@
+/* ===================================================
+   RESET
+   =================================================== */
+   *,
+   *::before,
+   *::after {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+   }
+
+   /* ===================================================
+      VARIABLES
+      =================================================== */
+   :root {
+     --clr-primary: #1d4e89;
+     --clr-secondary: #273c75;
+     --clr-light: #f4f7fa;
+     --clr-white: #ffffff;
+     --clr-danger: #dc3545;
+     --clr-muted: #555555;
+     --fs-xs: 0.75rem;
+     --fs-sm: 0.875rem;
+     --fs-md: 1rem;
+     --fs-lg: 1.25rem;
+     --transition: 0.3s ease;
+   }
+
+   /* ===================================================
+      GLOBAL
+      =================================================== */
+   body {
+     font-family: 'Segoe UI', sans-serif;
+     background: var(--clr-light);
+     min-height: 100vh;
+     display: flex;
+     overflow-x: hidden;
+     color: #333;
+   }
+   a {
+     text-decoration: none;
+     color: inherit;
+   }
+   ul {
+     list-style: none;
+   }
+
+   /* ===================================================
+      HEADER
+      =================================================== */
+   .header {
+     background: var(--clr-primary);
+     height: 60px;
+     width: 100%;
+     position: fixed;
+     top: 0; left: 0;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 0 1rem;
+     z-index: 1000;
+   }
+   .header h1 {
+     font-size: var(--fs-lg);
+     color: var(--clr-white);
+   }
+   .header .btn {
+     background: none;
+     border: none;
+   }
+   .header .btn:focus {
+     outline: none;
+     box-shadow: none;
+   }
+
+   /* ===================================================
+      NOTIFICATION BELL
+      =================================================== */
+   .notification-count {
+     position: absolute;
+     top: -6px;
+     right: -6px;
+     background: var(--clr-danger);
+     color: var(--clr-white);
+     font-size: var(--fs-xs);
+     padding: 2px 6px;
+     border-radius: 50%;
+     pointer-events: none;
+   }
+
+   /* ===================================================
+      SIDEBAR
+      =================================================== */
+   .sidebar {
+     position: fixed;
+     top: 0; left: 0;
+     height: 100%;
+     width: 220px;
+     background: var(--clr-secondary);
+     padding-top: 60px; /* espacio para header */
+     transform: translateX(0);
+     transition: transform var(--transition);
+     z-index: 900;
+   }
+   .sidebar.collapsed {
+     transform: translateX(-100%);
+   }
+   .sidebar .nav-link {
+     display: flex;
+     align-items: center;
+     color: #dcdde1;
+     padding: 0.75rem 1rem;
+     transition: background var(--transition), color var(--transition);
+   }
+   .sidebar .nav-link i {
+     margin-right: 0.5rem;
+   }
+   .sidebar .nav-link:hover,
+   .sidebar .nav-link.active {
+     background: #192a56;
+     color: var(--clr-white);
+   }
+
+   /* ===================================================
+      CONTENT
+      =================================================== */
+   .content {
+     margin-top: 60px;
+     margin-left: 220px;
+     padding: 2rem;
+     width: calc(100% - 220px);
+     transition: margin-left var(--transition), width var(--transition);
+   }
+   .sidebar.collapsed ~ .content {
+     margin-left: 0;
+     width: 100%;
+   }
+
+   /* ===================================================
+      STAT CARDS
+      =================================================== */
+   .stat-card {
+     background: var(--clr-white);
+     border-radius: 8px;
+     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+     text-align: center;
+     transition: transform var(--transition), box-shadow var(--transition);
+     cursor: default;
+   }
+   .stat-card:hover {
+     transform: translateY(-6px);
+     box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+   }
+   .stat-card h6 {
+     font-size: var(--fs-md);
+     margin-bottom: 0.5rem;
+     color: var(--clr-muted);
+   }
+   .stat-card p {
+     font-size: 2rem;
+     margin: 0;
+     color: var(--clr-primary);
+     font-weight: bold;
+   }
+
+   /* ===================================================
+      ORDERS TABLE
+      =================================================== */
+   .table-responsive {
+     background: var(--clr-white);
+     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+     border-radius: 8px;
+     overflow-x: auto;
+   }
+   .table {
+     margin: 0;
+   }
+   .table-hover tbody tr:hover {
+     background: #f1f3f5;
+   }
+   .table thead {
+     background: #e9ecef;
+   }
+   .table th,
+   .table td {
+     vertical-align: middle;
+     padding: 0.75rem;
+   }
+
+   /* ===================================================
+      FORM CONTROLS
+      =================================================== */
+   .form-control {
+     border-radius: 4px;
+   }
+   .form-control:focus {
+     box-shadow: 0 0 0 0.2rem rgba(29,78,137,0.25);
+     border-color: var(--clr-primary);
+   }
+
+   /* ===================================================
+      BUTTONS
+      =================================================== */
+   .btn-outline-primary {
+     border-color: var(--clr-primary);
+     color: var(--clr-primary);
+     transition: background var(--transition), color var(--transition);
+   }
+   .btn-outline-primary:hover {
+     background: var(--clr-primary);
+     color: var(--clr-white);
+   }
+   .btn-sm {
+     font-size: var(--fs-sm);
+   }
+
+   /* ===================================================
+      TYPOGRAPHY
+      =================================================== */
+   h2 {
+     font-size: var(--fs-lg);
+     margin-bottom: 1rem;
+     color: #333;
+   }
+   h6 {
+     font-size: var(--fs-md);
+   }
+
+   /* ===================================================
+      UTILITY CLASSES
+      =================================================== */
+   .text-center { text-align: center !important; }
+   .mb-0 { margin-bottom: 0 !important; }
+   .mb-1 { margin-bottom: 0.25rem !important; }
+   .mb-2 { margin-bottom: 0.5rem !important; }
+   .mb-3 { margin-bottom: 1rem !important; }
+
+   /* ===================================================
+      MEDIA QUERIES
+      =================================================== */
+   @media (max-width: 1200px) {
+     .content { padding: 1.5rem; }
+   }
+   @media (max-width: 992px) {
+     .sidebar { transform: translateX(-100%); }
+     .sidebar.collapsed { transform: translateX(0); }
+     .content { margin-left: 0; width: 100%; padding: 1rem; }
+   }
+   @media (max-width: 768px) {
+     .stat-card { margin-bottom: 1rem; }
+     .stat-card p { font-size: 1.75rem; }
+   }
+   @media (max-width: 576px) {
+     .header h1 { font-size: var(--fs-md); }
+     .stat-card h6 { font-size: var(--fs-sm); }
+     .stat-card p { font-size: 1.5rem; }
+   }
+
+   /* ===================================================
+      SCROLLBAR STYLING
+      =================================================== */
+   .sidebar::-webkit-scrollbar {
+     width: 6px;
+   }
+   .sidebar::-webkit-scrollbar-thumb {
+     background: rgba(255,255,255,0.2);
+     border-radius: 3px;
+   }
+
+   /* ===================================================
+      KEYFRAME ANIMATIONS
+      =================================================== */
+   @keyframes fadeIn {
+     from { opacity: 0; }
+     to   { opacity: 1; }
+   }
+   @keyframes slideIn {
+     from { transform: translateX(-20px); opacity: 0; }
+     to   { transform: translateX(0); opacity: 1; }
+   }
+
+   /* ===================================================
+      ANIMATION UTILS
+      =================================================== */
+   .fade-in { animation: fadeIn 0.5s ease both; }
+   .slide-in { animation: slideIn 0.4s ease both; }
+
+   /* ===================================================
+      EXTRA PADDING & SPACING CLASSES
+      =================================================== */
+   .p-1 { padding: 0.25rem !important; }
+   .p-2 { padding: 0.5rem !important; }
+   .p-3 { padding: 1rem !important; }
+   .p-4 { padding: 1.5rem !important; }
+

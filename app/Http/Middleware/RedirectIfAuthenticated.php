@@ -2,26 +2,29 @@
 
 namespace App\Http\Middleware;
 
-use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
+// Si el usuario ya está autenticado, redirige según rol.
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        $guards = empty($guards) ? [null] : $guards;
-
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                /* desde aquí corregí: redirigir según rol_id */
+                $rol = Auth::user()->rol_id;
+                return match ($rol) {
+                    4 => redirect()->route('laboratorista.dashboard'),
+                    3 => redirect()->route('asistente'),
+                    2 => redirect()->route('odontologo.dashboard'),
+                    1 => redirect()->route('administrador.dashboard'),
+                    5 => redirect()->route('dueno.dashboard'),
+                    default => redirect('/'),
+                };
+                /* hasta aquí corregí */
             }
         }
 

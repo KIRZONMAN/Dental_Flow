@@ -1,76 +1,194 @@
-body {
-    font-family: Arial, sans-serif;
+:root {
+    --azul-claro: #caf0f8;
+    --azul-medio: #90e0ef;
+    --azul-oscuro: #0077b6;
+    --azul-profundo: #023e8a;
+    --azul-texto: #03045e;
+    --gris-fondo: #f0f4f8;
+    --blanco: #ffffff;
+    --sombra: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: #f1f6fc;
-    text-align: center;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--gris-fondo);
+    color: var(--azul-texto);
+    padding-bottom: 50px;
 }
 
 header {
-    background-color: #0077b6;
-    color: white;
-    padding: 15px;
+    background: linear-gradient(to right, var(--azul-oscuro), var(--azul-profundo));
+    padding: 20px;
+    color: var(--blanco);
+    box-shadow: 0 4px 10px var(--sombra);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 800px;
-    margin: auto;
 }
 
 .back-button {
+    background-color: var(--azul-medio);
+    color: var(--azul-texto);
+    padding: 8px 14px;
+    border-radius: 8px;
     text-decoration: none;
-    color: white;
-    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: var(--azul-claro);
+    color: var(--azul-profundo);
+    transform: scale(1.05);
+}
+
+h2 {
+    font-size: 24px;
+}
+
+main {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
 }
 
 .search-container {
-    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
 .search-container input {
-    padding: 10px;
-    width: 70%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    width: 100%;
+    max-width: 700px;
+    padding: 14px;
+    font-size: 17px;
+    border: 2px solid var(--azul-claro);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--azul-oscuro);
+    box-shadow: 0 0 8px var(--azul-medio);
 }
 
 .search-container button {
-    padding: 10px 15px;
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+    padding: 12px 24px;
+    font-size: 15px;
     border: none;
-    background-color: #0096c7;
-    color: white;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.search-container button:hover {
+    background-color: var(--azul-profundo);
+    transform: translateY(-2px);
 }
 
 .resultados-container {
-    max-width: 800px;
-    margin: auto;
-    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Antes 280px */
+    gap: 25px;
 }
 
 .paciente-card {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    margin-bottom: 15px;
-    text-align: left;
+    background-color: var(--blanco);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0px 6px 12px var(--sombra);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-width: 320px; /* Nueva anchura mínima */
+    max-width: 480px;  /* Para mantener control en pantallas grandes */
+    margin: 0 auto;    /* Centrado */
+}
+
+.paciente-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+.paciente-card h3 {
+    margin-bottom: 10px;
+    color: var(--azul-profundo);
+}
+
+.paciente-card p {
+    margin: 5px 0;
+    font-size: 15px;
+    color: #333;
 }
 
 .paciente-card button {
-    background-color: #023e8a;
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 5px;
-    cursor: pointer;
+    margin-top: 10px;
     width: 100%;
+    background-color: var(--azul-medio);
+    border: none;
+    color: var(--azul-texto);
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease, transform 0.2s;
 }
 
 .paciente-card button:hover {
-    background-color: #005f99;
+    background-color: var(--azul-claro);
+    transform: scale(1.02);
+}
+
+/* Animación para carga de resultados */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.resultados-container .paciente-card {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Adaptabilidad */
+@media screen and (max-width: 600px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .back-button {
+        margin-bottom: 10px;
+    }
+
+    .search-container input {
+        width: 100%;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
 }

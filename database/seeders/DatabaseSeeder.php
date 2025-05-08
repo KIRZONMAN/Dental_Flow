@@ -12,6 +12,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([
+            LabPedidosSeeder::class,
+            ProductoLaboratorioSeeder::class
+        ]);
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
@@ -20,3 +25,4 @@ class DatabaseSeeder extends Seeder
         // ]);
     }
 }
+

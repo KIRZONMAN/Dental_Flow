@@ -1,46 +1,81 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+/* ===== Reset y base ===== */
+* {
+    margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe, #ffffff);
+    padding: 30px;
     text-align: center;
-    background-color: #f1f6fc;
+    min-height: 100vh;
 }
 
-h2, h3 {
+/* ===== Encabezado ===== */
+h2 {
+    font-size: 2.5rem;
+    color: #023e8a;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 2px #ade8f4;
+}
+
+h3 {
+    font-size: 1.8rem;
     color: #0077b6;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px #90e0ef;
 }
 
+/* ===== Inputs ===== */
 label {
-    font-size: 18px;
+    font-size: 1.2rem;
     margin-right: 10px;
+    color: #03045e;
 }
 
 input[type="date"] {
-    font-size: 16px;
-    padding: 5px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 2px solid #00b4d8;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    transition: 0.3s ease;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
-.hidden {
-    display: none;
+input[type="date"]:hover,
+input[type="date"]:focus {
+    border-color: #0077b6;
+    outline: none;
+    background-color: #e0f7ff;
+}
+
+/* ===== Horario ===== */
+#horario-container {
+    margin-top: 30px;
+    animation: fadeIn 0.6s ease-in-out;
 }
 
 #horario {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 20px;
+    gap: 12px;
+    margin-top: 15px;
 }
 
 .hora-btn {
     background-color: #0096c7;
     color: white;
     border: none;
-    padding: 12px 20px;
-    margin: 5px;
+    padding: 14px 25px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 16px;
-    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 150, 199, 0.2);
+    transition: transform 0.3s, background-color 0.3s;
 }
 
 .hora-btn:hover {
@@ -48,36 +83,135 @@ input[type="date"] {
     transform: scale(1.1);
 }
 
+/* ===== Detalles de la Cita ===== */
 #detalle-cita {
-    margin-top: 20px;
-    padding: 15px;
+    margin-top: 40px;
+    padding: 25px;
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    text-align: left;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: slideIn 0.5s ease-in-out;
+    position: relative;
+}
+
+#detalle-cita:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+#detalle-cita p {
+    font-size: 1rem;
+    margin: 12px 0;
+    color: #333;
+}
+
+#detalle-cita strong {
+    color: #03045e;
+}
+
+/* ===== Estado de Cita ===== */
+#estado-buttons {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
 }
 
 .estado-btn {
-    padding: 10px;
-    font-size: 16px;
+    padding: 12px 20px;
+    font-size: 15px;
     border: none;
-    cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     color: white;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .estado-btn:hover {
-    transform: scale(1.1);
+    transform: scale(1.08);
+    filter: brightness(1.1);
 }
 
+/* ===== Botón editar ===== */
 .editar-btn {
-    margin-top: 10px;
+    margin-top: 20px;
     background-color: #0066cc;
     color: white;
-    padding: 10px;
+    padding: 12px 20px;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.editar-btn:hover {
+    background-color: #023e8a;
+}
+
+/* ===== Utilidades ===== */
+.hidden {
+    display: none !important;
+}
+
+/* ===== Animaciones ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1.4rem;
+    }
+
+    .hora-btn {
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+
+    .estado-btn {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+
+    #detalle-cita {
+        padding: 18px;
+        max-width: 90%;
+    }
+}
+
+/* ===== Transiciones Visuales ===== */
+#detalle-cita,
+.hora-btn,
+.estado-btn,
+input[type="date"],
+.editar-btn {
+    transition: all 0.3s ease-in-out;
 }
