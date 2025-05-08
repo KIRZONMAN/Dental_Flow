@@ -187,7 +187,9 @@ INSERT INTO pacientes (cedula,nombres_paciente, apellidos_paciente, edad, genero
 /* Insertar citas*/
 INSERT INTO citas (fecha_cita, hora_cita, estado_cita, motivo_cita, total_cita, paciente_id, usuario_id) VALUES
 ('2024-04-01', '09:00:00', 'confirmada', 'Dolor de muelas', 50000.00, "1020304050", 2),
-('2024-04-02', '10:30:00', 'pendiente', 'Chequeo general', 120000.00, "5040302010", 3);
+('2024-04-02', '10:30:00', 'pendiente', 'Chequeo general', 120000.00, "5040302010", 3),
+('2025-04-22', '11:30:00', 'pendiente', 'Chequeo dental', 100000.00, "1020304050", 2),
+('2025-05-08', '11:26:00', 'confirmada', 'Tratamiento de Caries', 230.00, "1020304050", 9);
 
 /* Insertar procedimientos_citas*/
 INSERT INTO procedimientos_citas (procedimiento_id, cita_id) VALUES
