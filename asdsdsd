@@ -1,0 +1,176 @@
+[33mcommit 2d08dcdb76b2def47b43c4fd39750553a9e2786a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpruebas[m[33m)[m
+Author: KIRZONMAN <hectoralejandrogarces1991@gmail.com>
+Date:   Thu May 8 17:03:04 2025 -0500
+
+    DentalFlow: Version Gamma
+
+ .env.example                                       |  16 [32m+[m[31m-[m
+ app/Actions/Fortify/CreateNewUser.php              |  40 [32m++[m
+ app/Actions/Fortify/PasswordValidationRules.php    |  18 [32m+[m
+ app/Actions/Fortify/ResetUserPassword.php          |  29 [32m++[m
+ app/Actions/Fortify/UpdateUserPassword.php         |  32 [32m++[m
+ .../Fortify/UpdateUserProfileInformation.php       |  58 [32m+++[m
+ app/Contracts/CitaServiceInterface.php             |  20 [32m+[m
+ app/Contracts/HistoriaClinicaServiceInterface.php  |  11 [32m+[m
+ app/Contracts/InsumoServiceInterface.php           |  11 [32m+[m
+ app/Contracts/OrdenCompraServiceInterface.php      |  11 [32m+[m
+ app/Contracts/PacienteServiceInterface.php         |  11 [32m+[m
+ app/Contracts/PedidoServiceInterface.php           |  11 [32m+[m
+ app/Contracts/ProcedimientoServiceInterface.php    |  11 [32m+[m
+ app/Contracts/ProveedorServiceInterface.php        |  11 [32m+[m
+ app/Contracts/RecetaMedicaServiceInterface.php     |  11 [32m+[m
+ app/Contracts/RolServiceInterface.php              |  11 [32m+[m
+ app/Contracts/UsuarioServiceInterface.php          |  11 [32m+[m
+ app/Http/Controllers/Api/CitasControllerApi.php    | 292 [32m+++++++++++[m
+ .../Controllers/Api/GestorInsumosControllerApi.php | 191 [32m+++++++[m
+ app/Http/Controllers/Api/InsumoController.php      |  63 [32m+++[m
+ app/Http/Controllers/Api/ProveedorController.php   |  15 [32m+[m
+ app/Http/Controllers/AsistenteController.php       |  38 [32m++[m
+ app/Http/Controllers/Citas/PacienteController.php  |  48 [32m++[m
+ app/Http/Controllers/LaboratoristaController.php   | 113 [32m+++++[m
+ app/Http/Controllers/OdontologoController.php      |  16 [32m+[m
+ app/Http/Controllers/pa_ActProveedorController.php |  28 [32m++[m
+ app/Http/Kernel.php                                |   2 [32m+[m
+ app/Http/Middleware/RedirectIfAuthenticated.php    |  21 [32m+[m[31m-[m
+ app/Http/Middleware/RoleMiddleware.php             |  27 [32m+[m
+ app/Http/Middleware/VerifyCsrfToken.php            |   3 [32m+[m[31m-[m
+ app/Mail/NotificacionProveedor.php                 |  32 [32m++[m
+ app/Models/Cita.php                                |  37 [32m+[m[31m-[m
+ app/Models/DetalleOrden.php                        |  28 [32m++[m
+ app/Models/Insumo.php                              |  10 [32m+[m
+ app/Models/OrdenCompra.php                         |  23 [32m+[m
+ app/Models/OrdenLaboratorio.php                    |  42 [32m++[m
+ app/Models/Paciente.php                            |  15 [32m+[m
+ app/Models/ProductoLaboratorio.php                 |  23 [32m+[m
+ app/Models/Proveedor.php                           |  19 [32m+[m
+ app/Models/User.php                                |  48 [32m+[m[31m-[m
+ app/Providers/AppServiceProvider.php               |   2 [32m+[m[31m-[m
+ app/Providers/CustomUserProvider.php               |  79 [32m+++[m
+ app/Providers/FortifyServiceProvider.php           |  88 [32m++++[m
+ app/Providers/RepositoryServiceProvider.php        |  61 [32m+++[m
+ app/Providers/RouteServiceProvider.php             |   2 [32m+[m[31m-[m
+ app/Services/CitaService.php                       |  72 [32m+++[m
+ app/Services/HistoriaClinicaService.php            |  51 [32m++[m
+ app/Services/InsumoService.php                     |  52 [32m++[m
+ app/Services/OrdenCompraService.php                |  50 [32m++[m
+ app/Services/PacienteService.php                   |  59 [32m+++[m
+ app/Services/PedidoService.php                     |  50 [32m++[m
+ app/Services/ProcedimientoService.php              |  46 [32m++[m
+ app/Services/ProveedorService.php                  |  49 [32m++[m
+ app/Services/RecetaMedicaService.php               |  52 [32m++[m
+ app/Services/RolService.php                        |  18 [32m+[m
+ app/Services/UsuarioService.php                    |  59 [32m+++[m
+ bootstrap/app.php                                  |   3 [32m+[m
+ composer.json                                      |   1 [32m+[m
+ composer.lock                                      | 518 [32m++++++++++++++[m[31m-----[m
+ config/app.php                                     |   5 [32m+[m[31m-[m
+ config/auth.php                                    |  34 [32m+[m[31m-[m
+ config/database.php                                |   1 [32m+[m
+ config/fortify.php                                 | 160 [32m++++++[m
+ ...00000_add_two_factor_columns_to_users_table.php |  42 [32m++[m
+ ...=> 2025_04_13_204009_create_usuarios_table.php} |   6 [32m+[m[31m-[m
+ ..._03_192724_create_ordenes_laboratorio_table.php |  40 [32m++[m
+ ...3_192739_create_productos_laboratorio_table.php |  35 [32m++[m
+ .../Citas/2025_04_12_203430_create_citas_table.php |  37 [32m++[m
+ ...2025_04_12_215453_add_recetas_medicas_table.php |  33 [32m++[m
+ .../2025_04_12_220957_add_pacientes_table.php      |  35 [32m++[m
+ ...5_04_12_221041_add_historias_clinicas_table.php |  30 [32m++[m
+ ...25_04_13_203839_create_procedimientos_table.php |  27 [32m+[m
+ ...13_204105_create_procedimientos_citas_table.php |  27 [32m+[m
+ .../2025_04_13_204142_create_insumos_table.php     |  27 [32m+[m
+ ...5_04_13_204217_create_ordenes_compras_table.php |  27 [32m+[m
+ ..._04_13_204241_create_detalles_ordenes_table.php |  27 [32m+[m
+ ..._13_204308_create_proveedores_insumos_table.php |  27 [32m+[m
+ .../2025_04_13_204345_create_proveedores_table.php |  27 [32m+[m
+ .../Roles/2025_04_13_203554_create_roles_table.php |  27 [32m+[m
+ database/seeders/DatabaseSeeder.php                |   6 [32m+[m
+ database/seeders/LabPedidosSeeder.php              |  83 [32m+++[m
+ database/seeders/ProductoLaboratorioSeeder.php     |  25 [32m+[m
+ database/seeders/RolLaboratoristaSeeder.php        |  35 [32m++[m
+ public/css/ARegistro.css                           | 149 [32m++++[m[31m--[m
+ public/css/AdminSolicitudes.css                    |   2 [32m+[m[31m-[m
+ public/css/CLab_Pedidos.css                        | 139 [32m+++++[m
+ public/css/Ccontable.css                           | 188 [32m+++++[m[31m--[m
+ public/css/Cestadistico.css                        | 224 [32m+++++++[m[31m--[m
+ public/css/Cformulario.css                         | 177 [32m+++++[m[31m--[m
+ public/css/Citas.css                               | 194 [32m+++++[m[31m--[m
+ public/css/Claboratorista.css                      | 295 [32m+++++++++++[m
+ public/css/Config1.css                             | 144 [32m++++++[m
+ public/css/Config2.css                             | 136 [32m+++++[m
+ public/css/Config4.css                             |  30 [32m++[m
+ public/css/SAhistorial.css                         | 188 [32m+++++[m[31m--[m
+ public/css/Sadmin.css                              | 137 [32m++[m[31m---[m
+ public/css/Sasistente.css                          | 315 [32m++++++++[m[31m----[m
+ public/css/Scajero.css                             | 202 [32m+++++[m[31m---[m
+ public/css/Sgestion.css                            | 244 [32m+++++++[m[31m--[m
+ public/css/Sgestion2.css                           | 102 [32m+++[m[31m-[m
+ public/css/Sodontologo.css                         | 245 [32m++++++++[m[31m-[m
+ public/css/Sordenes.css                            | 170 [32m+++[m[31m----[m
+ public/css/Ssolicitud.css                          | 184 [32m+++++[m[31m--[m
+ public/css/agenda_hc.css                           | 119 [32m+++[m[31m--[m
+ public/css/awawa.css                               | 179 [32m+++++++[m
+ public/css/styles.css                              |  26 [32m+[m[31m-[m
+ .../views/Administrador/administrador.blade.php    | 118 [32m+++++[m
+ .../{ => Administrador}/configuracion3.blade.php   |   0
+ .../{ => Administrador}/gestionUsuarios.blade.php  |   0
+ .../gestionarSolicitudes.blade.php                 |   0
+ resources/views/Ahistorial.blade.php               |  64 [31m---[m
+ resources/views/Aregistro.blade.php                |  64 [31m---[m
+ resources/views/Asistente/Ahistorial.blade.php     | 141 [32m++++++[m
+ resources/views/Asistente/Aregistro.blade.php      |  82 [32m+++[m
+ resources/views/Asistente/Citas.blade.php          | 222 [32m++++++++[m
+ resources/views/Asistente/Citas_edit.blade.php     |  57 [32m+++[m
+ resources/views/Asistente/asistente.blade.php      | 108 [32m++++[m
+ resources/views/Asistente/configuracion2.blade.php |  64 [32m+++[m
+ resources/views/Auth/login.blade.php               | 125 [32m+++++[m
+ resources/views/Cajero/Ccontable.blade.php         | 157 [32m++++++[m
+ resources/views/Cajero/Cestadistico.blade.php      | 181 [32m+++++++[m
+ resources/views/Cajero/Cformulario.blade.php       | 168 [32m+++++++[m
+ resources/views/{ => Cajero}/cajero.blade.php      |  23 [32m+[m[31m-[m
+ resources/views/Ccontable.blade.php                | 111 [31m----[m
+ resources/views/Cestadistico.blade.php             | 166 [31m------[m
+ resources/views/Cformulario.blade.php              | 104 [31m----[m
+ resources/views/Citas.blade.php                    | 117 [31m-----[m
+ resources/views/GestionPedidos.blade.php           |  34 [31m--[m
+ .../views/Laboratorista/Lab_Pedidos.blade.php      | 140 [32m++++++[m
+ .../views/Laboratorista/configuracion4.blade.php   |  68 [32m+++[m
+ .../views/Laboratorista/laboratorista.blade.php    | 153 [32m++++++[m
+ .../views/Odontologo/GestionPedidos.blade.php      |  60 [32m+++[m
+ resources/views/Odontologo/agenda.blade.php        |  65 [32m+++[m
+ resources/views/Odontologo/configuracion.blade.php |  79 [32m+++[m
+ resources/views/Odontologo/historias.blade.php     |  42 [32m++[m
+ resources/views/Odontologo/odontologo.blade.php    | 173 [32m+++++++[m
+ resources/views/Odontologo/ordenes.blade.php       | 123 [32m+++++[m
+ resources/views/Odontologo/solicitud.blade.php     | 153 [32m++++++[m
+ resources/views/{ => TESTEOS}/asist.blade.php      |  13 [32m+[m[31m-[m
+ resources/views/{ => TESTEOS}/consulta.php         |   4 [32m+[m[31m-[m
+ resources/views/{ => TESTEOS}/ejemplo.sql          | 558 [32m++++++++++++++++++[m[31m---[m
+ .../{plantilla.php => TESTEOS/plantilla.blade.php} |   6 [32m+[m[31m-[m
+ .../plantilla2.blade.php}                          |   7 [32m+[m[31m-[m
+ .../{ => TESTEOS}/plantilla_asesoria.blade.php     |   4 [32m+[m[31m-[m
+ .../views/{ => TESTEOS}/verificacion.blade.php     |   2 [32m+[m[31m-[m
+ resources/views/administrador.blade.php            |  78 [31m---[m
+ resources/views/agenda.blade.php                   |  97 [31m----[m
+ resources/views/asistente copy.blade.php           | 267 [31m----------[m
+ resources/views/asistente.blade.php                | 119 [31m-----[m
+ resources/views/asistente.php                      | 173 [31m-------[m
+ resources/views/configuracion.blade.php            | 159 [31m------[m
+ resources/views/configuracion2.blade.php           | 148 [31m------[m
+ resources/views/ejemplo.blade.php                  |  12 [32m+[m
+ resources/views/emails/solicitud_insumo.blade.php  |  23 [32m+[m
+ resources/views/gestionInsumos.blade.php           | 238 [32m++++++[m[31m---[m
+ resources/views/gestionProveedores.blade.php       | 119 [32m+++++[m
+ resources/views/historias.blade.php                |  23 [31m-[m
+ .../views/{login.blade.php => l2ogin.blade.php}    |   7 [32m+[m[31m-[m
+ resources/views/odontologo.blade.php               | 110 [31m----[m
+ resources/views/ordenes.blade.php                  |  57 [31m---[m
+ resources/views/plantilla.blade.php                |  40 [31m--[m
+ .../actInformacion.blade.php}                      |   0
+ resources/views/proveedores/formulario.blade.php   |  22 [32m+[m
+ resources/views/registrar.blade.php                |  50 [31m--[m
+ resources/views/solicitud.blade.php                | 122 [31m-----[m
+ routes/api.php                                     |  59 [32m++[m[31m-[m
+ routes/web.php                                     | 169 [32m+++[m[31m----[m
+ storage/framework/cache/data/.gitignore            |   2 [31m-[m
+ tests/Feature/LoginRedirectionTest.php             |  20 [32m+[m
+ 169 files changed, 9961 insertions(+), 3290 deletions(-)
