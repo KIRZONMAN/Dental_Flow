@@ -3,15 +3,17 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Contracts\CitaServiceInterface;
+use App\Services\CitaService;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    public function register(): void
+    public function register()
     {
-        $this->app->register(\Laravel\Fortify\FortifyServiceProvider::class);
+        $this->app->bind(CitaServiceInterface::class, CitaService::class);
     }
 
     /**

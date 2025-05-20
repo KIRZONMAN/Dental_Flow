@@ -18,10 +18,10 @@
 
     <!-- Menú lateral -->
     <nav id="sidebar" class="sidebar">
-        <a href="/asistente" class="sidebar-link">🏠 Panel Principal</a>
-        <a href="/api/citas" class="sidebar-link">📅 Ver Citas</a>
-        <a href="/api/ahistorial" class="sidebar-link">📋 Historial</a>
-        <a href="/asistente/aregistro" class="sidebar-link">📝 Registrar Paciente</a>
+        <a href="{{ route('asistente') }}" class="sidebar-link">🏠 Panel Principal</a>
+        <a href="{{ route('asistente.citas.view') }}" class="sidebar-link">📅 Ver Citas</a>
+        <a href="{{ route('asistente.ahistorial') }}" class="sidebar-link">📋 Historial</a>
+        <a href="{{ route('asistente.aregistro') }}" class="sidebar-link">📝 Registrar Paciente</a>
         <a href="/asistente/configuracion2" class="sidebar-link">⚙️ Configuración</a>
         <form action="{{ route('logout') }}" method="POST" id="logoutForm">
             @csrf

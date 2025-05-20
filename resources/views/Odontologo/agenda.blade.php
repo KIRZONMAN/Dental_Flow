@@ -19,8 +19,10 @@
         </div>
 
         <div class="card shadow-lg p-4 mb-4 animate__animated animate__fadeIn">
-            <form method="POST" action="" class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
-                <input type="text" name="buscar_paciente" placeholder="🔍 Buscar paciente por nombre" class="form-control agenda-search-input w-75">
+            <form method="GET" action="{{ route('odontologo.agenda') }}"
+                class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+                <input type="text" name="buscar_paciente" value="{{ request('buscar_paciente') }}" placeholder="🔍 Buscar paciente por nombre"
+                    class="form-control agenda-search-input w-75">
                 <button type="submit" class="btn btn-primary agenda-search-button">
                     <i class="fas fa-search"></i> Buscar
                 </button>
@@ -39,20 +41,17 @@
                 </thead>
                 <tbody class="agenda-table-body">
                     @foreach ($pacientes as $paciente)
-                                    <tr>
-                                        <td>{{ $paciente->cedula }}</td>
-                                        <td>{{ $paciente->nombre_completo_paciente }}</td>
-                                        <td>{{ $paciente->telefono_paciente }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                            <a href="/api/historias" class="btn btn-outline-info">
-                                                <i class="fas fa-notes-medical"></i> Ver Historia
-                                                <button class="btn btn-sm btn-outline-success"><i
-                                                        class="fas fa-play"></i></button>
-                                                        </a>
-                                            </div>
-                                        </td>
-                                    </tr>
+                        <tr>
+                            <td>{{ $paciente->cedula }}</td>
+                            <td>{{ $paciente->nombre_completo_paciente }}</td>
+                            <td>{{ $paciente->telefono_paciente }}</td>
+                            <td>
+                                <a href="{{ route('odontologo.historias', ['cedula' => $paciente->cedula]) }}"
+                                    class="btn btn-outline-info">
+                                    <i class="fas fa-notes-medical"></i> Ver Historia
+                                </a>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

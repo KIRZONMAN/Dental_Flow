@@ -24,17 +24,17 @@
                 <span><strong>Dental Flow</strong></span>
             </div>
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action"><i
+                <a href="{{ route('odontologo.dashboard') }}" class="list-group-item list-group-item-action"><i
                         class="fas fa-home me-2"></i>Inicio</a>
-                <a href="/agenda" class="list-group-item list-group-item-action"><i
+                <a href="{{ route('odontologo.agenda') }}" class="list-group-item list-group-item-action"><i
                         class="fas fa-calendar-alt me-2"></i>Agenda</a>
-                <a href="/ordenes" class="list-group-item list-group-item-action"><i
-                        class="fas fa-file-medical me-2"></i>Órdenes</a>
-                <a href="/solicitud" class="list-group-item list-group-item-action"><i
+                <a href="{{ route('odontologo.ordenes') }}" class="list-group-item list-group-item-action"><i
+                        class="fas fa-calendar-alt me-2"></i>Órdenes</a>
+                <a href="{{ route('odontologo.solicitud.form') }}" class="list-group-item list-group-item-action"><i
                         class="fas fa-tooth me-2"></i>Solicitar Prótesis</a>
                 <a href="/gestionInsumos" class="list-group-item list-group-item-action"><i
                         class="fas fa-box-open me-2"></i>Insumos</a>
-                <a href="/configuracion" class="list-group-item list-group-item-action"><i
+                <a href="{{ route('odontologo.configuracion') }}" class="list-group-item list-group-item-action"><i
                         class="fas fa-cog me-2"></i>Configuración</a>
             </div>
         </nav>
@@ -85,7 +85,7 @@
                 <section class="card shadow-sm p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4><i class="fas fa-calendar-check text-primary"></i> Próximas Citas</h4>
-                        <a href="/agenda" class="btn btn-outline-primary"><i class="fas fa-calendar-alt"></i> Ver
+                        <a href="{{ route('odontologo.agenda') }}" class="btn btn-outline-primary"><i class="fas fa-calendar-alt"></i> Ver
                             Agenda</a>
                     </div>
 
@@ -99,32 +99,8 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($citas as $cita)
-                                    <tr>
-                                        <td>{{ $cita->hora_cita }}</td>
-                                        <td>{{ $cita->nombre_completo_paciente }}</td>
-                                        <td class="fw-bold
-                                        @if($cita->estado_cita === 'confirmada') text-success
-                                        @elseif($cita->estado_cita === 'pendiente') text-warning
-                                        @elseif($cita->estado_cita === 'cancelada') text-danger
-                                        @elseif($cita->estado_cita === 'completada') text-primary
-                                        @endif">
-                                            {{ $cita->estado_cita }}
-                                        </td>
-                                        <td>
-                                            <!-- Acciones adicionales, botones, etc. -->
-                                            <div class="btn-group">
-                                                <button class="btn btn-sm btn-outline-success"><i
-                                                        class="fas fa-play"></i></button>
-                                                <button class="btn btn-sm btn-outline-warning"><i
-                                                        class="fas fa-edit"></i></button>
-                                                <button class="btn btn-sm btn-outline-danger"><i
-                                                        class="fas fa-times"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                            <tbody id="citas-body">
+                                <!-- Las filas llegarán vía JavaScript -->
                             </tbody>
                         </table>
                     </div>
@@ -136,7 +112,7 @@
                         <section class="card shadow-sm p-4 mb-4">
                             <h4><i class="fas fa-file-medical text-info"></i> Órdenes</h4>
                             <p>Administra las órdenes generadas para tus pacientes.</p>
-                            <a href="/ordenes" class="btn btn-outline-info mt-2"><i class="fas fa-folder-open"></i> Ir a
+                            <a href="{{ route('odontologo.ordenes') }}" class="btn btn-outline-info mt-2"><i class="fas fa-folder-open"></i> Ir a
                                 Órdenes</a>
                         </section>
                     </div>
@@ -149,10 +125,10 @@
                                 <a href="/gestionInsumos" class="btn btn-outline-dark">
                                     <i class="fas fa-box-open"></i> Insumos
                                 </a>
-                                <a href="/gestionPedidos" class="btn btn-outline-dark">
+                                <a href="{{ route('odontologo.pedidos') }}" class="btn btn-outline-dark">
                                     <i class="fas fa-clipboard-list"></i> Pedidos
                                 </a>
-                                <a href="/solicitud" class="btn btn-outline-dark">
+                                <a href="{{ route('odontologo.solicitud.form') }}" class="btn btn-outline-dark">
                                     <i class="fas fa-tooth"></i> Prótesis
                                 </a>
                             </div>
@@ -168,6 +144,60 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // 1) CSRF
+                await fetch('/sanctum/csrf-cookie', {
+                    credentials: 'include'
+                });
+
+                // 2) Consume el endpoint corregido
+                const res = await fetch('/api/citas/hoy', {
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                if (!res.ok) throw new Error(res.statusText);
+
+                // 3) Parse y render
+                const citas = await res.json();
+                console.log('citas recibidas:', citas);
+
+                const tbody = document.getElementById('citas-body');
+                citas.forEach(c => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+        <td>${c.hora_cita}</td>
+        <td>${c.nombre_completo_paciente}</td>
+        <td>
+          <span class="badge ${
+            c.estado_cita==='confirmada' ? 'text-bg-success' :
+            c.estado_cita==='pendiente'   ? 'text-bg-warning' :
+            c.estado_cita==='cancelada'  ? 'text-bg-danger'  :
+                                           'text-bg-primary'
+          }">${c.estado_cita}</span>
+        </td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline-success"><i class="fas fa-play"></i></button>
+            <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-times"></i></button>
+          </div>
+        </td>`;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error('Error al cargar citas:', err);
+            }
+        });
+    </script>
+
+
+
+
 </body>
 
 </html>

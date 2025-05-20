@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,14 +12,20 @@
 <body>
     <div class="registro-wrapper">
         <div class="form-card">
-        <a href="{{ route('asistente') }}" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i> Volver</a>
+            <a href="{{ route('asistente') }}" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i>
+                Volver</a>
             <h2><i class="fas fa-user-plus"></i> Registro de Paciente</h2>
+
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+
             <form action="{{ route('postaregistro') }}" method="POST">
                 @csrf
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="cedula"><i class="fas fa-user"></i> Cédula:</label>
-                        <input type="text" id="nombre" name="cedula" required>
+                        <input type="text" id="cedula" name="cedula" required pattern="\d{10}" maxlength="10" title="La cédula debe tener exactamente 10 dígitos">
                     </div>
                     <div class="form-group">
                         <label for="nombre"><i class="fas fa-user"></i> Nombre:</label>
@@ -30,7 +37,7 @@
                     </div>
                     <div class="form-group">
                         <label for="edad"><i class="fas fa-hourglass-half"></i> Edad:</label>
-                        <input type="number" id="edad" name="edad" min="0" required>
+                        <input type="number" id="edad" name="edad" min="0" required min="0" max="120" title="La edad debe estar entre 0 y 120 años">
                     </div>
                     <div class="form-group">
                         <label for="genero"><i class="fas fa-venus-mars"></i> Género:</label>
@@ -52,6 +59,7 @@
                         <input type="email" id="correo" name="correo_paciente" required>
                     </div>
                     <div class="form-group">
+                        <label for="telefono"><i class="fa-solid fa-droplet"></i> Tipo de Sangre:</label>
                         <select id="tipo_sangre" name="tipo_sangre">
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
@@ -66,12 +74,12 @@
                 </div>
                 <button type="submit" class="btn-registrar"><i class="fas fa-save"></i> Registrar</button>
             </form>
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
-            @if(session('error'))
+            @if (session('error'))
                 <div class="alert alert-danger">
                     {{ session('error') }}
                 </div>
@@ -79,4 +87,5 @@
         </div>
     </div>
 </body>
+
 </html>

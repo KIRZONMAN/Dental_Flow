@@ -6,15 +6,47 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
+use App\Contracts\CitaServiceInterface;
 
 class CitasControllerApi extends Controller
 {
-    public function index()
+    private CitaServiceInterface $citaService;
+
+    public function __construct(CitaServiceInterface $citaService)
     {
-        $citas = DB::table('v_estado_citas_pacientes')->where('id_usuario', 2)->limit(5)->get(); /*2 Se puede cambiar por ID DINAMICO */
-        return view('odontologo.odontologo', compact('citas'));
+        $this->citaService = $citaService;
     }
+    public function index(Request $request)
+    {
+        // Usamos el SP pa_ObtenerCitas() para traer todas las citas
+        $citas = $this->citaService->all();
+        return response()->json($citas);
+    }
+
+    public function indexHoy(Request $request)
+    {
+        $hoy = now()->toDateString();
+        // 1) obtenemos todas las citas de hoy
+        $raw = $this->citaService->allHoy($hoy);
+
+        // 2) filtramos solo las del odontólogo autenticado
+        $odontologoId = $request->user()->id_usuario;
+        $mias = array_filter($raw, fn($c) => $c->id_odontologo == $odontologoId);
+
+        // 3) dejamos solo los campos que la vista espera
+        $payload = array_map(fn($c) => [
+            'hora_cita' => $c->hora_cita,
+            'nombre_completo_paciente' => $c->nombre_paciente,  // ¡aquí cambiamos el alias!
+            'estado_cita' => $c->estado_cita,
+        ], $mias);
+
+        return response()->json(array_values($payload));
+    }
+
+
+
 
     public function indexCitas()
     {
@@ -34,29 +66,44 @@ class CitasControllerApi extends Controller
         return view('asistente.citas', compact('citas', 'usuarios'));
     }
 
-    public function indexAgendaBusqueda()
+    public function indexAgendaBusqueda(Request $request)
     {
-        $pacientes = DB::table('pacientes')->
-            select(
+        $q = $request->input('buscar_paciente');
+
+        $query = DB::table('pacientes')
+            ->select(
                 'cedula',
                 DB::raw("CONCAT(nombres_paciente, ' ', apellidos_paciente) AS nombre_completo_paciente"),
                 'telefono_paciente'
-            )
-            ->limit(10)->get();
+            );
+
+        if ($q) {
+            $query->whereRaw("CONCAT(nombres_paciente,' ',apellidos_paciente) LIKE ?", ["%{$q}%"])
+                ->orWhere('cedula', 'like', "%{$q}%");
+        }
+
+        $pacientes = $query->limit(10)->get();
+
         return view('odontologo.agenda', compact('pacientes'));
     }
 
-    public function indexHistorias()
+
+    public function indexHistorias(string $cedula)
     {
-        $pacientes = DB::table('pacientes')->
-            select(
+        $pacientes = DB::table('pacientes')
+            ->select(
                 'cedula',
                 DB::raw("CONCAT(nombres_paciente, ' ', apellidos_paciente) AS nombre_completo_paciente"),
                 'telefono_paciente'
             )
-            ->limit(10)->where('cedula', '1020304050')->get();
-        return view('odontologo.historias', compact('pacientes'));
+            ->where('cedula', $cedula)
+            ->get();
+
+       
+        return view('odontologo.historias_pacientes', compact('pacientes'));
     }
+
+
 
     public function indexAhistorialPacientes()
     {
@@ -71,6 +118,31 @@ class CitasControllerApi extends Controller
         return view('asistente.ahistorial', compact('pacientes'));
     }
 
+    /**
+     * Busca un paciente por cédula exacta o por fragmento de nombre.
+     */
+    public function buscarPaciente(string $input)
+    {
+        $paciente = DB::table('pacientes')
+            ->select(
+                'cedula',
+                DB::raw("CONCAT(nombres_paciente,' ',apellidos_paciente) AS nombre_completo_paciente"),
+                'edad',
+                'telefono_paciente',
+                'correo_paciente'
+            )
+            ->where('cedula', $input)
+            ->orWhereRaw("CONCAT(nombres_paciente,' ',apellidos_paciente) LIKE ?", ["%{$input}%"])
+            ->first();
+
+        if (!$paciente) {
+            return response()->json(['message' => 'No se encontraron pacientes.'], 404);
+        }
+
+        return response()->json(['paciente' => $paciente]);
+    }
+
+
     public function indexAregistro()
     {
         return view('asistente.aregistro');
@@ -80,7 +152,7 @@ class CitasControllerApi extends Controller
     {
         try {
             $request->validate([
-                'cedula' => 'required|string|max:20|unique:pacientes,cedula',
+                'cedula' => 'required|digits:10|unique:pacientes,cedula',
             ]);
 
             //dd('Pasa validación de cedula');
@@ -100,7 +172,7 @@ class CitasControllerApi extends Controller
 
             // Validación de 'edad'
             $request->validate([
-                'edad' => 'required|numeric|max:100',
+                'edad' => 'required|integer|min:0|max:120',
             ]);
 
             //dd('Pasa validación de edad');
@@ -153,8 +225,11 @@ class CitasControllerApi extends Controller
                 'tipo_sangre' => $request->input('tipo_sangre'),
             ]);
             return redirect()->back()->with('success', 'Paciente registrado correctamente 😀');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Hubo un problema al registrar, recuerda que la cédula no se puede repetir');
+        } catch (QueryException $e) {
+            // Captura cualquier error lanzado por triggers o constraints
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
         }
     }
     /**
@@ -162,65 +237,59 @@ class CitasControllerApi extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'fecha' => 'required|date_format:Y-m-d',
-            'hora' => 'required|date_format:H:i',
-            'estado' => 'required|in:pendiente,cancelada,confirmada,completada',
-            'motivo' => 'required|string|max:255',
-            'total' => 'required|numeric|min:0',
-            'cedula' => 'required|string|max:20',
-            'odontologo' => 'required|integer|max:99999999999'
+        try {
+            $data = $request->validate([
+                'fecha' => 'required|date',
+                'hora' => 'required|date_format:H:i',
+                'estado' => 'required|in:pendiente,confirmada,cancelada,completada',
+                'motivo' => 'required|string|max:255',
+                'total' => 'required|numeric|min:0',
+                'cedula' => 'required|string|max:20',
+                'odontologo' => 'required|integer',
+            ]);
 
-        ]);
+            $this->citaService->create([
+                'fecha_cita' => $data['fecha'],
+                'hora_cita' => $data['hora'],
+                'estado_cita' => $data['estado'],
+                'motivo_cita' => $data['motivo'],
+                'total_cita' => $data['total'],
+                'paciente_id' => $data['cedula'],
+                'usuario_id' => $data['odontologo'],
+            ]);
 
-        DB::table('citas')->insert([
-            'fecha_cita' => $request->input('fecha'),
-            'hora_cita' => $request->input('hora'),
-            'motivo_cita' => $request->input('motivo'),
-            'total_cita' => $request->input('total'),
-            'paciente_id' => $request->input('cedula'),
-            'estado_cita' => $request->input('estado'),
-            'usuario_id' => $request->input('odontologo'),
-        ]);
-
-        return response()->json(['message' => 'Cita registrada correctamente'], 201);
+            return response()->json(['message' => 'Cita registrada'], 201);
+        } catch (QueryException $e) {
+            return response()->json([
+                'message' => 'Error al crear la cita',
+                'error' => $e->getMessage()
+            ], 400);
+        }
     }
+
     public function update(Request $request, $id)
     {
-
-        $request->validate([
+        $data = $request->validate([
             'fecha' => 'sometimes|date',
             'hora' => 'sometimes|date_format:H:i',
-            'estado' => 'sometimes|in:pendiente,cancelada,confirmada,completada',
+            'estado' => 'sometimes|in:pendiente,confirmada,cancelada,completada',
             'motivo' => 'sometimes|string|max:255',
-            'total' => 'sometimes|numeric|min:0',
+            'total' => 'sometimes|numeric',
             'odontologo' => 'sometimes|integer',
         ]);
 
-        // 2) Trae la cita “vieja”
-        $old = DB::table('citas')->where('id_cita', $id)->first();
-
-        // 3) Para cada parámetro, usa el nuevo si llega, o el viejo si no:
-        $fecha = $request->input('fecha', $old->fecha_cita);
-        $hora = $request->input('hora', $old->hora_cita);
-        $estado = $request->input('estado', $old->estado_cita);
-        $motivo = $request->input('motivo', $old->motivo_cita);
-        $total = $request->input('total', $old->total_cita);
-        $odontologo = $request->input('odontologo', $old->usuario_id);
-
-        // 4) Llama al SP con todos los valores definitivos
-        DB::statement('CALL pa_ActualizarCita(?, ?, ?, ?, ?, ?, ?)', [
-            $id,
-            $fecha,
-            $hora,
-            $estado,
-            $motivo,
-            $total,
-            $odontologo
+        $this->citaService->update($id, [
+            'fecha_cita' => $data['fecha'] ?? null,
+            'hora_cita' => $data['hora'] ?? null,
+            'estado_cita' => $data['estado'] ?? null,
+            'motivo_cita' => $data['motivo'] ?? null,
+            'total_cita' => $data['total'] ?? null,
+            'usuario_id' => $data['odontologo'] ?? null,
         ]);
 
-        return redirect()->back()->with('success', 'Cita actualizada correctamente 😀');
+        return response()->json(['message' => 'Cita actualizada']);
     }
+
 
 
     public function edit($id)
@@ -234,59 +303,30 @@ class CitasControllerApi extends Controller
         return view('Asistente.Citas_edit', compact('cita', 'usuarios'));
     }
 
-    public function show($input)
+    public function show(int $id)
     {
-        // Buscar paciente por cédula o nombre completo
-        $paciente = DB::table('pacientes')
-            ->select(
-                '*',
-                DB::raw("CONCAT(nombres_paciente, ' ', apellidos_paciente) AS nombre_completo_paciente") // Concatenación de nombre y apellido
-            )
-            ->where('cedula', 'like', "%$input%")
-            ->orWhere(DB::raw("CONCAT(nombres_paciente, ' ', apellidos_paciente)"), 'like', "%$input%")
-            ->first();
-
-        // Si no se encuentra al paciente, devolver un mensaje de error
-        if (!$paciente) {
-            return response()->json(['message' => 'Paciente no encontrado'], 404);
-        }
-
-        // Si se encuentra al paciente, devolver los datos en formato JSON
-        return response()->json([
-            'paciente' => $paciente
-        ]);
-    }
-
-
-    public function delete($id)
-    {
-
-        $cita = DB::table('citas')->where('id_cita', $id)->first();
+        $cita = $this->citaService->find($id);
 
         if (!$cita) {
             return response()->json(['message' => 'Cita no encontrada'], 404);
         }
 
-        $deleted = DB::table('citas')->where('id_cita', $id)->delete();
+        return response()->json($cita);
+    }
 
-        if ($deleted) {
-            $citas = DB::table('citas')->join('usuarios', 'citas.usuario_id', '=', 'usuarios.id_usuario')
-                ->select(
-                    'citas.*',
-                    DB::raw("CONCAT(usuarios.nombres_usuario, ' ', usuarios.apellidos_usuario) AS nombre_completo_odontologo")
-                )->where('usuarios.rol_id', 2)
-                ->limit(5)->get();
-            $usuarios = DB::table('usuarios')->where('rol_id', 2)->
-                select(
-                    'id_usuario',
-                    DB::raw("CONCAT(nombres_usuario, ' ', apellidos_usuario) AS nombre_completo_odontologo")
-                )
-                ->limit(5)->get();
-            return view('asistente.citas', compact('citas', 'usuarios'))->with('success', 'Cita eliminada');
-        } else {
-            return response()->json(['message' => 'Cita no encontrada'], 404);
+
+    public function delete(int $id)
+    {
+        try {
+            // Esto lanza excepción si no existe o el SP falla
+            $this->citaService->delete($id);
+            return response()->json(['message' => 'Cita eliminada'], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'No se pudo eliminar la cita',
+                'error' => $e->getMessage()
+            ], 400);
         }
-
     }
 
 }

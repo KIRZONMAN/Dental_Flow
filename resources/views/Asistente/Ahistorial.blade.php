@@ -51,13 +51,13 @@
                     <tbody>
                         <tr>
                             @foreach ($pacientes as $paciente)
-                                    <td>{{ $paciente->nombre_completo_paciente }}</td>
-                                    <td>{{ $paciente->cedula }}</td>
-                                    <td>{{ $paciente->edad }}</td>
-                                    <td>{{ $paciente->telefono_paciente }}</td>
-                                    <td>{{ $paciente->correo_paciente }}</td>
-                                </tr>
-                            @endforeach
+                                <td>{{ $paciente->nombre_completo_paciente }}</td>
+                                <td>{{ $paciente->cedula }}</td>
+                                <td>{{ $paciente->edad }}</td>
+                                <td>{{ $paciente->telefono_paciente }}</td>
+                                <td>{{ $paciente->correo_paciente }}</td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -80,17 +80,17 @@
         const resultados = document.getElementById("resultados");
         const tablaPacientes = document.getElementById("tablaPacientes");
 
-        toggleTablaBtn.addEventListener("click", function () {
+        toggleTablaBtn.addEventListener("click", function() {
             tablaVisible = !tablaVisible;
             tablaPacientes.classList.toggle("d-none", !tablaVisible);
             resultados.classList.toggle("d-none", tablaVisible);
-            toggleTablaBtn.innerHTML = tablaVisible
-                ? '<i class="fas fa-search"></i> Buscar'
-                : '<i class="fas fa-eye"></i> Mostrar';
+            toggleTablaBtn.innerHTML = tablaVisible ?
+                '<i class="fas fa-search"></i> Buscar' :
+                '<i class="fas fa-eye"></i> Mostrar';
         });
     </script>
 
-<script>
+    <script>
         function buscarPaciente() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const resultadosDiv = document.getElementById('resultados');
@@ -109,9 +109,10 @@
                                 <p class="card-text"><strong>🧬 Edad:</strong> ${data.paciente.edad} años</p>
                                 <p class="card-text"><strong>📞 Teléfono:</strong> ${data.paciente.telefono_paciente}</p>
                                 <p class="card-text"><strong>✉️ Correo:</strong> ${data.paciente.correo_paciente}</p>
-                                <button class="btn btn-primary w-100 mt-3" onclick="descargarPDF('${data.paciente.nombre_completo_paciente}')">
-                                    <i class="fas fa-file-pdf"></i> Descargar Historia Clínica
-                                </button>
+                                <button class="btn btn-primary w-100 mt-3"
+        onclick="descargarPDF('${data.paciente.nombre_completo_paciente}', '${data.paciente.cedula}')">
+  <i class="fas fa-file-pdf"></i> Descargar Historia Clínica
+</button>
                             </div>
                         </div>
                     </div>
@@ -128,13 +129,13 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
-
     </script>
     <script>
-    function descargarPDF(nombrePaciente) {
-        alert(`Descargando historia clínica de ${nombrePaciente}`);
-    }
-</script>
+        function descargarPDF(nombrePaciente, cedula) {
+            // simplemente redirige al endpoint que descarga el PDF
+            window.location.href = `/asistente/historial/${cedula}/pdf`;
+        }
+    </script>
 
 </body>
 

@@ -15,7 +15,8 @@ return new class extends Migration {
             $table->unsignedInteger('cita_id');
             $table->unsignedInteger('usuario_id');
             $table->date('fecha_solicitud');
-            $table->date('fecha_limite');
+            $table->date('fecha_limite')->nullable()->change();
+
             $table->enum('horario', ['Mañana', 'Tarde']);
             $table->string('tipo_material', 50);
             $table->text('otros_detalles')->nullable();

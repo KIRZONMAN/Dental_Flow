@@ -6,12 +6,21 @@ use Illuminate\Support\Facades\DB;
 
 class CitaService implements CitaServiceInterface
 {
+
+    /**
+     * Devuelve todas las citas (sin paginar).
+     */
+    public function all(): array
+    {
+        return DB::select('CALL pa_ObtenerCitas()');
+    }
+
+
     /**
      * Devuelve todas las citas del día.
      */
     public function allHoy(string $fecha): array
     {
-        // Asume que has creado un SP pa_ObtenerCitasHoy(fecha)
         return DB::select('CALL pa_ObtenerCitasHoy(?)', [$fecha]);
     }
 
@@ -30,7 +39,7 @@ class CitaService implements CitaServiceInterface
     public function create(array $datos): void
     {
         DB::statement(
-            'CALL pa_InsertarCita(?, ?, ?, ?, ?, ?, ?)',
+            'CALL pa_InsertarCita(?,?,?,?,?,?,?)',
             [
                 $datos['fecha_cita'],
                 $datos['hora_cita'],
@@ -49,7 +58,7 @@ class CitaService implements CitaServiceInterface
     public function update(int $id, array $datos): void
     {
         DB::statement(
-            'CALL pa_ActualizarCita(?, ?, ?, ?, ?, ?, ?)',
+            'CALL pa_ActualizarCita(?,?,?,?,?,?,?)',
             [
                 $id,
                 $datos['fecha_cita'],

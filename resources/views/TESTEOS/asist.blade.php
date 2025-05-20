@@ -115,7 +115,7 @@
                 `;
             content.style.opacity = "1";
         }, 300);
-        }
+
 
         function loadPage(page) {
             let content = document.getElementById('main-content');
