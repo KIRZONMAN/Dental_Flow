@@ -19,7 +19,7 @@ h1 {
 }
 
 .search-input {
-    width: 70%;
+    width: 50%;
     padding: 10px;
     margin-right: 10px;
     border: 1px solid #ccc;
@@ -30,7 +30,7 @@ h1 {
 .history-button,
 .back-button {
     padding: 10px 20px;
-    background-color: #007BFF;
+    background-color: #5289c4;
     color: white;
     border: none;
     border-radius: 4px;
@@ -38,10 +38,119 @@ h1 {
     text-decoration: none;
 }
 
-.search-button:hover,
-.history-button:hover,
-.back-button:hover {
-    background-color: #0056b3;
+/*== Titulo y Botón volver==*/
+.barra-superior {
+    position: relative;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background-color: #f1f6fc;
+    margin-bottom: 20px;
+}
+
+.btn-volver {
+    position: absolute;
+    left: 20px;
+    background-color: #0077b6;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-volver:hover {
+    background-color: #023e8a;
+}
+
+.titulo-centro {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 35px;
+    color: #023e8a;
+}
+
+/*Barra de busqueda y Agregar usuario*/
+.barra-acciones {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0px;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.busqueda {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+p {
+    margin: 20px;
+    font-size: 50px;
+    text-align: center;
+    margin: 20px;
+    padding: 20px;
+    color: #062cae;
+}
+
+.search-input {
+    padding: 10px;
+    font-size: 15px;
+    border: 1.5px solid #0096c7;
+    border-radius: 8px;
+    width: 200px;
+}
+
+.search-button {
+    padding: 10px 14px;
+    background-color: #0096c7;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-button:hover {
+    background-color: #023e8a;
+}
+
+#btn-addUser {
+    padding: 10px 14px;
+    background-color: #0077b6;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+    margin: 20px;
+}
+
+#btn-addUser:hover {
+    background-color: #023e8a;
+}
+
+
+.history-button {
+    padding: 10px 14px;
+    background-color: #0077b6;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.history-button:hover {
+    background-color: #023e8a;
 }
 
 .appointment-table {
@@ -64,6 +173,93 @@ h1 {
 .appointment-table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
-#btnAddUser{
+
+#btnAddUser {
     margin-top: 25px;
+}
+
+/*Tabla usuarios*/
+.table-responsive {
+    background: var(--clr-white);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-top: 10px;
+    margin: 5px;
+    margin-top: 20px;
+}
+
+.table {
+    margin: 0;
+}
+
+.table-hover tbody tr:hover {
+    background: #f1f3f5;
+}
+
+.table thead {
+    background: #e9ecef;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    padding: 20px !important;
+    border: 1px solid #ccc;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/*== Paginación ==*/
+#paginacion-usuarios {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#paginacion-usuarios button {
+    background-color: #0096c7;
+    color: white;
+    border: none;
+    margin: 0 5px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#paginacion-usuarios button:hover {
+    background-color: #0077b6;
+}
+
+#paginacion-usuarios button.activo {
+    background-color: #023e8a;
+}
+
+#paginacion-usuarios button:disabled {
+    background-color: #a0c4db;
+    cursor: not-allowed;
+    color: #eee;
+    opacity: 0.6;
+}
+
+/* Pantallas medianas: tablet */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin-top: 20px !important;
+    }
+}
+
+/* Pantallas pequeñas: smartphone */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+        margin-top: 20px !important;
+    }
 }

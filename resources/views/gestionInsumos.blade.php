@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Insumos</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('css/Sgestion.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -185,16 +186,20 @@
             const cantidad = document.getElementById("cantidad").value;
             const proveedor = document.getElementById("proveedor").value;
 
-            fetch("http://127.0.0.1:8000/api/solicitar-insumo", {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch("/api/solicitar-insumo", {
                     method: "POST",
+                    credentials: 'include', // <— para enviar la cookie de sesión/Sanctum
                     headers: {
                         "Content-Type": "application/json",
                         "Accept": "application/json",
+                        "X-CSRF-TOKEN": csrfToken // <— el token que Laravel espera
                     },
                     body: JSON.stringify({
-                        tipo: tipo,
-                        cantidad: cantidad,
-                        proveedor: proveedor,
+                        tipo,
+                        cantidad,
+                        proveedor
                     })
                 })
                 .then(response => {
@@ -205,23 +210,20 @@
                     }
                     return response.json();
                 })
-
                 .then(data => {
-                    console.log("Respuesta:", data);
                     Swal.fire({
                         icon: 'success',
                         title: '¡Solicitud enviada!',
-                        text: 'El proveedor ha sido notificado correctamente.',
+                        text: data.message,
                         confirmButtonColor: '#00c3a5',
                     });
                     document.getElementById("formInsumos").reset();
                 })
                 .catch(error => {
-                    console.error("Error:", error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo enviar la solicitud.',
+                        text: error.message,
                         confirmButtonColor: '#e53935',
                     });
                 });

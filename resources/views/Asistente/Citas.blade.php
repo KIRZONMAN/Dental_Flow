@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Administrar Citas</title>
     <link rel="stylesheet" href="{{ asset('css/Citas.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,7 +12,14 @@
 </head>
 
 <body>
-<a href="{{ route('asistente') }}" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i> Volver</a>
+    <a href="{{ route('asistente') }}" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i> Volver</a>
+
+    <div class="container my-3">
+        @if (session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+    </div>
+
     <h2>📅 Administrador de Citas</h2>
 
     <form id="form-cita">
@@ -50,6 +58,10 @@
         </a>
 
     </form>
+
+
+
+
     <div class="table-responsive">
         <table class="table table-hover align-middle">
             <thead class="table-primary">
@@ -67,27 +79,28 @@
             <tbody>
                 <tr>
                     @foreach ($citas as $cita)
-                            <td>{{ $cita->fecha_cita }}</td>
-                            <td>{{ $cita->hora_cita }}</td>
-                            <td>{{ $cita->estado_cita }}</td>
-                            <td>{{ $cita->motivo_cita }}</td>
-                            <td>{{ $cita->total_cita }}</td>
-                            <td>{{ $cita->paciente_id }}</td>
-                            <td>{{ $cita->nombre_completo_odontologo }}</td>
-                            <td>
-                                <a href="{{ route('citas.edit', $cita->id_cita) }}">
-                                    <button type="submit" class="btn btn-success">✍🏿</button>
-                            </td>
-                            <td>
-                                <form action="{{ route('citas.delete', $cita->id_cita) }}" method="POST" style="display:inline;"
-                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta Cita?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">🗑️</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
+                        <td>{{ $cita->fecha_cita }}</td>
+                        <td>{{ $cita->hora_cita }}</td>
+                        <td>{{ $cita->estado_cita }}</td>
+                        <td>{{ $cita->motivo_cita }}</td>
+                        <td>{{ $cita->total_cita }}</td>
+                        <td>{{ $cita->paciente_id }}</td>
+                        <td>{{ $cita->nombre_completo_odontologo }}</td>
+                        <td>
+                            <a href="{{ route('asistente.citas.edit', $cita->id_cita) }}">
+                                <button type="submit" class="btn btn-success">✍🏿</button>
+                        </td>
+                        <td>
+                            <form action="{{ route('api.citas.delete', $cita->id_cita) }}" method="POST"
+                                style="display:inline;"
+                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta Cita?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">🗑️</button>
+                            </form>
+                        </td>
+                </tr>
+                @endforeach
             </tbody>
         </table>
 
@@ -135,7 +148,14 @@
             let cedula = prompt("Ingrese la cédula del paciente:");
 
             if (nombre && cedula) {
-                citas[hora] = { nombre, cedula, estado: "Pendiente", color: "gray", textColor: "white", boton: btn };
+                citas[hora] = {
+                    nombre,
+                    cedula,
+                    estado: "Pendiente",
+                    color: "gray",
+                    textColor: "white",
+                    boton: btn
+                };
                 mostrarDetallesCita(hora);
             } else {
                 alert("Debe ingresar todos los datos.");
@@ -177,10 +197,11 @@
     </script>
 
     <script>
-        document.getElementById('form-cita').addEventListener('submit', async function (e) {
+        document.getElementById('form-cita').addEventListener('submit', async function(e) {
             e.preventDefault();
-
+            const token = document.querySelector('meta[name="csrf-token"]').content;
             const form = e.target;
+
             const data = {
                 fecha: form.fecha.value,
                 hora: form.hora.value,
@@ -192,30 +213,31 @@
             };
 
             try {
-                const response = await fetch('/api/registrarcita', {
+                const resp = await fetch('{{ route('api.citas.store') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
                     },
-                    body: JSON.stringify(data)
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data),
                 });
 
-                const result = await response.json();
+                const result = await resp.json();
 
-                if (response.ok) {
+                if (resp.ok) {
                     document.getElementById('mensaje').innerText = result.message;
                     form.reset();
                 } else {
                     document.getElementById('mensaje').innerText = result.message || 'Error al registrar cita';
                 }
-
             } catch (error) {
                 console.error('Error:', error);
                 document.getElementById('mensaje').innerText = 'Error en la conexión';
             }
         });
     </script>
+
 
 </body>
 

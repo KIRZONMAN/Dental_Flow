@@ -3,105 +3,214 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Gestión de Usuarios</title>
     <link rel="stylesheet" href="{{ asset('css/gestionUsuarios.css') }}">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-
     <div class="container">
-        <h1>Buscar Usuarios</h1>
-        <form method="POST" action="">
-            <input type="text" name="buscar_paciente" placeholder="Buscar usuario" class="search-input">
-            <button type="submit" class="search-button">Buscar</button>
-        </form>
-
-        <?php
-        /*// Conexión a la base de datos
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "clinica";
-        $conn = new mysqli($servername, $username, $password, $dbname);
-
-        if ($conn->connect_error) {
-            die("Conexión fallida: " . $conn->connect_error);
-        }
-
-        // Manejo de acciones (Editar, Eliminar, etc.)
-        if (isset($_GET['accion']) && isset($_GET['id'])) {
-            $accion = $_GET['accion'];
-            $id = intval($_GET['id']);
-
-            if ($accion == 'editar') {
-                echo "<p>Editar usuario con ID: $id</p>";
-                // Aquí puedes agregar la lógica para editar un usuario
-            } elseif ($accion == 'eliminar') {
-                echo "<p>Usuario con ID $id eliminado (simulado)</p>";
-                // Aquí puedes agregar la lógica para eliminar un usuario
-            } elseif ($accion == 'asignar_rol') {
-                echo "<p>Asignar rol al usuario con ID: $id</p>";
-            } elseif ($accion == 'modificar_permisos') {
-                echo "<p>Modificar permisos del usuario con ID: $id</p>";
-            }
-        }
-*/
-        ?>
-
-        <table class="appointment-table">
-            <tr>
-                <th>Nombre</th>
-                <th>Rol</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-            <tr>
-                <td>Juan Pérez</td>
-                <td>Odontologo</td>
-                <td>En línea</td>
-                <td>
-                    <a href="/gestionUsuarios?accion=editar&id=1" class="history-button">Editar</a>
-                    <a href="/gestionUsuarios?accion=eliminar&id=1" class="history-button">Eliminar</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Mario Fernandez</td>
-                <td>Cajero</td>
-                <td>Inactivo</td>
-                <td>
-                    <a href="/gestionUsuarios?accion=editar&id=2" class="history-button">Editar</a>
-                    <a href="/gestionUsuarios?accion=eliminar&id=2" class="history-button">Eliminar</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Abigail Florez</td>
-                <td>Asistente</td>
-                <td>En línea</td>
-                <td>
-                    <a href="/gestionUsuarios?accion=editar&id=3" class="history-button">Editar</a>
-                    <a href="/gestionUsuarios?accion=eliminar&id=3" class="history-button">Eliminar</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Marco Gomez</td>
-                <td>Odontologo</td>
-                <td>En línea</td>
-                <td>
-                    <a href="/gestionUsuarios?accion=editar&id=4" class="history-button">Editar</a>
-                    <a href="/gestionUsuarios?accion=eliminar&id=4" class="history-button">Eliminar</a>
-                </td>
-            </tr>
-        </table>
-
-        <div id="btnAddUser">
-            <a href="/gestionUsuarios?accion=agregar" class="history-button">Agregar Usuarios</a>
+        <div class="barra-superior">
+            <a href="/administrador" class="btn-volver">Volver</a>
+            <h1 class="titulo-centro">Buscar Usuarios</h1>
         </div>
-
-        <h2>Roles y Permisos</h2>
-        <a href="/gestionUsuarios?accion=asignar_rol&id=1" class="history-button">👤Asignar rol</a>
-        <a href="/gestionUsuarios?accion=modificar_permisos&id=1" class="history-button">⚙️Modificar Permisos</a>
+        <div class="barra-acciones">
+            <div class="busqueda">
+                <input type="text" name="buscar_paciente" id="searchInput" placeholder="Buscar usuario"
+                    class="search-input">
+                <button type="submit" class="search-button" onclick="buscarUsuario()">Buscar</button>
+            </div>
+            <div id="btnAddUser">
+                <a href="/api/agregarUsuario" id="btn-addUser">Agregar Usuarios</a>
+            </div>
+        </div>
+        <div id="tabla-usuarios" class="table-responsive"></div>
+        <div id="paginacion-usuarios"></div>
     </div>
+
+    <!--Construir tabla usuarios-->
+    <script>
+        let paginaActual = 1;
+        const usuariosPorPagina = 10;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarTablaUsuarios(paginaActual);
+        });
+
+        function cargarTablaUsuarios(pagina) {
+            fetch(`/api/tablaUsuarios?limit=${usuariosPorPagina}&page=${pagina}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('tabla-usuarios').innerHTML = construirTablaUsuarios(data.data);
+                    mostrarPaginacion(data);
+                    paginaActual = data.current_page;
+                })
+                .catch(() => {
+                    document.getElementById('tabla-usuarios').innerHTML = '<p>Error cargando usuarios.</p>';
+                    document.getElementById('paginacion-usuarios').innerHTML = '';
+                });
+        }
+
+        function construirTablaUsuarios(usuarios) {
+            if (!usuarios.length) return '<p>No hay usuarios disponibles.</p>';
+
+            const filas = usuarios.map(usuario => `
+        <tr>
+            <td>${usuario.id_usuario}</td>
+            <td>${usuario.nombre_completo}</td>
+            <td>${usuario.correo}</td>
+            <td>${usuario.estado}</td>
+            <td>${usuario.rol}</td>
+            <td>
+                <a href="/gestionUsuarios?accion=editar&id=${usuario.id}" class="history-button">Editar</a>
+                <a href="#" class="history-button eliminar-usuario" data-id="${usuario.id}">Eliminar</a>
+            </td>
+        </tr>
+    `).join('');
+
+            return `
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${filas}
+            </tbody>
+        </table>
+    `;
+        }
+        function mostrarPaginacion(data) {
+            let html = '';
+
+            if (data.prev_page_url) {
+                html += `<button onclick="cargarTablaUsuarios(${data.current_page - 1})">Anterior</button>`;
+            } else {
+                html += `<button disabled>Anterior</button>`;
+            }
+
+            html += ` Página ${data.current_page} de ${data.last_page} `;
+
+            if (data.next_page_url) {
+                html += `<button onclick="cargarTablaUsuarios(${data.current_page + 1})">Siguiente</button>`;
+            } else {
+                html += `<button disabled>Siguiente</button>`;
+            }
+
+            document.getElementById('paginacion-usuarios').innerHTML = html;
+        }
+
+    </script>
+
+
+    <!--Acciones-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.addEventListener('click', function (e) {
+                if (e.target.classList.contains('eliminar-usuario')) {
+                    e.preventDefault();
+                    const id = e.target.getAttribute('data-id');
+
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "¡No podrás revertir esto!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/api/gestionUsuarios/${id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                    'Accept': 'application/json'
+                                }
+                            })
+                                .then(response => {
+                                    if (response.ok) {
+                                        Swal.fire({
+                                            title: '¡Eliminado!',
+                                            text: 'El usuario fue eliminado correctamente.',
+                                            icon: 'success',
+                                            timer: 2000,
+                                            showConfirmButton: false
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        return response.json().then(err => { throw err; });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error al eliminar:', error);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'Ocurrió un error al eliminar el usuario.',
+                                        icon: 'error'
+                                    });
+                                });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function buscarUsuario(pagina = 1) {
+            const input = document.getElementById('searchInput').value.trim().toLowerCase();
+
+            if (!input) {
+                cargarTablaUsuarios(1);
+                return;
+            }
+
+            fetch(`/api/filtrarUsuario/${input}?page=${pagina}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('tabla-usuarios').innerHTML = construirTablaUsuarios(data.data);
+                    mostrarPaginacionBusqueda(data, input);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('tabla-usuarios').innerHTML = '<p>Error buscando usuarios.</p>';
+                    document.getElementById('paginacion-usuarios').innerHTML = '';
+                });
+        }
+
+        /*Función para mostrar opciones de paginación*/
+        function mostrarPaginacionBusqueda(data, input) {
+            let html = '';
+
+            if (data.prev_page_url) {
+                html += `<button onclick="buscarUsuario(${data.current_page - 1})">Anterior</button>`;
+            } else {
+                html += `<button disabled>Anterior</button>`;
+            }
+
+            html += ` Página ${data.current_page} de ${data.last_page} `;
+
+            if (data.next_page_url) {
+                html += `<button onclick="buscarUsuario(${data.current_page + 1})">Siguiente</button>`;
+            } else {
+                html += `<button disabled>Siguiente</button>`;
+            }
+
+            document.getElementById('paginacion-usuarios').innerHTML = html;
+        }
+
+    </script>
 
 </body>
 

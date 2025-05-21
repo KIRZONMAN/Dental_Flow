@@ -29,9 +29,16 @@ class Cita extends Model
 
     protected $casts = [
         'fecha_cita' => 'date',
-        'hora_cita' => 'datetime:H:i',  // así te devuelve la hora con Carbon
         'total_cita' => 'decimal:2',
     ];
+
+    public function getFechaHoraAttribute()
+{
+    $hora = $this->hora_cita
+        ? substr($this->hora_cita, 0, 5)
+        : '--:--';
+    return $this->fecha_cita->format('d/m/Y') . ' ' . $hora;
+}
 
     public function paciente()
     {

@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\Paciente;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class AsistenteController extends Controller
 {
@@ -35,4 +38,37 @@ class AsistenteController extends Controller
         // 3) Renderizar vista con el listado
         return view('asistente.asistente', compact('citasHoy'));
     }
+
+    public function descargarPDF(string $cedula)
+    {
+        $paciente = Paciente::findOrFail($cedula);
+        // Aquí indicamos la carpeta 'Asistente':
+        $pdf = Pdf::loadView('Asistente.pdf_historia', compact('paciente'));
+        return $pdf->download("historia_{$cedula}.pdf");
+    }
+
+    public function configuracion2(Request $request)
+    {
+        // Si es POST, guardamos en sesión de Laravel
+        if ($request->isMethod('post')) {
+            session([
+                'asistente.nombre' => $request->input('nombre'),
+                'asistente.telefono' => $request->input('telefono'),
+                'asistente.email' => $request->input('email'),
+            ]);
+            return redirect()->route('asistente.configuracion2');
+        }
+
+        // Valores por defecto
+        $datos = [
+            'nombre' => session('asistente.nombre', 'Dr. (Nombre)'),
+            'telefono' => session('asistente.telefono', '+12 34567890'),
+            'email' => session('asistente.email', 'doctor@dominio.com'),
+            'especialidad' => 'Asistente',
+        ];
+
+        return view('asistente.configuracion2', $datos);
+    }
+
+
 }

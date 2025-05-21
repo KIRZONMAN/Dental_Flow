@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\ApiDuenoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OdontologoController;
-
 use App\Http\Controllers\Api\CitasControllerApi;
+use App\Http\Controllers\Api\ApiAdministradorController;
 use App\Http\Controllers\Api\GestorInsumosControllerApi;
 use App\Http\Controllers\Api\ProveedorController;
 use App\Http\Controllers\Api\InsumoController;
@@ -17,14 +18,31 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Citas
-Route::get('/odontologo', [CitasControllerApi::class, 'index']);
-Route::get('/citas', [CitasControllerApi::class, 'indexCitas'])->name('asistente.volver');
-Route::post('/registrarcita', [CitasControllerApi::class, 'store']);
-Route::get('/citas/edit/{id}', [CitasControllerApi::class, 'edit'])->name('citas.edit');
-Route::put('/citas/{id}', [CitasControllerApi::class, 'update'])->name('citas.update');
-Route::delete('/citas/delete/{id}', [CitasControllerApi::class, 'delete'])->name('citas.delete');
-Route::get('/buscar-paciente/{input}', [CitasControllerApi::class, 'show']);
+// Rutas RESTful de Citas (API – JSON)
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('citas')->group(function () {
+        Route::get('/', [CitasControllerApi::class, 'index'])->name('api.citas.index');
+        Route::get('/hoy', [CitasControllerApi::class, 'indexHoy'])->name('api.citas.hoy');
+        Route::get('/{id}', [CitasControllerApi::class, 'show'])
+            ->where('id', '[0-9]+')
+            ->name('api.citas.show');
+        Route::post('/', [CitasControllerApi::class, 'store'])->name('api.citas.store');
+        Route::put('/{id}', [CitasControllerApi::class, 'update'])
+            ->where('id', '[0-9]+')
+            ->name('api.citas.update');
+        Route::delete('/{id}', [CitasControllerApi::class, 'delete'])
+            ->where('id', '[0-9]+')
+            ->name('api.citas.delete');
+    });
+});
+
+// Vista de Blade para asistente (HTML)
+Route::get('/asistente/citas', [CitasControllerApi::class, 'indexCitas'])
+    ->name('asistente.citas.view');
+
+
+// Ruta de búsqueda de paciente (mantener si la usas desde JS)
+Route::get('/buscar-paciente/{input}', [CitasControllerApi::class, 'buscarPaciente']);
 
 
 
@@ -51,4 +69,30 @@ Route::delete('/pedidos/{id}', [GestorInsumosControllerApi::class, 'eliminarPedi
 Route::get('/agenda', [CitasControllerApi::class, 'indexAgendaBusqueda']);
 Route::get('/historias', [CitasControllerApi::class, 'indexHistorias']);
 Route::get('/ahistorial', [CitasControllerApi::class, 'indexAhistorialPacientes']);
+
+/*Dueño */
+Route::get('/dueno', [ApiDuenoController::class, 'indexDueno'])->name('dueno');
+Route::get('/dueno/rendimiento', [ApiDuenoController::class, 'indexRendimiento'])->name('dueno.rendimiento');
+Route::get('/dueno/insumos', [ApiDuenoController::class, 'indexInsumos'])->name('dueno.insumos');
+Route::get('/dueno-conteo', [ApiDuenoController::class, 'conteoCitas'])->name('dueno.conteo');
+Route::get('/informe-clinica', [ApiDuenoController::class, 'indexInformeClinica'])->name('informe-clinica');
+Route::get('/historial-movimientos', [ApiDuenoController::class, 'indexHistorialTransacciones'])->name('historial-movimientos');
+Route::get('/ordenar-insumos', [ApiDuenoController::class, 'indexOrdenarInsumos'])->name('ordenar-insumos');
+Route::view('/autorizacion-compras', 'dueno.dueno-configuracion')->name('dueno-configuracion');
+Route::get('/insumos-solicitados', [ApiDuenoController::class, 'indexInsumosSolicitados'])->name('insumos-solicitados');
+Route::post('/ordenes/{id}/aprobar', [ApiDuenoController::class, 'aprobar']);
+Route::post('/ordenes/{id}/rechazar', [ApiDuenoController::class, 'rechazar']);
+
+/*Administrador*/
+Route::get('/usuarios', [ApiAdministradorController::class, 'indexUsuarios']);
+Route::get('/gestionUsuarios', [ApiAdministradorController::class, 'index'])->name('gestionUsuarios');
+Route::delete('/gestionUsuarios/{id}', [ApiAdministradorController::class, 'eliminarUsuario']);
+Route::get('/agregarUsuario', [ApiAdministradorController::class, 'VistaAgregarUsuario']);
+Route::post('/agregarUsuario', [ApiAdministradorController::class, 'agregarUsuario'])->name('usuarios.store');
+Route::get('/tablaUsuarios', [ApiAdministradorController::class, 'indexTablaUsuarios']);
+Route::get('/filtrarUsuario/{input}',[ApiAdministradorController::class, 'filtrarUsuario']);
+
+/*Ruta prueba */
+Route::post('/testeoContra', [ApiAdministradorController::class, 'login'])->name('login.post');
+
 //});

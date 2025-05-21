@@ -103,7 +103,7 @@
     background: rgba(0,0,0,0.05);
   }
   .badge-estado-pendiente        { background: #F59E0B; color: #fff; }
-  .badge-estado-en-producción    { background: #6366F1; color: #fff; }
+  .badge-estado-en-produccion    { background: #6366F1; color: #fff; }
   .badge-estado-listo-para-enviar{ background: #10B981; color: #fff; }
   .badge-estado-entregada        { background: #6B7280; color: #fff; }
   .badge-estado-rechazada        { background: #EF4444; color: #fff; }

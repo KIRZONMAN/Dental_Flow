@@ -62,8 +62,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('laboratorista.ordenes.hoy') }}"
-                    class="nav-link {{ request()->routeIs('laboratorista.ordenes.hoy') ? 'active' : '' }}">
+                <a href="{{ route('laboratorista.ordenes.todos') }}"
+                    class="nav-link {{ request()->routeIs('laboratorista.ordenes.todos') ? 'active' : '' }}">
                     <i class="fas fa-list me-2"></i>Pedidos
                 </a>
             </li>
@@ -94,26 +94,40 @@
                 <table class="table table-hover lab-pedidos-table mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
-                            <th>Cita</th>
-                            <th>Paciente</th>
-                            <th>Odontólogo</th>
+                            <th>ID Orden</th>
+                            <th>Cita ID</th>
+                            <th>Usuario ID</th>
+                            <th>Fecha Solicitud</th>
+                            <th>Fecha Límite</th>
+                            <th>Horario</th>
+                            <th>Tipo Material</th>
+                            <th>Otros Detalles</th>
                             <th>Estado</th>
+                            <th>Creado</th>
+                            <th>Última Actualización</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($ordenes as $pedido)
+                        @foreach ($ordenes as $pedido)
                             <tr>
                                 <td>{{ $pedido->id_orden_lab }}</td>
-                                <td>{{ \Carbon\Carbon::parse($pedido->cita->fecha_cita . ' ' . $pedido->cita->hora_cita)->format('d/m/Y H:i') }}</td>
-                                <td>{{ $pedido->cita->paciente->nombres_paciente }}</td>
-                                <td>{{ $pedido->cita->odontologo->nombres_usuario }}</td>
+                                <td>{{ $pedido->cita_id }}</td>
+                                <td>{{ $pedido->usuario_id }}</td>
+                                <td>{{ optional($pedido->fecha_solicitud)->format('d/m/Y') ?? '—' }}</td>
+                                <td>{{ optional($pedido->fecha_limite)->format('d/m/Y') ?? '—' }}</td>
+                                <td>{{ $pedido->horario }}</td>
+                                <td>{{ $pedido->tipo_material }}</td>
+                                <td title="{{ $pedido->otros_detalles }}">
+                                    {{ \Illuminate\Support\Str::limit($pedido->otros_detalles ?? '—', 50, '...') }}
+                                </td>
                                 <td>
                                     <span class="badge badge-estado-{{ Str::slug($pedido->estado) }}">
                                         {{ ucfirst($pedido->estado) }}
                                     </span>
                                 </td>
+                                <td>{{ optional($pedido->created_at)->format('d/m/Y H:i') ?? '—' }}</td>
+                                <td>{{ optional($pedido->updated_at)->format('d/m/Y H:i') ?? '—' }}</td>
                                 <td>
                                     <a href="{{ route('laboratorista.orden.show', $pedido->id_orden_lab) }}"
                                         class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i></a>

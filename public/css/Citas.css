@@ -10,26 +10,179 @@ body {
     background: linear-gradient(135deg, #e0f2fe, #ffffff);
     padding: 30px;
     text-align: center;
-    min-height: 100vh;
 }
 
-/* ===== Encabezado ===== */
-h2 {
-    font-size: 2.5rem;
-    color: #023e8a;
-    margin-bottom: 25px;
-    text-shadow: 1px 1px 2px #ade8f4;
+/* ===== Encabezado citas ===== */
+
+.header-container-1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+    border-radius: 12px;
+    color: white;
 }
 
-h3 {
-    font-size: 1.8rem;
-    color: #0077b6;
+.header-container-1 a {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    text-decoration: none;
+}
+
+/*=== Botón volver personalizado vista citas===*/
+.custom-btn-outline1 {
+    color: #000 !important;
+    border: 1px solid #000 !important;
+    background-color: transparent !important;
+    transition: all 0.5s ease in-out;
+}
+
+.custom-btn-outline1:hover,
+.custom-btn-outline1:focus {
+    border: transparent !important;
+    background-color: #7dacf8 !important;
+    color: #fff !important;
+}
+
+/* ===== Encabezado editar citas ===== */
+.header-container-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #3bcef6, #1e6b8a);
+    border-radius: 12px;
+    color: white;
+}
+
+.header-container-2 a {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    text-decoration: none;
+}
+
+/*=== Botón volver personalizado Vista editar cita===*/
+.custom-btn-outline2 {
+    color: #000 !important;
+    border: 1px solid #000 !important;
+    background-color: transparent !important;
+    transition: all 0.5s ease in-out;
+}
+
+.custom-btn-outline2:hover,
+.custom-btn-outline2:focus {
+    border: transparent !important;
+    background-color: #397ae3 !important;
+    color: #fff !important;
+}
+
+
+.header-container-1 h2,
+.header-container-2 h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+/*=== FORM ===*/
+.card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.card:hover {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+    scale: 1.02;
+    transition: all 0.3s ease-in-out;
+
+}
+
+/* ===== Formulario de Cita ===== */
+#form-cita h2 {
+    text-align: center;
     margin-bottom: 20px;
-    text-shadow: 1px 1px 2px #90e0ef;
+    color: #333;
+}
+
+/* Agrupaciones de fila */
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+/* Grupos de cada campo */
+.form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+/*inputs*/
+.form-group input,
+.form-group select {
+    width: 100%;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+    border-color: #5a67d8;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    background-color: #5a67d8;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #434190;
+}
+
+button.btn.btn-success {
+    width: auto !important;
+}
+
+button.btn.btn-danger {
+    width: auto !important;
 }
 
 /* ===== Inputs ===== */
 label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: 600;
     font-size: 1.2rem;
     margin-right: 10px;
     color: #03045e;
@@ -112,31 +265,8 @@ input[type="date"]:focus {
     color: #03045e;
 }
 
-/* ===== Estado de Cita ===== */
-#estado-buttons {
-    margin-top: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-}
 
-.estado-btn {
-    padding: 12px 20px;
-    font-size: 15px;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.estado-btn:hover {
-    transform: scale(1.08);
-    filter: brightness(1.1);
-}
-
-/* ===== Botón editar ===== */
+/* ===== Botón editar===== */
 .editar-btn {
     margin-top: 20px;
     background-color: #0066cc;
@@ -158,12 +288,53 @@ input[type="date"]:focus {
     display: none !important;
 }
 
+
+/* === Tabla de citas === */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+.table thead {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.table tbody td {
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #ffffff;
+}
+
+
+.table thead tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.table thead tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+}
+
+.table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+.table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+
 /* ===== Animaciones ===== */
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -175,6 +346,7 @@ input[type="date"]:focus {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);

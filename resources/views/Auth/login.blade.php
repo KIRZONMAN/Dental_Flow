@@ -101,6 +101,7 @@
 
         const response = await fetch("/login", {
           method: "POST",
+          credentials: "same-origin",
           headers: {
             "X-CSRF-TOKEN": token,
             "Accept": "application/json"

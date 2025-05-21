@@ -77,7 +77,8 @@ $especialidad = "Administrador"; // Fijo y no editable
             margin-bottom: 5px;
         }
 
-        input[type="text"], input[type="email"] {
+        input[type="text"],
+        input[type="email"] {
             width: 100%;
             padding: 8px;
             border: none;
@@ -138,7 +139,8 @@ $especialidad = "Administrador"; // Fijo y no editable
 
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
-                    <input type="text" id="numeroInput" name="numeroInput" oninput="validateNumberInput(this)"value="<?= $telefono?>">
+                    <input type="text" id="numeroInput" name="numeroInput" oninput="validateNumberInput(this)"
+                        value="<?= $telefono?>">
                 </div>
 
                 <div class="form-group">

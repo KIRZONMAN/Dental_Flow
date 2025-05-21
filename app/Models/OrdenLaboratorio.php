@@ -8,7 +8,7 @@ class OrdenLaboratorio extends Model
 {
     protected $table = 'ordenes_laboratorio';
     protected $primaryKey = 'id_orden_lab';
-    public $timestamps = true;
+    public $timestamps = false;
     protected $fillable = [
         'cita_id',
         'usuario_id',
@@ -17,8 +17,11 @@ class OrdenLaboratorio extends Model
         'horario',
         'tipo_material',
         'otros_detalles',
+        'color',
+        'firma',
         'estado',
     ];
+
 
     protected $casts = [
         'fecha_solicitud' => 'date',

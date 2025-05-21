@@ -18,7 +18,7 @@ class LaboratoristaController extends Controller
             'cita.odontologo',
             'productos.insumo'
         ])
-            ->whereDate('fecha_solicitud', Carbon::today())
+            ->whereDate('fecha_limite', Carbon::today())
             ->get();
 
         $enProduccion = OrdenLaboratorio::where('estado', 'en producción')->count();
@@ -29,17 +29,21 @@ class LaboratoristaController extends Controller
 
     public function ordenesHoy()
     {
-        $hoy = Carbon::today();
+        $hoy = Carbon::today()->toDateString();
+
         $ordenes = OrdenLaboratorio::with([
             'cita.paciente',
             'cita.odontologo',
             'productos.insumo'
         ])
-            ->whereDate('fecha_solicitud', Carbon::today())
+            ->whereDate('fecha_limite', $hoy)
+            ->orderByDesc('fecha_limite')
             ->paginate(10);
 
         return view('laboratorista.Lab_Pedidos', compact('ordenes'));
     }
+
+
 
     public function show($id)
     {
@@ -101,12 +105,20 @@ class LaboratoristaController extends Controller
 
     public function all()
     {
-        $ordenes = OrdenLaboratorio::with(['cita.paciente', 'cita.odontologo'])
-            ->orderBy('fecha_solicitud', 'desc')
+        // Carga todas las órdenes sin filtrar
+        $ordenes = OrdenLaboratorio::with([
+            'cita.paciente',
+            'cita.odontologo',
+            'productos.insumo'
+        ])
+            ->orderByDesc('fecha_solicitud')
             ->paginate(10);
 
-        return view('laboratorista.todos_pedidos', compact('ordenes'));
+        return view('laboratorista.Lab_Pedidos', compact('ordenes'));
     }
+
+
+
 
 
 

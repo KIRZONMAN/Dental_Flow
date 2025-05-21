@@ -11,10 +11,10 @@ CREATE TABLE usuarios (
     id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombres_usuario VARCHAR(50) NOT NULL,
     apellidos_usuario VARCHAR(50) NOT NULL,
-    correo_usuario VARCHAR(50) NOT NULL,
+    correo_usuario VARCHAR(100) NOT NULL,
     contrasena_usuario VARCHAR(255) NOT NULL,
     telefono_usuario VARCHAR(50) NOT NULL,
-    direccion_usuario VARCHAR(100) NOT NULL,
+    direccion_usuario VARCHAR(255) NOT NULL,
     estado_usuario ENUM('activo', 'inactivo') NOT NULL,
     especialidad_usuario VARCHAR(50),
     rol_id INT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE procedimientos (
 );
 
 CREATE TABLE pacientes (
-    cedula VARCHAR(20) NOT NULL PRIMARY KEY,
+    cedula VARCHAR(20) NOT NULL PRIMARY KEY ,
     nombres_paciente VARCHAR(50) NOT NULL,
     apellidos_paciente VARCHAR(50) NOT NULL,
     edad INT NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE ordenes_compras (
     fecha_expedicion DATE NOT NULL,
     fecha_vencimiento DATE NOT NULL,
     usuario_id INT,
-    estado ENUM('ordenado', 'en produccion', 'listo para entregar', 'entregado') NOT NULL,
+    estado ENUM('ordenado', 'aprobado','rechazado','en produccion', 'listo para entregar', 'entregado') NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario)
 );
 
@@ -125,93 +125,130 @@ CREATE TABLE detalles_ordenes (
         FOREIGN KEY (insumo_id) REFERENCES insumos(id_insumo)
 );
 
-/*TABLAS PARA LABORATORISTA*/
-CREATE TABLE ordenes_laboratorio (
-    id_orden_lab INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    cita_id INT NOT NULL,
-    usuario_id INT NOT NULL,               -- el laboratorista asignado
-    fecha_solicitud DATE NOT NULL,
-    fecha_limite DATE NOT NULL,
-    horario ENUM('Mañana','Tarde') NOT NULL,
-    tipo_material VARCHAR(50) NOT NULL,
-    otros_detalles TEXT,
-    estado ENUM('pendiente','en producción','listo para enviar','entregada','rechazada')
-        NOT NULL DEFAULT 'pendiente',
-    created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL,
-    FOREIGN KEY (cita_id)   REFERENCES citas(id_cita),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario)
-);
-
-CREATE TABLE productos_laboratorio (
-    id_producto_lab INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    orden_id INT NOT NULL,    -- referencia a ordenes_laboratorio.id_orden_lab
-    insumo_id INT NOT NULL,
-    cantidad INT NOT NULL,
-    detalles TEXT,
-    created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL,
-    FOREIGN KEY (orden_id)  REFERENCES ordenes_laboratorio(id_orden_lab),
-    FOREIGN KEY (insumo_id) REFERENCES insumos(id_insumo)
-);
-
 /* Insertar roles*/
-INSERT INTO roles (id_rol, nombre_rol, descripcion_rol) VALUES
-(1, 'Administrador', 'Gestiona el sistema'),
-(2, 'Odontologo',     'Atiende a los pacientes'),
-(3, 'Asistente',      'Agenda citas y maneja pacientes'),
-(4, 'Laboratorista',  'Gestiona órdenes de laboratorio'),
-(5, 'Dueño',          'Supervisor general del sistema');
+INSERT INTO roles (nombre_rol, descripcion_rol) VALUES
+('Administrador', 'Gestiona el sistema'),
+('Odontologo', 'Atiende a los pacientes'),
+('Asistente', 'Agenda citas y maneja pacientes'),
+('Laboratorista', 'Encargado de realizar protesis'),
+('Dueño', 'Gestiona la clínica');
 
 /* Insertar usuarios*/
 INSERT INTO usuarios (nombres_usuario, apellidos_usuario, correo_usuario, contrasena_usuario, telefono_usuario, direccion_usuario, estado_usuario, especialidad_usuario, rol_id) VALUES
-("Marco Alejandro","Torres Gomez","marcotorres@gmail.com","contra123456789","3112345678","Calle 123 # 45-67","activo",NULL,1),
-('Juan', 'Pérez', 'juan.perez@gmail.com', 'hashedpassword1', '123456789', 'Calle 12C #3-10 Centro', 'activo', 'Odontopediatría', 2),
-('Maria', 'Gonzalez', 'maria.gonzalez@gmail.com', 'hashedpassword2', '987654321', 'Avenida Azulejo 456', 'activo', 'Cirugía Oral y Maxilofacial', 2),
-('Carlos', 'Ramirez', 'carlos.ramirez@gmail.com', 'hashedpassword3', '456123789', 'Boulevard Rose 789', 'activo', NULL, 3),
-('Gref', 'Smithforge', 'grefsmithforge@gmail.com', 'contraseñageneric3', '456123089', 'Retiro Bajo 789', 'inactivo', NULL, 3),
+("Juan David","Oviedo Jiménez","juan.oviedo@gmail.com","$2y$12$s5AuwDptSLWnv0HvHM4.ievgGmm7zK/gNLLF6j/s7PqotQBqZ7rUG","3126730341","Retiro bajo calle 12C #5A-2","activo",NULL,1),
+('Janer Esteban', 'Pechene Cifuentes', 'janner.pechene@gmail.com','$2y$12$PVFYuJjgM7hBsrjrv17UHOaFiz2qTWvsvrL6Sq1wolmEZaVODqA3a', '67234917', 'El Imperio de la Alta Sociedad Torre 12 Piso 3', 'activo', NULL, 1),
+('Juan Carlos', 'Pérez Castrillón', 'juan.perez@gmail.com', '$2y$12$TfvqCwC1sU7X8xGpoHoezehOHxEQmwr5Cbv83tc0s2JjwSuiVPYuu', '123456789', 'Calle 12C #3-10 Centro', 'activo', 'Odontopediatría', 2),
+('Maria Alejandra', 'Gonzalez López', 'maria.gonzalez@gmail.com', '$2y$12$TfvqCwC1sU7X8xGpoHoezehOHxEQmwr5Cbv83tc0s2JjwSuiVPYuu', '987654321', 'Avenida Azulejo 456', 'activo', 'Cirugía Oral y Maxilofacial', 2),
 ('Manuel José', 'Moreno Campo', 'jose.moreno@gmail.com','$2y$12$PVFYuJjgM7hBsrjrv17UHOaFiz2qTWvsvrL6Sq1wolmEZaVODqA3a', '67234917', 'El Imperio de la Alta Sociedad Torre 12 Piso 3', 'activo', NULL, 2),
-('Janer Esteban', 'Pechene Cifuentes', 'janner.pechene@gmail.com','$2y$12$PVFYuJjgM7hBsrjrv17UHOaFiz2qTWvsvrL6Sq1wolmEZaVODqA3a', '67234917', 'El Imperio de la Alta Sociedad Torre 12 Piso 3', 'activo', NULL, 3),
-('Juan Armando','Gomez Galindez','juan.laboratorista@example.com', '$2y$12$PVFYuJjgM7hBsrjrv17UHOaFiz2qTWvsvrL6Sq1wolmEZaVODqA3a', '3001234567','Calle Falsa 123','activo',NULL,4);
+('Carlos', 'Ramirez', 'carlos.ramirez@gmail.com', '$2y$12$TfvqCwC1sU7X8xGpoHoezehOHxEQmwr5Cbv83tc0s2JjwSuiVPYuu', '456123789', 'Boulevard Rose 789', 'activo', NULL, 3),
+('Pedro', 'Manquillo Solarte', 'pedro.manquillo@gmail.com', '$2y$12$TfvqCwC1sU7X8xGpoHoezehOHxEQmwr5Cbv83tc0s2JjwSuiVPYuu', '456123089', 'Retiro Bajo 789', 'inactivo', NULL, 3),
+('David','Rey Castillo','david.rey@gmail.com','$2y$12$PVFYuJjgM7hBsrjrv17UHOaFiz2qTWvsvrL6Sq1wolmEZaVODqA3a','3207490231','El pajonal Calle 3 # 9C-2','activo',NULL,4),
+('Jesús David ','Velasco Quilindo','jesus.velasco@gmail.com','$2y$12$PVFYuJjgM7hBsrjrv17UHOaFiz2qTWvsvrL6Sq1wolmEZaVODqA3a','3175609347','La esmeralda calle 5 #4A-2','activo',NULL,4),
+('Dueño','Clinica Dental','gerencia@dentalflow.com','$2y$12$PVFYuJjgM7hBsrjrv17UHOaFiz2qTWvsvrL6Sq1wolmEZaVODqA3a','3146590264','Retiro Alto Calle 5 #7B-3','activo',NULL,5);
+
 /* Insertar procedimientos*/
 INSERT INTO procedimientos (tipo_procedimiento, costo) VALUES
 ('Consulta General', 50000.00),
 ('Radiografía', 120000.00),
-('Extracción Dental', 300000.00);
+('Extracción Dental', 300000.00),
+('Limpieza Dental', 80000.00),
+('Ortodoncia Inicial', 450000.00),
+('Blanqueamiento Dental', 250000.00),
+('Endodoncia', 320000.00),
+('Implante Dental', 1500000.00),
+('Control Post-Operativo', 40000.00);
 
 /* Insertar pacientes*/
 INSERT INTO pacientes (cedula,nombres_paciente, apellidos_paciente, edad, genero, telefono_paciente, direccion_paciente, correo_paciente, tipo_sangre) VALUES
-("1020304050",'Pedro', 'Lopez', 30, 'masculino', '123123123', 'Calle ABC', 'pedro.lopez@gmail.com', 'O+'),
-("5040302010",'Ana', 'Martinez', 45, 'femenino', '321321321', 'Avenida XYZ', 'ana.martinez@gmail.com', 'A-');
+("1020304050",'Pedro', 'Lopez Rivera', 30, 'masculino', '123123123', 'Calle ABC', 'pedro.lopez@gmail.com', 'O+'),
+("5040302010",'Ana', 'Martinez gomez', 45, 'femenino', '321321321', 'Avenida XYZ', 'ana.martinez@gmail.com', 'A-'),
+("1122334455", 'Carlos Andrés', 'Ramírez Soto', 28, 'masculino', '987654321', 'Calle Los Pinos 123', 'carlos.ramirez@gmail.com', 'B+'),
+("5566778899", 'María José', 'González Martinez', 35, 'femenino', '876543210', 'Avenida Libertad 456', 'maria.gonzalez@gmail.com', 'AB-'),
+("6677889900", 'Luis Alberto', 'Fernández Ocampo', 52, 'masculino', '765432109', 'Pasaje El Sol 789', 'luis.fernandez@gmail.com', 'B-'),
+("9988776655", 'Laura Patricia', 'Torres Ríos', 41, 'femenino', '654321098', 'Callejón San Juan 321', 'laura.torres@gmail.com', 'A+'),
+("3344556677", 'Xavier Manuel', 'Pérez Montoya', 37, 'masculino', '543210987', 'Ruta 5 Km 18', 'javier.perez@gmail.com', 'B-'),
+("2233445566", 'Lucía Fernanda', 'Morales Delgado', 22, 'femenino', '432109876', 'Camino Real 654', 'lucia.morales@gmail.com', 'AB+');
 
 /* Insertar citas*/
 INSERT INTO citas (fecha_cita, hora_cita, estado_cita, motivo_cita, total_cita, paciente_id, usuario_id) VALUES
-('2024-04-01', '09:00:00', 'confirmada', 'Dolor de muelas', 50000.00, "1020304050", 2),
-('2024-04-02', '10:30:00', 'pendiente', 'Chequeo general', 120000.00, "5040302010", 3),
-('2025-04-22', '11:30:00', 'pendiente', 'Chequeo dental', 100000.00, "1020304050", 2),
-('2025-05-08', '11:26:00', 'confirmada', 'Tratamiento de Caries', 230.00, "1020304050", 9);
+('2025-05-05', '08:30:00', 'completada', 'Limpieza dental', 85000.00, '3344556677', 4),
+('2025-05-05', '09:45:00', 'completada', 'Revisión de ortodoncia', 120000.00, '5566778899', 3),
+('2025-05-06', '10:15:00', 'completada', 'Consulta general', 50000.00, '6677889900', 2),
+('2025-05-06', '11:30:00', 'completada', 'Blanqueamiento dental', 250000.00, '9988776655', 4),
+('2025-05-08', '13:00:00', 'completada', 'Extracción dental', 300000.00, '2233445566', 3),
+('2025-05-10', '14:20:00', 'completada', 'Consulta por dolor de muelas', 60000.00, '1122334455', 2),
+('2025-05-11', '07:45:00', 'completada', 'Control post-operatorio', 40000.00, '3344556677', 4),
+('2025-05-11', '08:30:00', 'completada', 'Limpieza dental', 90000.00, '2233445566', 3),
+('2025-05-12', '07:30:00', 'confirmada', 'Consulta general', 50000.00, "1020304050", 2),
+('2025-05-13', '09:45:00', 'pendiente', 'Limpieza dental', 90000.00, "1122334455", 4),
+('2025-05-13', '10:00:00', 'completada', 'Revisión de ortodoncia', 120000.00, "5566778899", 3),
+('2025-05-13', '11:15:00', 'cancelada', 'Consulta de ortodoncia', 110000.00, "1122334455", 4),
+('2025-05-13', '14:00:00', 'confirmada', 'Revisión anual', 100000.00, "2233445566", 4),
+('2025-05-14', '08:15:00', 'pendiente', 'Control post-operatorio', 40000.00, "6677889900", 4),
+('2025-05-15', '09:00:00', 'cancelada', 'Consulta por dolor de muelas', 60000.00, "9988776655", 2),
+('2025-05-16', '11:45:00', 'confirmada', 'Limpieza dental', 85000.00, "2233445566", 3),
+('2025-05-17', '14:15:00', 'pendiente', 'Consulta general', 50000.00, "3344556677", 4),
+('2025-05-20', '15:30:00', 'completada', 'Extracción dental', 300000.00, "1122334455", 2),
+('2025-05-21', '10:30:00', 'confirmada', 'Blanqueamiento dental', 250000.00, "5566778899", 3),
+('2025-05-22', '16:00:00', 'pendiente', 'Dolor mandibular', 95000.00, "5040302010", 4),
+('2025-05-23', '07:00:00', 'cancelada', 'Consulta de encías', 55000.00, "1020304050", 3);
 
 /* Insertar procedimientos_citas*/
 INSERT INTO procedimientos_citas (procedimiento_id, cita_id) VALUES
-(1, 1),
-(2, 2);
+(1, 1),   
+(3, 2),   
+(4, 3),   
+(4, 4),   
+(1, 5),   
+(9, 6),   
+(1, 7),   
+(3, 8),   
+(1, 9),  
+(2, 10),  
+(6, 10),  
+(5, 11), 
+(1, 12),  
+(2, 12),  
+(1, 13);  
 
 /* Insertar historia clínica*/
 INSERT INTO historias_clinicas (antecedentes_medicos, tratamiento_realizados, paciente_id) VALUES
 ('Hipertensión', 'Control de presión', "1020304050"),
-('Alergia a penicilina', 'Evitar antibióticos con penicilina', "1020304050");
+('Alergia a penicilina', 'Evitar antibióticos con penicilina', "1020304050"),
+('Diabetes tipo 2', 'Control con metformina y dieta baja en azúcares', "5040302010"),
+('Sin antecedentes relevantes', 'Limpieza dental y chequeos anuales', "1122334455"),
+('Bruxismo', 'Uso de férula nocturna', "5566778899"),
+('Extracción de muela del juicio', 'Cicatrización sin complicaciones', "6677889900"),
+('Periodontitis crónica', 'Tratamiento periodontal y control trimestral', "9988776655"),
+('Alergia al látex', 'Evitar uso de guantes o materiales con látex', "3344556677"),
+('Asma leve', 'Inhalador de rescate antes de procedimientos', "2233445566");
 
 /* Insertar recetas médicas*/
-INSERT INTO recetas_medicas (historia_clinica_id, tipo_orden, descripcion_receta, medicamento_recetado, fecha_receta) VALUES
-(1, 'Medicamento', 'Tomar una pastilla diaria', 'Losartan 50mg', '2024-03-05'),
-(2, 'Antibiótico', 'Tomar cada 8 horas', 'ketorolaco 500KG', '2024-03-06');
+INSERT INTO recetas_medicas (historia_clinica_id, tipo_orden, descripcion_receta, medicamento_recetado, fecha_receta) VALUES 
+(1, 'Medicamento', 'Tomar una pastilla diaria por la mañana', 'Losartan 50mg', '2025-05-12'),
+(2, 'Antibiótico', 'Tomar una cápsula cada 8 horas por 7 días', 'Amoxicilina 500mg', '2025-05-13'),
+(3, 'Medicamento', 'Administrar con el desayuno y cena', 'Metformina 850mg', '2025-05-14'),
+(4, 'Indicación general', 'Continuar higiene bucal y uso de hilo dental', 'Sin medicación', '2025-05-15'),
+(5, 'Dispositivo', 'Usar férula dental todas las noches', 'Férula rígida personalizada', '2025-05-16'),
+(6, 'Analgésico', 'Tomar en caso de dolor postquirúrgico', 'Ibuprofeno 400mg', '2025-05-17'),
+(7, 'Tratamiento', 'Aplicar gel antibacteriano cada 12 horas', 'Clorhexidina al 0.12%', '2025-05-18'),
+(8, 'Advertencia', 'Evitar el uso de guantes de látex durante consulta', 'N/A', '2025-05-20'),
+(9, 'Medicamento', 'Administrar 2 inhalaciones antes de la cita', 'Salbutamol aerosol', '2025-05-21'),
+(3, 'Examen complementario', 'Control de glucosa capilar semanal', 'Kit glucómetro y tiras', '2025-05-22');
 
 /* Insertar órdenes de compras*/
-INSERT INTO ordenes_compras (fecha_expedicion, fecha_vencimiento, usuario_id,estado) VALUES
-('2024-02-20', '2024-03-20', 1,'ordenado'),
-('2024-02-25', '2024-03-25', 2,'en produccion'),
-('2024-03-01', '2024-04-01', 3,'listo para entregar'),
-('2024-03-05', '2024-04-05', 1,'entregado');
+INSERT INTO ordenes_compras (fecha_expedicion, fecha_vencimiento, usuario_id, estado) VALUES
+('2025-05-12', '2025-05-19', 2, 'ordenado'),
+('2025-05-13', '2025-05-24', 3, 'aprobado'),
+('2025-05-14', '2025-05-21', 4, 'en produccion'),
+('2025-05-16', '2025-05-29', 2, 'listo para entregar'),
+('2025-05-18', '2025-05-25', 3, 'entregado'),
+('2025-05-18', '2025-05-21', 3, 'aprobado'),
+('2025-05-19', '2025-05-22', 2, 'aprobado'),
+('2025-05-20', '2025-05-27', 4, 'ordenado'),
+('2025-05-21', '2025-06-05', 2, 'aprobado'),
+('2025-05-22', '2025-06-01', 3, 'en produccion'),
+('2025-05-23', '2025-06-05', 4, 'listo para entregar');
 
 /* Insertar proveedores*/
 INSERT INTO proveedores (nit,nombre_proveedor, telefono_proveedor, correo_proveedor) VALUES
@@ -221,34 +258,69 @@ INSERT INTO proveedores (nit,nombre_proveedor, telefono_proveedor, correo_provee
 
 /* Insertar insumos*/
 INSERT INTO insumos (nombre_insumo, cantidad_insumo, costo_insumo, fecha_vencimiento, umbral_alerta) VALUES
-('Guantes quirúrgicos', 100, 2500.00, '2125-01-01', 20),
-('Anestesia local', 50, 20.00, '2028-12-01', 10);
+('Guantes quirúrgicos', 15, 2500.00, '2125-01-01', 20), 
+('Anestesia local', 50, 20000.00, '2028-12-01', 10),
+('Algodón dental', 80, 300.00, '2035-05-23', 100),       
+('Mascarillas quirúrgicas', 45, 1800.00, '2125-05-23', 50),
+('Jeringas desechables', 150, 500.00, '2125-05-23', 30),
+('Vasos plásticos para enjuague', 300, 100.00, '2125-05-23', 80),
+('Batas desechables', 60, 3500.00, '2125-05-23', 15),
+('Carillas provisionales', 25, 45000.00, '2030-05-23', 5),
+('Pasta profiláctica', 40, 12000.00, '2027-05-23', 10),
+('Selladores dentales', 30, 30000.00, '2029-05-23', 5),
+('Fórceps de extracción', 10, 120000.00, '2125-05-23', 2),
+('Posicionadores radiográficos', 80, 2500.00, '2125-05-23', 10),
+('Limas endodónticas', 60, 6000.00, '2125-05-23', 10),
+('Material de impresión (alginato)', 20, 18000.00, '2026-05-23', 5),
+('Resina compuesta', 40, 25000.00, '2028-05-23', 8);
 
 /* Insertar proveedores_insumos*/
 INSERT INTO proveedores_insumos (proveedor_id, insumo_id) VALUES
-('123', 1),
-('432', 2),
-('665', 2);
+('123', 1), 
+('123', 2), 
+('123', 4),
+('123', 5), 
+('123', 7), 
+('123', 10), 
+('432', 2), 
+('432', 3), 
+('432', 6), 
+('432', 8), 
+('432', 9), 
+('432', 14), 
+('432', 15), 
+('665', 2), 
+('665', 5), 
+('665', 6), 
+('665', 11), 
+('665', 12), 
+('665', 13); 
 
 /* Insertar detalles de órdenes*/
 INSERT INTO detalles_ordenes (cantidad_insumo, total, orden_id, insumo_id) VALUES
-(50, 2500000.00, 1, 1),
-(20, 4000000.00, 2, 2),
-(40000, 5000000.00, 2, 2);
-
-/*Insertar en ordenes_laboratorio*/
-
-INSERT INTO ordenes_laboratorio
-(cita_id, usuario_id, fecha_solicitud, fecha_limite, horario, tipo_material, otros_detalles, estado)
-VALUES
-(1, 4, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 7 DAY), 'Mañana', 'Zirconio', 'Solicitar coronas superiores', 'pendiente');
-
-/*Insertar en productos_laboratorio*/
-
-INSERT INTO productos_laboratorio
-(orden_id, insumo_id, cantidad, detalles)
-VALUES
-(LAST_INSERT_ID(), 1, 5, 'Guantes quirúrgicos usados para prueba');
+(50, 125000.00, 1, 1), 
+(60, 30000.00, 1, 3), 
+(10, 200000.00, 2, 2), 
+(80, 144000.00, 2, 4), 
+(20, 50000.00, 2, 3), 
+(40, 20000.00, 3, 3),
+(5, 225000.00, 3, 9), 
+(10, 35000.00, 4, 7), 
+(100, 10000.00, 4, 6),
+(3, 135000.00, 5, 8), 
+(10, 250000.00, 5, 10),
+(40, 20000.00, 6, 3), 
+(50, 25000.00, 6, 6),  
+(15, 180000.00, 7, 9), 
+(10, 180000.00, 7, 15),
+(8, 160000.00, 7, 2),  
+(20, 500000.00, 7, 15), 
+(5, 90000.00, 8, 14),  
+(6, 15000.00, 9, 5),
+(60, 108000.00, 10, 4), 
+(10, 60000.00, 10, 13), 
+(4, 72000.00, 11, 14), 
+(12, 6000.00, 11, 5);  
 
 /*VISTAS*/
 /*OBTENER DATOS DE UNA CITA*/
@@ -306,19 +378,80 @@ WHERE fecha_vencimiento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DA
 
 /*VER CANTIDAD DE ESTADO CITAS (pendiente 1, confirmada 2, cancelada 4, completada 3)*/
 CREATE VIEW v_cantidad_estado_citas AS
-SELECT estado_cita, COUNT(*) AS cantidad
+SELECT estado_cita,
+       SUM(total_cita) AS total_cita,
+       COUNT(*) AS cantidad,
+       fecha_cita
 FROM citas
-GROUP BY estado_cita;
+WHERE estado_cita IN ('cancelada', 'completada')
+GROUP BY estado_cita, fecha_cita;
+
+/*RENDIMIENTO ODONTOLOGOS*/
+CREATE OR REPLACE VIEW v_rendimiento_odontologos AS
+SELECT 
+    u.id_usuario, 
+    CONCAT(u.nombres_usuario, ' ', u.apellidos_usuario) AS nombre_completo_odontologo,
+    COUNT(c.id_cita) AS cantidad_citas,
+    c.fecha_cita
+FROM usuarios u
+JOIN citas c ON u.id_usuario = c.usuario_id
+WHERE c.estado_cita IN ('cancelada', 'completada')
+GROUP BY u.id_usuario, u.nombres_usuario, u.apellidos_usuario, c.fecha_cita;
+
+
+/*VER TOTAL DE PROCEDIMIENTOS REALIZADOS POR ODONTOLOGO*/
+CREATE VIEW v_procedimientos_por_odontologo AS
+SELECT 
+    u.id_usuario,
+    CONCAT(u.nombres_usuario, ' ', u.apellidos_usuario) AS nombre_completo_odontologo,
+    COUNT(*) AS cantidad
+FROM procedimientos p
+JOIN procedimientos_citas pc ON p.id_procedimiento = pc.procedimiento_id
+JOIN citas c ON pc.cita_id = c.id_cita
+JOIN usuarios u ON c.usuario_id = u.id_usuario
+WHERE c.estado_cita = 'completada'
+GROUP BY u.id_usuario, u.nombres_usuario, u.apellidos_usuario;
+
+
+/*VER CANTIDAD DE ESTADO DE CITAS PARA UN ODONTOLOGO ESPECIFICO*/
+CREATE VIEW v_cantidad_estado_citas_odontologo AS
+SELECT u.id_usuario, c.estado_cita, COUNT(*) AS cantidad
+FROM citas c
+JOIN usuarios u ON c.usuario_id = u.id_usuario
+GROUP BY u.id_usuario, c.estado_cita;
+
 
 /*ESTADO CITA DEL PACIENTES */
 CREATE VIEW v_estado_citas_pacientes As
-SELECT u.id_usuario,c.hora_cita,p.cedula,
+SELECT c.id_cita,u.id_usuario,c.hora_cita,p.cedula,
 CONCAT(p.nombres_paciente,' ',p.apellidos_paciente) AS nombre_completo_paciente,
  c.estado_cita,CONCAT(u.nombres_usuario,' ',u.apellidos_usuario) AS nombre_completo_odontologo
 FROM pacientes p
 JOIN citas c ON c.paciente_id = p.cedula
 JOIN usuarios u ON u.id_usuario = c.usuario_id
 WHERE u.rol_id = 2;
+
+CREATE OR REPLACE VIEW v_citas_detalladas 
+AS SELECT c.fecha_cita, 
+CONCAT(u.nombres_usuario, ' ', u.apellidos_usuario) AS nombre_completo_odontologo, 
+c.estado_cita, COUNT(c.id_cita) AS cantidad, 
+SUM(c.total_cita) AS total_cita FROM prototype1.citas c 
+JOIN prototype1.usuarios u ON u.id_usuario = c.usuario_id 
+WHERE c.estado_cita IN ('cancelada', 'completada') GROUP BY c.fecha_cita, CONCAT(u.nombres_usuario, ' ', u.apellidos_usuario),c.estado_cita;
+
+/*Vista de gestion de usuarios*/
+CREATE OR REPLACE VIEW v_gestion_usuarios AS
+SELECT
+    u.id_usuario AS id,
+    CONCAT(u.nombres_usuario, ' ', u.apellidos_usuario) AS nombre_completo,
+    u.correo_usuario AS correo,
+    u.estado_usuario AS estado,
+    r.nombre_rol AS rol
+FROM
+    usuarios u
+JOIN
+    roles r ON u.rol_id = r.id_rol;
+
 
 /*Consultas sobre Historia Clínica y Recetas Médicas*/
 CREATE VIEW v_paciente_historia_receta AS
@@ -330,11 +463,16 @@ JOIN historias_clinicas h ON p.cedula= h.paciente_id;
 CREATE VIEW v_gestion_insumos AS
 SELECT
     i.nombre_insumo,
-    oc.estado
+    i.cantidad_insumo as cantidad_actual,
+    deto.cantidad_insumo as cantidad_ordenada,
+    oc.estado,
+    i.fecha_vencimiento,
+    deto.total,
+    i.umbral_alerta
 FROM detalles_ordenes AS deto
-JOIN proveedores_insumos pi ON deto.insumo_id = pi.id_proveedor_insumo
-JOIN insumos i ON pi.insumo_id = i.id_insumo
-JOIN ordenes_compras oc ON deto.orden_id = oc.id_orden_compra;
+JOIN insumos i ON deto.insumo_id = i.id_insumo
+JOIN ordenes_compras oc ON deto.orden_id = oc.id_orden_compra
+ ORDER BY oc.estado ASC;
 
 /*PROCEDIMIENTOS*/
 /*INSERTAR o REGISTRAR PACIENTE*/
@@ -489,7 +627,7 @@ BEGIN
 END //
 
 DELIMITER ;
-CALL pa_ActualizarCita(1, '2026-04-20', '20:30:00', 'confirmada', 'Consulta de seguimiento', 1200000.00,1);
+CALL pa_ActualizarCita(1, '2025-04-20', '20:30:00', 'confirmada', 'Consulta de seguimiento', 1200000.00,2);
 /*LISTO*/
 
 /*ELIMINAR CITA*/
