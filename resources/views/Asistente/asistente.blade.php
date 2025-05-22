@@ -6,6 +6,7 @@
     <title>Panel Asistente - DentalFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/Sasistente.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -23,15 +24,25 @@
         <a href="{{ route('asistente.ahistorial') }}" class="sidebar-link">📋 Historial</a>
         <a href="{{ route('asistente.aregistro') }}" class="sidebar-link">📝 Registrar Paciente</a>
         <a href="/asistente/configuracion2" class="sidebar-link">⚙️ Configuración</a>
-        <form action="{{ route('logout') }}" method="POST" id="logoutForm">
-            @csrf
-            <button type="submit" class="btn btn-danger">Cerrar sesión</button>
-        </form>
+        <div class="form-container">
+            <form action="{{ route('logout') }}" method="POST" id="logoutForm">
+                @csrf
+                <button type="submit" class="btn btn-danger">Cerrar sesión</button>
+            </form>
+        </div>
     </nav>
 
     <div id="content" class="content transition-all">
         <!-- 1) Carrusel dinámico -->
         <section class="carousel-container">
+            @php
+                $rolTexto = match (Auth::user()->rol_id) {
+                    1 => 'Administrador',
+                    3 => 'Asistente',
+                    default => 'Usuario',
+                };
+            @endphp
+            <h5 id="mensaje">Bienvenido, {{ $rolTexto }} {{ Auth::user()->nombres_usuario }} 👋</h5>
             <h2 class="section-title">Citas del Día</h2>
             <div class="carousel-wrapper">
                 <button class="carousel-control left" onclick="scrollCarousel(-1)">&#8592;</button>

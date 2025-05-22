@@ -44,6 +44,21 @@ body {
     margin-bottom: 1.2rem;
 }
 
+/*Logout*/
+#logout {
+    background-color: transparent !important;
+    border-color: white;
+    border-radius: 20px;
+
+}
+
+#logout:hover{
+    background-color: rgb(202, 66, 66) !important;
+    color: black;
+    border-color: black !important;
+    border-radius: 20px;
+}
+
 /* Menú */
 .card-menu {
     background-color: var(--azul-medio);

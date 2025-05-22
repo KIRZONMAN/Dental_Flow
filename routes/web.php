@@ -65,9 +65,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('gestionUsuarios', fn() => view('administrador.gestionUsuarios'))
                 ->name('usuarios');
 
-            // Configuración general
-            Route::get('configuracion3', fn() => view('administrador.configuracion3'))
-                ->name('configuracion');
+            // Configuración Administrador
+            Route::match(['get', 'post'], '/configuracion3', [ApiAdministradorController::class, 'configuracion3'])
+                ->name('administrador.configuracion3');
 
             // Gestión de proveedores (vista estática o blade)
             Route::get('gestionProveedores', fn() => view('gestionProveedores'))
@@ -188,6 +188,12 @@ Route::prefix('laboratorista')
             ->name('laboratorista.orden.producto');
         Route::get('/ordenes/todos', [LaboratoristaController::class, 'all'])
             ->name('laboratorista.ordenes.todos');
+        // Mostrar formulario de edición
+        Route::get('usuarios/{id}/edit', [ApiAdministradorController::class, 'edit'])
+            ->name('usuarios.edit');
+        // Procesar la actualización
+        Route::put('usuarios/{id}', [ApiAdministradorController::class, 'update'])
+            ->name('usuarios.update');
     });
 
 // Configuración 4 (Laboratorista)
@@ -202,3 +208,4 @@ Route::get(
 )
     ->middleware(['auth', 'role:2,4'])
     ->name('gestion.insumos');
+

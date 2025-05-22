@@ -20,7 +20,7 @@
     </div>
     <header class="header d-flex justify-content-between align-items-center px-4">
         <button class="btn text-white p-0" id="menu-toggle"><i class="fas fa-bars fa-lg"></i></button>
-        <h1 class="h5 text-white m-0">Bienvenido, dueño de la clínica</h1>
+        <h1 class="h5 text-white m-0">Bienvenido, {{ Auth::user()->nombres_usuario }} dueño de la clínica</h1>
         <div class="d-flex align-items-center">
             <!-- NOTIFICACIONES -->
             <div class="dropdown me-3">

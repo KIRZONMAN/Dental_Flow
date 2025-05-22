@@ -45,4 +45,9 @@ class User extends Authenticatable
     {
         return $this->contrasena_usuario;
     }
+
+    public function getAuthIdentifierName()
+    {
+        return 'correo_usuario';
+    }
 }

@@ -43,7 +43,7 @@
         <div id="page-content-wrapper" class="w-100">
 
             <header class="odont-header shadow-sm px-4 py-3 d-flex justify-content-between align-items-center bg-light">
-                <h4 class="text-primary m-0">Bienvenido, DR. 👨‍⚕️</h4>
+                <h4 class="text-primary m-0">Bienvenido, Dr. {{ Auth::user()->nombres_usuario }}👨‍⚕️</h4>
                 <div class="d-flex gap-2">
                     <a href="#" class="btn btn-outline-secondary"><i class="fas fa-user"></i> Perfil</a>
                     <a href="/login" class="btn btn-outline-danger"><i class="fas fa-sign-out-alt"></i> Cerrar

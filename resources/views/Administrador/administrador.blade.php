@@ -17,18 +17,19 @@
             <h1 class="titulo">Panel del Administrador</h1>
         </div>
         <div class="d-flex gap-2">
-            <a href="/configuracion3" class="btn btn-outline-light rounded-pill">
+            <a href="/administrador/configuracion3" class="btn btn-outline-light rounded-pill">
                 <i class="fas fa-cog me-1"></i> Configuración
             </a>
-            <button class="btn btn-outline-light rounded-pill">
-                <i class="fas fa-user me-1"></i> Perfil
-            </button>
+            <form action="{{ route('logout') }}" method="POST" id="logoutForm">
+                @csrf
+                <button id="logout" type="submit" class="btn btn-danger">Cerrar sesión</button>
+            </form>
         </div>
     </header>
 
     <nav class="menu-admin container my-4">
         <section class="bienvenida text-center mb-5">
-            <h2>Hola Administrador 👋</h2>
+            <h2>Hola Administrador {{ Auth::user()->nombres_usuario }} 👋</h2>
             <p>¡Bienvenido al panel de control de DentalFlow!</p>
         </section>
         <div class="row g-4 justify-content-center text-center">

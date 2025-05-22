@@ -63,8 +63,8 @@
             <td>${usuario.estado}</td>
             <td>${usuario.rol}</td>
             <td>
-                <a href="/gestionUsuarios?accion=editar&id=${usuario.id}" class="history-button">Editar</a>
-                <a href="#" class="history-button eliminar-usuario" data-id="${usuario.id}">Eliminar</a>
+                <a href="/administrador/usuarios/${usuario.id_usuario}/edit" class="history-button">Editar</a>
+                <a href="#" class="history-button eliminar-usuario" data-id="${usuario.id_usuario}">Eliminar</a>
             </td>
         </tr>
     `).join('');

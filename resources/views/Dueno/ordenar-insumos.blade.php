@@ -27,8 +27,6 @@
             </div>
         </section>
 
-
-
         <section class="final-section">
             <button id="regresarBtn" class="btn btn-regresar">
                 Regresar a Inicio <i class="fas fa-arrow-left"></i>
@@ -173,28 +171,11 @@
 
 
     <script>
-        document.getElementById("limpiarBtn").addEventListener("click", function () {
-            Swal.fire({
-                icon: 'warning',
-                title: '¿Deseas limpiar el formulario?',
-                showCancelButton: true,
-                confirmButtonColor: '#00c3a5',
-                cancelButtonColor: '#ff6b6b',
-                confirmButtonText: 'Sí, limpiar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById("formInsumos").reset();
-                }
-            });
-        });
-
         document.getElementById("regresarBtn").addEventListener("click", function () {
-            const rol = @json(session('rol'));
-            if (rol === 'odontologo') {
-                window.location.href = "/odontologo";
-            } else if (rol === 'cajero') {
-                window.location.href = "/cajero";
+            const rol = @json(Auth::user()->rol_id) || null;
+            console.log(rol);
+            if (rol === 5 || rol === 1) {
+                window.location.href = "/api/dueno";
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -203,79 +184,6 @@
                     confirmButtonColor: '#e53935',
                 });
             }
-        });
-
-        document.addEventListener("DOMContentLoaded", () => {
-            fetch("/api/proveedores/listar")
-                .then(response => response.json())
-                .then(data => {
-                    const proveedorSelect = document.getElementById("proveedor");
-                    proveedorSelect.innerHTML = `<option value="">Seleccione un proveedor</option>`;
-                    data.forEach(proveedor => {
-                        proveedorSelect.innerHTML += `
-                            <option value="${proveedor.nit}">
-                                ${proveedor.nombre_proveedor} (${proveedor.correo_proveedor})
-                            </option>`;
-                    });
-                })
-                .catch(error => {
-                    console.error("Error al cargar proveedores:", error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudieron cargar los proveedores disponibles.',
-                        confirmButtonColor: '#e53935',
-                    });
-                });
-        });
-
-        document.getElementById("formInsumos").addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const tipo = document.getElementById("tipo").value;
-            const cantidad = document.getElementById("cantidad").value;
-            const proveedor = document.getElementById("proveedor").value;
-
-            fetch("http://127.0.0.1:8000/api/solicitar-insumo", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                },
-                body: JSON.stringify({
-                    tipo: tipo,
-                    cantidad: cantidad,
-                    proveedor: proveedor,
-                })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => {
-                            throw new Error(err.error || "Error al enviar la solicitud.");
-                        });
-                    }
-                    return response.json();
-                })
-
-                .then(data => {
-                    console.log("Respuesta:", data);
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Solicitud enviada!',
-                        text: 'El proveedor ha sido notificado correctamente.',
-                        confirmButtonColor: '#00c3a5',
-                    });
-                    document.getElementById("formInsumos").reset();
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo enviar la solicitud.',
-                        confirmButtonColor: '#e53935',
-                    });
-                });
         });
     </script>
 

@@ -89,6 +89,7 @@
 
     <!-- CONTENIDO -->
     <main id="content" class="content">
+        <h2 style="text-align:center">Bienvenido, Laboratorista {{ Auth::user()->nombres_usuario }} 👋</h2>
         <div class="container-fluid py-4">
             <div class="row g-3">
                 <div class="col-12 col-md-4">
@@ -116,8 +117,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="h5">Pedidos para Hoy</h2>
                 <div class="d-flex">
-                    <input type="search" id="search" class="form-control form-control-sm me-2"
-                        placeholder="Buscar...">
+                    <input type="search" id="search" class="form-control form-control-sm me-2" placeholder="Buscar...">
                     <button class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-file-export me-1"></i>Exportar
                     </button>
