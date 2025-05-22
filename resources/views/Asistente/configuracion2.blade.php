@@ -14,7 +14,6 @@
 
         <form method="POST" action="{{ route('asistente.configuracion2') }}">
             @csrf
-
             <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" name="nombre"

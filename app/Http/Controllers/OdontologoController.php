@@ -93,4 +93,27 @@ class OdontologoController extends Controller
                 ->with('error', $e->getMessage());
         }
     }
+
+    public function configuracion(Request $request)
+    {
+        // Si es POST, guardamos en sesión de Laravel
+        if ($request->isMethod('post')) {
+            session([
+                'odontologo.nombre' => $request->input('nombre'),
+                'odontologo.telefono' => $request->input('telefono'),
+                'odontologo.email' => $request->input('email'),
+            ]);
+            return redirect('odontologo');
+        }
+
+        // Valores por defecto
+        $datos = [
+            'nombre' => session('odontologo.nombre', '(Nombre)'),
+            'telefono' => session('odontologo.telefono', '+57 34567890'),
+            'email' => session('odontologo.email', 'odontologo@dentalflow.com'),
+            'especialidad' => 'Sin especialidad',
+        ];
+
+        return view('odontologo.configuracion', $datos);
+    }
 }

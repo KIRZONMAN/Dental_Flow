@@ -34,65 +34,68 @@ Route::middleware(['auth:sanctum'])->group(function () {
             ->where('id', '[0-9]+')
             ->name('api.citas.delete');
     });
+
+    // Vista de Blade para asistente (HTML)
+    Route::get('/asistente/citas', [CitasControllerApi::class, 'indexCitas'])
+        ->name('asistente.citas.view');
+
+
+    // Ruta de búsqueda de paciente (mantener si la usas desde JS)
+    Route::get('/buscar-paciente/{input}', [CitasControllerApi::class, 'buscarPaciente']);
+
+
+
+    // Proveedores
+    Route::get('/proveedores', [GestorInsumosControllerApi::class, 'index']);
+    Route::post('/proveedores', [GestorInsumosControllerApi::class, 'store']);
+    Route::put('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'update']);
+    Route::delete('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'destroy']);
+    Route::get('/proveedores/listar', [GestorInsumosControllerApi::class, 'listarProveedores']);
+    Route::post('/solicitar-insumo', [GestorInsumosControllerApi::class, 'solicitarInsumo']);
+
+    //ruta adicional de proveedores
+    Route::get('/proveedores/listar', [ProveedorController::class, 'index']);
+    /*Route::post(
+        '/solicitar-insumo',[InsumoController::class, 'solicitarInsumo'])->middleware('auth:sanctum');*/
+
+    // Pedidos
+    Route::get('/pedidos', [GestorInsumosControllerApi::class, 'listarPedidos']);
+    Route::post('/pedidos', [GestorInsumosControllerApi::class, 'insertarPedido']);
+    Route::put('/pedidos/{id}', [GestorInsumosControllerApi::class, 'actualizarPedido']);
+    Route::delete('/pedidos/{id}', [GestorInsumosControllerApi::class, 'eliminarPedido']);
+
+    // Agenda e Historias
+    Route::get('/agenda', [CitasControllerApi::class, 'indexAgendaBusqueda']);
+    Route::get('/historias', [CitasControllerApi::class, 'indexHistorias']);
+    Route::get('/ahistorial', [CitasControllerApi::class, 'indexAhistorialPacientes']);
+
+    /*Dueño */
+    Route::get('/dueno', [ApiDuenoController::class, 'indexDueno'])->name('dueno');
+    Route::get('/dueno/rendimiento', [ApiDuenoController::class, 'indexRendimiento'])->name('dueno.rendimiento');
+    Route::get('/dueno/insumos', [ApiDuenoController::class, 'indexInsumos'])->name('dueno.insumos');
+    Route::get('/dueno-conteo', [ApiDuenoController::class, 'conteoCitas'])->name('dueno.conteo');
+    Route::get('/informe-clinica', [ApiDuenoController::class, 'indexInformeClinica'])->name('informe-clinica');
+    Route::get('/historial-movimientos', [ApiDuenoController::class, 'indexHistorialTransacciones'])->name('historial-movimientos');
+    Route::get('/ordenar-insumos', [ApiDuenoController::class, 'indexOrdenarInsumos'])->name('ordenar-insumos');
+    
+    // Configuración Dueño
+    Route::match(['get', 'post'], '/apiDueno/configuracion', [ApiDuenoController::class, 'configuracion'])
+        ->name('dueno-configuracion');
+    Route::view('/dueno/configuracion', 'dueno.dueno-configuracion')->name('dueno-configuracion');
+    Route::get('/insumos-solicitados', [ApiDuenoController::class, 'indexInsumosSolicitados'])->name('insumos-solicitados');
+    Route::post('/ordenes/{id}/aprobar', [ApiDuenoController::class, 'aprobar']);
+    Route::post('/ordenes/{id}/rechazar', [ApiDuenoController::class, 'rechazar']);
+
+    /*Administrador*/
+    Route::get('/usuarios', [ApiAdministradorController::class, 'indexUsuarios']);
+    Route::get('/gestionUsuarios', [ApiAdministradorController::class, 'index'])->name('gestionUsuarios');
+    Route::delete('/gestionUsuarios/{id}', [ApiAdministradorController::class, 'eliminarUsuario']);
+    Route::get('/agregarUsuario', [ApiAdministradorController::class, 'VistaAgregarUsuario']);
+    Route::post('/agregarUsuario', [ApiAdministradorController::class, 'agregarUsuario'])->name('usuarios.store');
+    Route::get('/tablaUsuarios', [ApiAdministradorController::class, 'indexTablaUsuarios']);
+    Route::get('/filtrarUsuario/{input}', [ApiAdministradorController::class, 'filtrarUsuario']);
+
+    /*Ruta prueba */
+    Route::post('/testeoContra', [ApiAdministradorController::class, 'login'])->name('login.post');
+
 });
-
-// Vista de Blade para asistente (HTML)
-Route::get('/asistente/citas', [CitasControllerApi::class, 'indexCitas'])
-    ->name('asistente.citas.view');
-
-
-// Ruta de búsqueda de paciente (mantener si la usas desde JS)
-Route::get('/buscar-paciente/{input}', [CitasControllerApi::class, 'buscarPaciente']);
-
-
-
-// Proveedores
-Route::get('/proveedores', [GestorInsumosControllerApi::class, 'index']);
-Route::post('/proveedores', [GestorInsumosControllerApi::class, 'store']);
-Route::put('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'update']);
-Route::delete('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'destroy']);
-Route::get('/proveedores/listar', [GestorInsumosControllerApi::class, 'listarProveedores']);
-Route::post('/solicitar-insumo', [GestorInsumosControllerApi::class, 'solicitarInsumo']);
-
-//ruta adicional de proveedores
-Route::get('/proveedores/listar', [ProveedorController::class, 'index']);
-/*Route::post(
-    '/solicitar-insumo',[InsumoController::class, 'solicitarInsumo'])->middleware('auth:sanctum');*/
-
-// Pedidos
-Route::get('/pedidos', [GestorInsumosControllerApi::class, 'listarPedidos']);
-Route::post('/pedidos', [GestorInsumosControllerApi::class, 'insertarPedido']);
-Route::put('/pedidos/{id}', [GestorInsumosControllerApi::class, 'actualizarPedido']);
-Route::delete('/pedidos/{id}', [GestorInsumosControllerApi::class, 'eliminarPedido']);
-
-// Agenda e Historias
-Route::get('/agenda', [CitasControllerApi::class, 'indexAgendaBusqueda']);
-Route::get('/historias', [CitasControllerApi::class, 'indexHistorias']);
-Route::get('/ahistorial', [CitasControllerApi::class, 'indexAhistorialPacientes']);
-
-/*Dueño */
-Route::get('/dueno', [ApiDuenoController::class, 'indexDueno'])->name('dueno');
-Route::get('/dueno/rendimiento', [ApiDuenoController::class, 'indexRendimiento'])->name('dueno.rendimiento');
-Route::get('/dueno/insumos', [ApiDuenoController::class, 'indexInsumos'])->name('dueno.insumos');
-Route::get('/dueno-conteo', [ApiDuenoController::class, 'conteoCitas'])->name('dueno.conteo');
-Route::get('/informe-clinica', [ApiDuenoController::class, 'indexInformeClinica'])->name('informe-clinica');
-Route::get('/historial-movimientos', [ApiDuenoController::class, 'indexHistorialTransacciones'])->name('historial-movimientos');
-Route::get('/ordenar-insumos', [ApiDuenoController::class, 'indexOrdenarInsumos'])->name('ordenar-insumos');
-Route::view('/autorizacion-compras', 'dueno.dueno-configuracion')->name('dueno-configuracion');
-Route::get('/insumos-solicitados', [ApiDuenoController::class, 'indexInsumosSolicitados'])->name('insumos-solicitados');
-Route::post('/ordenes/{id}/aprobar', [ApiDuenoController::class, 'aprobar']);
-Route::post('/ordenes/{id}/rechazar', [ApiDuenoController::class, 'rechazar']);
-
-/*Administrador*/
-Route::get('/usuarios', [ApiAdministradorController::class, 'indexUsuarios']);
-Route::get('/gestionUsuarios', [ApiAdministradorController::class, 'index'])->name('gestionUsuarios');
-Route::delete('/gestionUsuarios/{id}', [ApiAdministradorController::class, 'eliminarUsuario']);
-Route::get('/agregarUsuario', [ApiAdministradorController::class, 'VistaAgregarUsuario']);
-Route::post('/agregarUsuario', [ApiAdministradorController::class, 'agregarUsuario'])->name('usuarios.store');
-Route::get('/tablaUsuarios', [ApiAdministradorController::class, 'indexTablaUsuarios']);
-Route::get('/filtrarUsuario/{input}',[ApiAdministradorController::class, 'filtrarUsuario']);
-
-/*Ruta prueba */
-Route::post('/testeoContra', [ApiAdministradorController::class, 'login'])->name('login.post');
-
-//});

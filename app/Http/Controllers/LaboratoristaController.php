@@ -117,8 +117,28 @@ class LaboratoristaController extends Controller
         return view('laboratorista.Lab_Pedidos', compact('ordenes'));
     }
 
+    public function configuracion(Request $request)
+    {
+        // Si es POST, guardamos en sesión de Laravel
+        if ($request->isMethod('post')) {
+            session([
+                'laboratorista.nombre' => $request->input('nombre'),
+                'laboratorista.telefono' => $request->input('telefono'),
+                'laboratorista.email' => $request->input('email'),
+            ]);
+            return redirect('/laboratorista');
+        }
 
+        // Valores por defecto
+        $datos = [
+            'nombre' => session('laboratorista.nombre', '(Nombre)'),
+            'telefono' => session('laboratorista.telefono', '+57 34567890'),
+            'email' => session('laboratorista.email', 'laboratorio@dentalflow.com'),
+            'especialidad' => 'Laboratorista',
+        ];
 
+        return view('laboratorista.configuracion4', $datos);
+    }
 
 
 

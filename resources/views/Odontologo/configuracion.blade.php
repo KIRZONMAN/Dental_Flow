@@ -1,24 +1,3 @@
-<?php
-session_start();
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $_SESSION["nombre"] = $_POST["nombre"];
-    $_SESSION["especialidad"] = $_POST["especialidad"];
-    $_SESSION["telefono"] = $_POST["telefono"];
-    $_SESSION["email"] = $_POST["email"];
-    $_SESSION["recordatorios"] = isset($_POST["recordatorios"]) ? "checked" : "";
-
-    header("Location: /configuracion");
-    exit();
-}
-
-$nombre = $_SESSION["nombre"] ?? "Dr. (Nombre)";
-$especialidad = $_SESSION["especialidad"] ?? "Especialidad";
-$telefono = $_SESSION["telefono"] ?? "+12 34567890";
-$email = $_SESSION["email"] ?? "doctor@dominio.com";
-$recordatorios = $_SESSION["recordatorios"] ?? "";
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -37,7 +16,8 @@ $recordatorios = $_SESSION["recordatorios"] ?? "";
             <h1>Configuración de Perfil</h1>
         </div>
 
-        <form method="POST">
+        <form method="POST" action="{{ route('odontologo.configuracion') }}">
+            @csrf
             <div class="config-section">
                 <h2 class="section-title">Perfil</h2>
 
@@ -59,14 +39,6 @@ $recordatorios = $_SESSION["recordatorios"] ?? "";
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
                     <input type="email" id="email" name="email" value="<?= $email ?>">
-                </div>
-            </div>
-
-            <div class="config-section">
-                <h2 class="section-title">Notificaciones</h2>
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="recordatorios" name="recordatorios" <?= $recordatorios ?>>
-                    <label for="recordatorios">Activar recordatorios de citas</label>
                 </div>
             </div>
 

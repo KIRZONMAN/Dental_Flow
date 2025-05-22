@@ -46,7 +46,7 @@
                 </a>
             </div>
             <div class="col-6 col-md-3">
-                <a href="/api/odontologo" class="card-menu">
+                <a href="/odontologo" class="card-menu">
                     <i class="fas fa-user-md fa-2x mb-2"></i>
                     <div>Odontólogo</div>
                 </a>

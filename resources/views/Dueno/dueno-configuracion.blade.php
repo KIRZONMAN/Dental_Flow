@@ -1,20 +1,3 @@
-<?php
-session_start();
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $_SESSION["nombre"] = $_POST["nombre"];
-    $_SESSION["telefono"] = $_POST["telefono"];
-    $_SESSION["email"] = $_POST["email"];
-    header("Location: /configuracion2");
-    exit();
-}
-
-$nombre = $_SESSION["nombre"] ?? "nombre completo";
-$telefono = $_SESSION["telefono"] ?? "+12 34567890";
-$email = $_SESSION["email"] ?? "dueno@dentalflow.com";
-$especialidad = "Dueño";
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -31,7 +14,8 @@ $especialidad = "Dueño";
             <h1>Configuración del Dueño</h1>
         </div>
 
-        <form method="POST">
+        <form method="POST" action="{{ route('dueno-configuracion') }}">
+            @csrf
             <div class="section">
                 <div class="section-title">Perfil</div>
 

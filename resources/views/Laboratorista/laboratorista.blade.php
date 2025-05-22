@@ -35,7 +35,7 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                     <!-- Apunta a configuracion4 -->
                     <li>
-                        <a class="dropdown-item" href="{{ route('laboratorista.configuracion4') }}">
+                        <a class="dropdown-item" href="{{ route('laboratorista.configuracion') }}">
                             Mi perfil
                         </a>
                     </li>
@@ -79,8 +79,8 @@
             </li>
             <li class="nav-item">
                 <!-- Ahora apunta a configuracion4 -->
-                <a href="{{ route('laboratorista.configuracion4') }}"
-                    class="nav-link {{ request()->routeIs('laboratorista.configuracion4') ? 'active' : '' }}">
+                <a href="{{ route('laboratorista.configuracion') }}"
+                    class="nav-link {{ request()->routeIs('laboratorista.configuracion') ? 'active' : '' }}">
                     <i class="fas fa-cog me-2"></i>Configuración
                 </a>
             </li>

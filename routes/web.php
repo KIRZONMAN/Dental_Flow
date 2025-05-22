@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiDuenoController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\OdontologoController;
 use App\Http\Controllers\pa_ActProveedorController;
@@ -139,8 +140,8 @@ Route::middleware(['auth'])->group(function () {
             // Borrado de una historia concreta (dispara trigger 17)
             Route::delete('/historias/{id}', [HistoriaClinicaController::class, 'destroy'])
                 ->name('odontologo.historias.destroy');
-
-            Route::view('/configuracion', 'odontologo.configuracion')
+            // Configuración Odontologo
+            Route::match(['get', 'post'], '/configuracion', [OdontologoController::class, 'configuracion'])
                 ->name('odontologo.configuracion');
 
             // Gestión de Pedidos
@@ -149,11 +150,9 @@ Route::middleware(['auth'])->group(function () {
         });
 
 
-    // CAJERO
-    Route::view('/cajero', 'cajero.cajero');
-    Route::view('/cajero/cformulario', 'cajero.cformulario');
-    Route::view('/cajero/cestadistico', 'cajero.cestadistico');
-    Route::view('/cajero/ccontable', 'cajero.ccontable');
+    // Configuración Dueño
+    Route::match(['get', 'post'], 'api/dueno/configuracion', [ApiDuenoController::class, 'configuracion'])
+        ->name('dueno.configuracion');
 });
 
 // Registro / Historial pacientes (API → web)
@@ -196,10 +195,9 @@ Route::prefix('laboratorista')
             ->name('usuarios.update');
     });
 
-// Configuración 4 (Laboratorista)
-Route::match(['get', 'post'], '/configuracion4', function () {
-    return view('laboratorista.configuracion4');
-})->name('laboratorista.configuracion4');
+// Configuración Laboratorista
+Route::match(['get', 'post'], '/configuracion4', [LaboratoristaController::class, 'configuracion'])
+    ->name('laboratorista.configuracion');
 
 // Gestión de insumos (odontólogo y laboratorista)
 Route::get(
