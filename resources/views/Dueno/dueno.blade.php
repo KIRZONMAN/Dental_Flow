@@ -27,7 +27,7 @@
                 <button class="btn btn-link position-relative p-0 text-white" id="notifToggle"
                     data-bs-toggle="dropdown">
                     <i class="fas fa-bell fa-lg"></i>
-                    <span class="notification-count">3</span>
+                    <!--<span class="notification-count">3</span>-->
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifToggle">
                     <li><span class="dropdown-item">Sin notificaciones</span></li>
@@ -325,7 +325,6 @@
                     maximumFractionDigits: 2
                 })}`
                 : 'No disponible';
-
             return `
         <tr>
             <td>${insumo.nombre_insumo}</td>

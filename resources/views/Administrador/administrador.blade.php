@@ -51,6 +51,12 @@
                 </a>
             </div>
             <div class="col-6 col-md-3">
+                <a href="/laboratorista" class="card-menu">
+                    <i class="fas fa-flask fa-2x mb-2"></i>
+                    <div>Laboratorista</div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
                 <a href="/api/dueno" class="card-menu">
                     <i class="fas fa-briefcase fa-2x mb-2"></i>
                     <div>Dueño</div>
@@ -60,6 +66,12 @@
                 <a href="/gestionProveedores" class="card-menu">
                     <i class="fas fa-boxes fa-2x mb-2"></i>
                     <div>Gestión de Proveedores</div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{{ route('administrador.procedimientos.index') }}" class="card-menu">
+                    <i class="fas fa-tooth fa-2x mb-2"></i>
+                    <div>Procedimientos</div>
                 </a>
             </div>
         </div>

@@ -112,7 +112,7 @@ class ApiAdministradorController extends Controller
         }
 
         if (Hash::check($validated['contrasena_usuario'], $usuario->contrasena_usuario)) {
-            // Aquí podrías crear un token o sesión API
+
             return response()->json(['success' => 'Has iniciado sesión correctamente'], 200);
         } else {
             return response()->json(['error' => 'Contraseña incorrecta'], 401);
