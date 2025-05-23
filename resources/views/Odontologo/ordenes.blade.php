@@ -12,9 +12,10 @@
 
 <body class="ordenes-body">
     <div class="ordenes-container">
-
+        <a href="{{ route('odontologo.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
         <header class="ordenes-header">
-            <img src="imagen/logo.png" alt="Dental Icon" class="dental-icon animated-icon">
             <h1 class="ordenes-title">Órdenes del Paciente</h1>
             <p class="ordenes-subtitle">Gestiona y crea nuevas órdenes o recetas fácilmente</p>
         </header>

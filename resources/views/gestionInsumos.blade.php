@@ -123,7 +123,7 @@
     </div>
 
     <script>
-        document.getElementById("limpiarBtn").addEventListener("click", function() {
+        document.getElementById("limpiarBtn").addEventListener("click", function () {
             Swal.fire({
                 icon: 'warning',
                 title: '¿Deseas limpiar el formulario?',
@@ -139,13 +139,17 @@
             });
         });
 
-        document.getElementById("regresarBtn").addEventListener("click", function() {
-            const rol = @json(session('rol'));
-            if (rol === 'odontologo') {
+        document.getElementById("regresarBtn").addEventListener("click", function () {
+            const rol = @json(Auth::user()->rol_id) || null;
+            console.log(rol);
+            if (rol === 2) {
                 window.location.href = "/odontologo";
-            } else if (rol === 'cajero') {
-                window.location.href = "/cajero";
-            } else {
+            } else if (rol === 1) {
+                window.location.href = "/administrador";
+            } else if (rol === 4) {
+                window.location.href = "/laboratorista";
+            }
+            else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Rol desconocido',
@@ -179,7 +183,7 @@
                 });
         });
 
-        document.getElementById("formInsumos").addEventListener("submit", function(e) {
+        document.getElementById("formInsumos").addEventListener("submit", function (e) {
             e.preventDefault();
 
             const tipo = document.getElementById("tipo").value;
@@ -189,19 +193,19 @@
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             fetch("/api/solicitar-insumo", {
-                    method: "POST",
-                    credentials: 'include', // <— para enviar la cookie de sesión/Sanctum
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "X-CSRF-TOKEN": csrfToken // <— el token que Laravel espera
-                    },
-                    body: JSON.stringify({
-                        tipo,
-                        cantidad,
-                        proveedor
-                    })
+                method: "POST",
+                credentials: 'include', // <— para enviar la cookie de sesión/Sanctum
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": csrfToken // <— el token que Laravel espera
+                },
+                body: JSON.stringify({
+                    tipo,
+                    cantidad,
+                    proveedor
                 })
+            })
                 .then(response => {
                     if (!response.ok) {
                         return response.json().then(err => {

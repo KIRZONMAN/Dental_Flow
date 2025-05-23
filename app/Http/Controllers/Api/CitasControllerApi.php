@@ -99,7 +99,7 @@ class CitasControllerApi extends Controller
             ->where('cedula', $cedula)
             ->get();
 
-       
+
         return view('odontologo.historias_pacientes', compact('pacientes'));
     }
 
@@ -132,7 +132,11 @@ class CitasControllerApi extends Controller
                 'correo_paciente'
             )
             ->where('cedula', $input)
-            ->orWhereRaw("CONCAT(nombres_paciente,' ',apellidos_paciente) LIKE ?", ["%{$input}%"])
+            ->orWhere(function ($query) use ($input) {
+                $query->where('nombres_paciente', 'LIKE', "{$input}%")
+                    ->orWhere('apellidos_paciente', 'LIKE', "{$input}%")
+                    ->orWhere('cedula', 'LIKE', "{$input}%");
+            })
             ->first();
 
         if (!$paciente) {
@@ -153,65 +157,18 @@ class CitasControllerApi extends Controller
         try {
             $request->validate([
                 'cedula' => 'required|digits:10|unique:pacientes,cedula',
-            ]);
-
-            //dd('Pasa validación de cedula');
-
-            $request->validate([
                 'nombres_paciente' => 'required|string|max:50',
-            ]);
-
-            //dd('Pasa validación de nombres_paciente');
-
-            // Validación de 'apellidos_paciente'
-            $request->validate([
                 'apellidos_paciente' => 'required|string|max:50',
-            ]);
-
-            //dd('Pasa validación de apellidos_paciente');
-
-            // Validación de 'edad'
-            $request->validate([
                 'edad' => 'required|integer|min:0|max:120',
-            ]);
-
-            //dd('Pasa validación de edad');
-
-            // Validación de 'genero'
-            $request->validate([
                 'genero' => 'required|in:masculino,femenino',
-            ]);
-
-            //dd('Pasa validación de genero');
-
-            // Validación de 'telefono_paciente'
-            $request->validate([
                 'telefono_paciente' => 'required|string|max:50',
-            ]);
-
-            //dd('Pasa validación de telefono_paciente');
-
-            // Validación de 'direccion'
-            $request->validate([
-                'direccion' => 'required|string|max:100',
-            ]);
-
-            //dd('Pasa validación de direccion');
-
-            // Validación de 'correo_paciente'
-            $request->validate([
-                'correo_paciente' => 'required|string|max:100',
-            ]);
-
-            //dd('Pasa validación de correo_paciente');
-
-            // Validación de 'tipo_sangre'
-            $request->validate([
+                'direccion' => 'required|string|max:255',
+                'correo_paciente' => 'required|string|max:100|unique:pacientes,correo_paciente',
                 'tipo_sangre' => 'required|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            ], [
+                'cedula.unique' => 'Esta cédula ya se encuentra registrada',
+                'correo_paciente.unique' => 'Este correo ya está en uso por otro paciente.'
             ]);
-
-            //dd('Pasa validación de tipo_sangre');
-
 
             DB::table('pacientes')->insert([
                 'cedula' => $request->input('cedula'),
@@ -224,12 +181,9 @@ class CitasControllerApi extends Controller
                 'correo_paciente' => $request->input('correo_paciente'),
                 'tipo_sangre' => $request->input('tipo_sangre'),
             ]);
-            return redirect()->back()->with('success', 'Paciente registrado correctamente 😀');
+            return response()->json(['mensaje' => 'Paciente registrado correctamente'], 200);
         } catch (QueryException $e) {
-            // Captura cualquier error lanzado por triggers o constraints
-            return redirect()
-                ->back()
-                ->with('error', $e->getMessage());
+            return back()->with('error', 'Error al actualizar: ' . $e->getMessage());
         }
     }
     /**

@@ -63,29 +63,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card stat-card text-center shadow-sm">
-                            <div class="card-body">
-                                <h5 class="text-muted">Consultas Activas</h5>
-                                <h2 class="text-success">2</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card stat-card text-center shadow-sm">
-                            <div class="card-body">
-                                <h5 class="text-muted">Solicitudes Pendientes</h5>
-                                <h2 class="text-warning">4</h2>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Citas -->
                 <section class="card shadow-sm p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4><i class="fas fa-calendar-check text-primary"></i> Próximas Citas</h4>
-                        <a href="{{ route('odontologo.agenda') }}" class="btn btn-outline-primary"><i class="fas fa-calendar-alt"></i> Ver
+                        <a href="{{ route('odontologo.agenda') }}" class="btn btn-outline-primary"><i
+                                class="fas fa-calendar-alt"></i> Ver
                             Agenda</a>
                     </div>
 
@@ -112,7 +97,8 @@
                         <section class="card shadow-sm p-4 mb-4">
                             <h4><i class="fas fa-file-medical text-info"></i> Órdenes</h4>
                             <p>Administra las órdenes generadas para tus pacientes.</p>
-                            <a href="{{ route('odontologo.ordenes') }}" class="btn btn-outline-info mt-2"><i class="fas fa-folder-open"></i> Ir a
+                            <a href="{{ route('odontologo.ordenes') }}" class="btn btn-outline-info mt-2"><i
+                                    class="fas fa-folder-open"></i> Ir a
                                 Órdenes</a>
                         </section>
                     </div>
@@ -173,12 +159,11 @@
         <td>${c.hora_cita}</td>
         <td>${c.nombre_completo_paciente}</td>
         <td>
-          <span class="badge ${
-            c.estado_cita==='confirmada' ? 'text-bg-success' :
-            c.estado_cita==='pendiente'   ? 'text-bg-warning' :
-            c.estado_cita==='cancelada'  ? 'text-bg-danger'  :
-                                           'text-bg-primary'
-          }">${c.estado_cita}</span>
+          <span class="badge ${c.estado_cita === 'confirmada' ? 'text-bg-success' :
+                            c.estado_cita === 'pendiente' ? 'text-bg-warning' :
+                                c.estado_cita === 'cancelada' ? 'text-bg-danger' :
+                                    'text-bg-primary'
+                        }">${c.estado_cita}</span>
         </td>
         <td>
           <div class="btn-group">

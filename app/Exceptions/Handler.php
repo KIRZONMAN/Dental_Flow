@@ -2,8 +2,9 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Database\QueryException;      // ← Añadir
+use Illuminate\Database\QueryException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,5 +42,12 @@ class Handler extends ExceptionHandler
         }
 
         return parent::render($request, $e);
+    }
+    public function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json([
+            'message' => 'Los datos proporcionados no son válidos.',
+            'errors' => $exception->errors(),
+        ], $exception->status);
     }
 }

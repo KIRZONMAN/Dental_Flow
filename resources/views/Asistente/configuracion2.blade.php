@@ -16,13 +16,12 @@
             @csrf
             <div class="form-group">
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre"
-                value="{{ old('nombre', $nombre) }}">
+                <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $nombre) }}">
             </div>
 
             <div class="form-group">
                 <label for="especialidad">Especialidad</label>
-                <input type="text" id="especialidad" value="{{ $especialidad }}" readonly>
+                <input type="text" id="especialidad" value="<?= $especialidad ?>" class="readonly-input" readonly>
             </div>
 
             <div class="form-group">

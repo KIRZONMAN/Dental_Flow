@@ -6,11 +6,15 @@
     <title>Solicitud de Prótesis</title>
     <link rel="stylesheet" href="{{ asset('css/Ssolicitud.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
     <div class="solicitud-container">
         <header class="solicitud-header">
+            <a href="{{ route('odontologo.dashboard') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
             <div class="logo-title">
                 <img src="{{ asset('imagen/logo.png') }}" alt="Dental Icon" class="dental-icon">
                 <h1>Solicitud de Prótesis</h1>
@@ -66,13 +70,11 @@
                 <div class="form-row">
                     <div class="form-field">
                         <label>Dirección Odontológica</label>
-                        <input type="text" class="input-field" value="{{ auth()->user()->direccion_usuario }}"
-                            disabled>
+                        <input type="text" class="input-field" value="{{ auth()->user()->direccion_usuario }}" disabled>
                     </div>
                     <div class="form-field">
                         <label>Teléfono Odontológico</label>
-                        <input type="text" class="input-field" value="{{ auth()->user()->telefono_usuario }}"
-                            disabled>
+                        <input type="text" class="input-field" value="{{ auth()->user()->telefono_usuario }}" disabled>
                     </div>
                 </div>
             </div>
@@ -148,8 +150,7 @@
                 <div class="form-row">
                     <div class="form-field full-width">
                         <label for="color">Color</label>
-                        <input type="text" id="color" name="color" class="input-field"
-                            placeholder="Color deseado">
+                        <input type="text" id="color" name="color" class="input-field" placeholder="Color deseado">
                     </div>
                     <div class="form-field full-width">
                         <label for="firma">Firma Autorizada</label>
@@ -174,7 +175,7 @@
 
 
         // Al cambiar la cita, ponemos el nombre
-        document.getElementById('cita_id').addEventListener('change', function() {
+        document.getElementById('cita_id').addEventListener('change', function () {
             document.getElementById('paciente').value =
                 citasData[this.value] ?? '';
         });
@@ -185,7 +186,7 @@
             document.getElementById("fecha_solicitud").value = hoy;
 
             // Vista previa de firma
-            document.getElementById("firma").addEventListener("change", function(e) {
+            document.getElementById("firma").addEventListener("change", function (e) {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();

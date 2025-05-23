@@ -7,6 +7,8 @@
     <title>Registrar Paciente</title>
     <link rel="stylesheet" href="{{ asset('css/ARegistro.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -20,12 +22,13 @@
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
 
-            <form action="{{ route('postaregistro') }}" method="POST">
+            <form id="form-registro-paciente" action="{{ route('postaregistro') }}" method="POST">
                 @csrf
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="cedula"><i class="fas fa-user"></i> Cédula:</label>
-                        <input type="text" id="cedula" name="cedula" required pattern="\d{10}" maxlength="10" title="La cédula debe tener exactamente 10 dígitos">
+                        <input type="text" id="cedula" name="cedula" required pattern="\d{10}" maxlength="10"
+                            title="La cédula debe tener exactamente 10 dígitos">
                     </div>
                     <div class="form-group">
                         <label for="nombre"><i class="fas fa-user"></i> Nombre:</label>
@@ -37,7 +40,8 @@
                     </div>
                     <div class="form-group">
                         <label for="edad"><i class="fas fa-hourglass-half"></i> Edad:</label>
-                        <input type="number" id="edad" name="edad" min="0" required min="0" max="120" title="La edad debe estar entre 0 y 120 años">
+                        <input type="number" id="edad" name="edad" min="0" required min="0" max="120"
+                            title="La edad debe estar entre 0 y 120 años">
                     </div>
                     <div class="form-group">
                         <label for="genero"><i class="fas fa-venus-mars"></i> Género:</label>
@@ -86,6 +90,62 @@
             @endif
         </div>
     </div>
+
+    <script>
+        document.getElementById('form-registro-paciente').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            fetch('{{ route("postaregistro") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+                .then(async response => {
+                    return response.json().then(data => {
+                        if (response.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Paciente registrado correctamente',
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then(() => {
+                                window.location.href = '/asistente/aregistro';
+                            });
+                        } else {
+                            let errores = '';
+                            if (data.errors) {
+                                for (const campo in data.errors) {
+                                    errores += `• ${data.errors[campo].join(', ')}<br>`;
+                                }
+                            } else {
+                                errores = 'Ha ocurrido un error inesperado. ';
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error al registrar paciente',
+                                html: errores
+                            });
+                        }
+                    });
+
+                })
+                .catch(error => {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de red',
+                        text: 'No se pudo enviar el formulario.'
+                    });
+                });
+        });
+    </script>
 </body>
 
 </html>

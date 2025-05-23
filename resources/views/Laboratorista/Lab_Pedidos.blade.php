@@ -11,7 +11,6 @@
 </head>
 
 <body>
-
     <!-- HEADER -->
     <header class="header d-flex justify-content-between align-items-center px-4">
         <button class="btn text-white p-0" id="menu-toggle"><i class="fas fa-bars fa-lg"></i></button>
@@ -34,7 +33,7 @@
                         class="fas fa-user-circle fa-2x"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                     <li>
-                        <a class="dropdown-item" href="{{ route('laboratorista.configuracion4') }}">
+                        <a class="dropdown-item" href="{{ route('laboratorista.configuracion') }}">
                             Mi perfil
                         </a>
                     <li>
@@ -45,7 +44,9 @@
                             onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                             Cerrar sesión
                         </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -74,7 +75,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('laboratorista.config') }}"
+                <a href="{{ route('laboratorista.configuracion') }}"
                     class="nav-link {{ request()->routeIs('laboratorista.config') ? 'active' : '' }}">
                     <i class="fas fa-cog me-2"></i>Configuración
                 </a>
@@ -87,8 +88,7 @@
         <div class="container-fluid py-4">
             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                 <h2 class="h5 m-0">Todos los Pedidos</h2>
-                <input type="search" id="search" class="form-control form-control-sm w-auto"
-                    placeholder="Buscar...">
+                <input type="search" id="search" class="form-control form-control-sm w-auto" placeholder="Buscar...">
             </div>
             <div class="table-responsive bg-white shadow-sm rounded">
                 <table class="table table-hover lab-pedidos-table mb-0">

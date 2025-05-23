@@ -56,14 +56,14 @@ class AsistenteController extends Controller
                 'asistente.telefono' => $request->input('telefono'),
                 'asistente.email' => $request->input('email'),
             ]);
-            return redirect()->route('asistente.configuracion2');
+            return redirect()->route('asistente');
         }
 
         // Valores por defecto
         $datos = [
-            'nombre' => session('asistente.nombre', 'Dr. (Nombre)'),
+            'nombre' => session('asistente.nombre', '(Nombre)'),
             'telefono' => session('asistente.telefono', '+12 34567890'),
-            'email' => session('asistente.email', 'doctor@dominio.com'),
+            'email' => session('asistente.email', 'asistente@dentalflow.com'),
             'especialidad' => 'Asistente',
         ];
 

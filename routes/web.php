@@ -156,11 +156,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Registro / Historial pacientes (API → web)
-Route::post(
-    '/postaregistro',
-    [\App\Http\Controllers\Api\CitasControllerApi::class, 'storePaciente']
-)
-    ->name('postaregistro');
+Route::post('/postaregistro', [CitasControllerApi::class, 'storePaciente'])->name('postaregistro');
 Route::get(
     '/aregistro',
     [\App\Http\Controllers\Api\CitasControllerApi::class, 'indexAregistro']
@@ -181,8 +177,6 @@ Route::prefix('laboratorista')
             ->name('laboratorista.orden.estado');
         Route::get('/insumos', [LaboratoristaController::class, 'insumos'])
             ->name('laboratorista.insumos');
-        Route::get('/config', [LaboratoristaController::class, 'config'])
-            ->name('laboratorista.config');
         Route::post('/orden/{id}/producto', [LaboratoristaController::class, 'addProducto'])
             ->name('laboratorista.orden.producto');
         Route::get('/ordenes/todos', [LaboratoristaController::class, 'all'])

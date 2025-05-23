@@ -31,8 +31,7 @@
 
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
-                    <input type="text" id="numeroInput" name="numeroInput" oninput="validateNumberInput(this)"
-                        value="<?= $telefono?>">
+                    <input type="text" id="telefono" name="telefono" value="{{ old('telefono', $telefono) }}">
                 </div>
 
                 <div class="form-group">

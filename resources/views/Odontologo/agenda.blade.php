@@ -11,8 +11,10 @@
 </head>
 
 <body class="agenda-body">
-
     <div class="container py-5">
+        <a href="{{ route('odontologo.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
         <div class="text-center mb-5 animate__animated animate__fadeInDown">
             <h1 class="agenda-title">📅 Agenda de Pacientes</h1>
             <p class="agenda-subtitle">Consulta, organiza y accede a la historia clínica de tus pacientes</p>
@@ -21,8 +23,8 @@
         <div class="card shadow-lg p-4 mb-4 animate__animated animate__fadeIn">
             <form method="GET" action="{{ route('odontologo.agenda') }}"
                 class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
-                <input type="text" name="buscar_paciente" value="{{ request('buscar_paciente') }}" placeholder="🔍 Buscar paciente por nombre"
-                    class="form-control agenda-search-input w-75">
+                <input type="text" name="buscar_paciente" value="{{ request('buscar_paciente') }}"
+                    placeholder="🔍 Buscar paciente por nombre" class="form-control agenda-search-input w-75">
                 <button type="submit" class="btn btn-primary agenda-search-button">
                     <i class="fas fa-search"></i> Buscar
                 </button>
@@ -46,7 +48,7 @@
                             <td>{{ $paciente->nombre_completo_paciente }}</td>
                             <td>{{ $paciente->telefono_paciente }}</td>
                             <td>
-                                <a href="{{ route('odontologo.historias', ['cedula' => $paciente->cedula]) }}"
+                                <a href="{{ route('odontologo.historias.list', ['cedula' => $paciente->cedula]) }}"
                                     class="btn btn-outline-info">
                                     <i class="fas fa-notes-medical"></i> Ver Historia
                                 </a>

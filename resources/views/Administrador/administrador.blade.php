@@ -64,7 +64,7 @@
                 </a>
             </div>
             <div class="col-6 col-md-3">
-                <a href="/gestionProveedores" class="card-menu">
+                <a href="administrador/gestionProveedores" class="card-menu">
                     <i class="fas fa-boxes fa-2x mb-2"></i>
                     <div>Gestión de Proveedores</div>
                 </a>
@@ -77,15 +77,6 @@
             </div>
         </div>
     </nav>
-
-    <main class="container">
-        <section class="seccion mt-5 text-center">
-            <h3 class="titulo-seccion"><i class="fas fa-file-medical me-2"></i>Tabla usuarios activos</h3>
-            <a href="/gestionarSolicitudes" class="btn btn-primary mt-3 rounded-pill px-4">
-                Ver solicitudes
-            </a>
-        </section>
-    </main>
 </body>
 
 </html>

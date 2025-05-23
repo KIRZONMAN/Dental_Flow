@@ -30,7 +30,7 @@
                 <div class="col-md-8 col-lg-6">
                     <div class="input-group shadow-sm">
                         <input type="text" id="searchInput" class="form-control"
-                            placeholder="🔍 Buscar por nombre o cédula">
+                            placeholder="🔍 Buscar por nombre, apellido o cédula">
                         <button id="toggleTablaBtn" class="btn btn-info text-white" onclick="buscarPaciente()">
                             <i class="fas fa-search"></i> Buscar
                         </button>
