@@ -116,4 +116,48 @@ class OdontologoController extends Controller
 
         return view('odontologo.configuracion', $datos);
     }
+
+    public function listarPedidos()
+    {
+        $odontologoId = Auth::id();
+
+        $ordenes = OrdenLaboratorio::with('cita.paciente')
+            ->whereHas('cita', fn($q) => $q->where('usuario_id', $odontologoId))
+            ->orderByDesc('fecha_solicitud')
+            ->paginate(10);
+
+
+        return view('odontologo.GestionPedidos', compact('ordenes'));
+    }
+
+
+    /** GET /odontologo/pedidos/{id} */
+    public function showPedido($id)
+    {
+        $orden = OrdenLaboratorio::with(['cita.paciente', 'cita.odontologo', 'productos.insumo'])
+            ->findOrFail($id);
+
+        // Asegurarnos de que el odontólogo es el propietario
+        if ($orden->cita->usuario_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('odontologo.orden_show', compact('orden'));
+    }
+
+    /** DELETE /odontologo/pedidos/{id} */
+    public function destroyPedido($id)
+    {
+        $orden = OrdenLaboratorio::findOrFail($id);
+
+        // Sólo permitir “archivar” si está entregada
+        if ($orden->estado !== 'entregada' || $orden->cita->usuario_id !== Auth::id()) {
+            return back()->with('error', 'No puedes archivar esta orden.');
+        }
+
+        $orden->delete();
+        return redirect()->route('odontologo.pedidos.index')
+            ->with('success', 'Orden archivada correctamente.');
+    }
+
 }

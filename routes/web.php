@@ -112,7 +112,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ODONTÓLOGO (rol_id=2)
-    Route::middleware(['auth', 'role:2'])
+    Route::middleware(['auth', 'role:1,2'])
         ->prefix('odontologo')
         ->group(function () {
             Route::get('/', [OdontologoController::class, 'index'])
@@ -135,7 +135,7 @@ Route::middleware(['auth'])->group(function () {
                 ->name('odontologo.historias');
             // Listado de historias clínicas de un paciente
             Route::get('/odontologo/historias/{cedula}/list', [HistoriaClinicaController::class, 'index'])
-                ->name('odontologo.historias.list');
+                ->middleware(['auth', 'role:2'])->name('odontologo.historias.list');
 
             // Borrado de una historia concreta (dispara trigger 17)
             Route::delete('/historias/{id}', [HistoriaClinicaController::class, 'destroy'])
@@ -165,7 +165,7 @@ Route::get(
 
 // Rutas Laboratorista (rol_id=4)
 Route::prefix('laboratorista')
-    ->middleware(['auth', 'role:4'])
+    ->middleware(['auth', 'role:1,4'])
     ->group(function () {
         Route::get('/', [LaboratoristaController::class, 'index'])
             ->name('laboratorista.dashboard');
@@ -198,6 +198,13 @@ Route::get(
     '/gestionInsumos',
     [LaboratoristaController::class, 'insumos']
 )
-    ->middleware(['auth', 'role:2,4'])
+    ->middleware(['auth', 'role:1,2,4'])
     ->name('gestion.insumos');
+
+Route::get('usuarios/create', [ApiAdministradorController::class, 'VistaAgregarUsuario']);
+Route::post('usuarios', [ApiAdministradorController::class, 'agregarUsuario']);
+Route::delete('gestionUsuarios/{id}', [ApiAdministradorController::class, 'eliminarUsuario']);
+Route::get('pedidos', [OdontologoController::class, 'listarPedidos']);
+Route::get('pedidos/{id}', [OdontologoController::class, 'showPedido']);
+Route::delete('pedidos/{id}', [OdontologoController::class, 'destroyPedido']);
 

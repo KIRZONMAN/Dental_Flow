@@ -77,10 +77,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/informe-clinica', [ApiDuenoController::class, 'indexInformeClinica'])->name('informe-clinica');
     Route::get('/historial-movimientos', [ApiDuenoController::class, 'indexHistorialTransacciones'])->name('historial-movimientos');
     Route::get('/ordenar-insumos', [ApiDuenoController::class, 'indexOrdenarInsumos'])->name('ordenar-insumos');
-    
     // Configuración Dueño
     Route::match(['get', 'post'], '/apiDueno/configuracion', [ApiDuenoController::class, 'configuracion'])
         ->name('dueno-configuracion');
+
     Route::view('/dueno/configuracion', 'dueno.dueno-configuracion')->name('dueno-configuracion');
     Route::get('/insumos-solicitados', [ApiDuenoController::class, 'indexInsumosSolicitados'])->name('insumos-solicitados');
     Route::post('/ordenes/{id}/aprobar', [ApiDuenoController::class, 'aprobar']);
@@ -97,5 +97,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     /*Ruta prueba */
     Route::post('/testeoContra', [ApiAdministradorController::class, 'login'])->name('login.post');
+    Route::post('/citas/{id}/procedimiento', [CitasControllerApi::class, 'addProcedure'])->name('api.citas.addProcedure');
+    Route::delete('/citas/{id}/procedimiento/{pcId}', [CitasControllerApi::class, 'removeProcedure'])->name('api.citas.removeProcedure');
 
 });

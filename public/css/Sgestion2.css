@@ -91,6 +91,52 @@ body {
 
 /* Animación suave */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.badge-pendiente {
+    background-color: #6B7280;
+}
+
+.badge-en-produccion {
+    background-color: #ffa726;
+}
+
+.badge-listo-para-enviar {
+    background-color: #5c6bc0;
+}
+
+.badge-rechazada {
+    background-color: #f44336;
+}
+
+.badge-entregada {
+    background-color: #10B981;
+}
+
+.btn-sm i {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.btn-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.61rem;
+    padding-bottom: 0.61rem;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+}
+
+.tabla-pedidos {
+    table-layout: fixed;
 }

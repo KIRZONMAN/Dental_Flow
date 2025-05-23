@@ -15,6 +15,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\LogoutResponse;
+use App\Actions\Fortify\CustomLogoutResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,7 @@ class FortifyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->app->singleton(LogoutResponse::class, CustomLogoutResponse::class);
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
@@ -35,16 +38,20 @@ class FortifyServiceProvider extends ServiceProvider
             $user = $provider->retrieveByCredentials([
                 'correo_usuario' => $request->input('correo_usuario'),
             ]);
-            if ($user && $provider->validateCredentials($user, [
-                'password' => $request->input('password'),
-            ])) {
+            if (
+                $user && $provider->validateCredentials($user, [
+                    'password' => $request->input('password'),
+                ])
+            ) {
                 return $user;
             }
         });
 
-        RateLimiter::for('login', fn(Request $r) =>
+        RateLimiter::for(
+            'login',
+            fn(Request $r) =>
             Limit::perMinute(100)->by(
-                Str::lower($r->input(Fortify::username())).'|'.$r->ip()
+                Str::lower($r->input(Fortify::username())) . '|' . $r->ip()
             )
         );
 
@@ -55,7 +62,7 @@ class FortifyServiceProvider extends ServiceProvider
                 public function toResponse($request)
                 {
                     $u = $request->user();
-                    $ruta = match($u->rol_id) {
+                    $ruta = match ($u->rol_id) {
                         4 => route('laboratorista.dashboard'),
                         3 => route('asistente'),
                         2 => route('odontologo.dashboard'),
@@ -64,13 +71,15 @@ class FortifyServiceProvider extends ServiceProvider
                         default => config('fortify.home'),
                     };
                     return $request->wantsJson()
-                        ? new JsonResponse(['redirectTo'=>$ruta])
+                        ? new JsonResponse(['redirectTo' => $ruta])
                         : redirect()->to($ruta);
                 }
             };
         });
 
-        RateLimiter::for('two-factor', fn(Request $r) =>
+        RateLimiter::for(
+            'two-factor',
+            fn(Request $r) =>
             Limit::perMinute(5)->by($r->session()->get('login.id'))
         );
     }
