@@ -10,16 +10,13 @@ use App\Http\Controllers\Api\GestorInsumosControllerApi;
 use App\Http\Controllers\Api\ProveedorController;
 use App\Http\Controllers\Api\InsumoController;
 
-
-//Route::middleware('auth')->group(function () { //Sanctum
-
-// Ruta para obtener al usuario autenticado
-Route::get('/user', function (Request $request) {
-    return $request->user();
-});
-
 // Rutas RESTful de Citas (API – JSON)
 Route::middleware(['auth:sanctum'])->group(function () {
+    // Ruta para obtener al usuario autenticado
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    //Citas
     Route::prefix('citas')->group(function () {
         Route::get('/', [CitasControllerApi::class, 'index'])->name('api.citas.index');
         Route::get('/hoy', [CitasControllerApi::class, 'indexHoy'])->name('api.citas.hoy');
@@ -35,15 +32,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             ->name('api.citas.delete');
     });
 
-    // Vista de Blade para asistente (HTML)
-    Route::get('/asistente/citas', [CitasControllerApi::class, 'indexCitas'])
-        ->name('asistente.citas.view');
-
-
-    // Ruta de búsqueda de paciente (mantener si la usas desde JS)
+    // Ruta de búsqueda de paciente (mantener)
     Route::get('/buscar-paciente/{input}', [CitasControllerApi::class, 'buscarPaciente']);
-
-
 
     // Proveedores
     Route::get('/proveedores', [GestorInsumosControllerApi::class, 'index']);
@@ -55,8 +45,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //ruta adicional de proveedores
     Route::get('/proveedores/listar', [ProveedorController::class, 'index']);
-    /*Route::post(
-        '/solicitar-insumo',[InsumoController::class, 'solicitarInsumo'])->middleware('auth:sanctum');*/
 
     // Pedidos
     Route::get('/pedidos', [GestorInsumosControllerApi::class, 'listarPedidos']);
@@ -69,8 +57,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/historias', [CitasControllerApi::class, 'indexHistorias']);
     Route::get('/ahistorial', [CitasControllerApi::class, 'indexAhistorialPacientes']);
 
-    /*Dueño */
-    Route::get('/dueno', [ApiDuenoController::class, 'indexDueno'])->name('dueno');
+    /*Dueño*/
+    Route::get('/dueno', [ApiDuenoController::class, 'indexDueno'])->name('dueno.dashboard');
     Route::get('/dueno/rendimiento', [ApiDuenoController::class, 'indexRendimiento'])->name('dueno.rendimiento');
     Route::get('/dueno/insumos', [ApiDuenoController::class, 'indexInsumos'])->name('dueno.insumos');
     Route::get('/dueno-conteo', [ApiDuenoController::class, 'conteoCitas'])->name('dueno.conteo');
@@ -81,10 +69,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::match(['get', 'post'], '/apiDueno/configuracion', [ApiDuenoController::class, 'configuracion'])
         ->name('dueno-configuracion');
 
-    Route::view('/dueno/configuracion', 'dueno.dueno-configuracion')->name('dueno-configuracion');
     Route::get('/insumos-solicitados', [ApiDuenoController::class, 'indexInsumosSolicitados'])->name('insumos-solicitados');
     Route::post('/ordenes/{id}/aprobar', [ApiDuenoController::class, 'aprobar']);
     Route::post('/ordenes/{id}/rechazar', [ApiDuenoController::class, 'rechazar']);
+    // Justo después de aprobar/rechazar:
+    Route::post('/ordenes/{id}/entregar', [ApiDuenoController::class, 'entregar'])
+        ->name('api.ordenes.entregar');
 
     /*Administrador*/
     Route::get('/usuarios', [ApiAdministradorController::class, 'indexUsuarios']);

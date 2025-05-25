@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotificacionProveedor;
+use App\Models\OrdenCompra;
+use App\Models\Proveedor;
 
 class ApiDuenoController extends Controller
 {
@@ -192,15 +197,18 @@ class ApiDuenoController extends Controller
 
     public function indexOrdenarInsumos(Request $request)
     {
-        $ordenes = DB::table('detalles_ordenes as deto')
-            ->join('insumos as i', 'deto.insumo_id', '=', 'i.id_insumo')
-            ->join('ordenes_compras as oc', 'deto.orden_id', '=', 'oc.id_orden_compra')
-            ->where('oc.estado', 'ordenado')
+
+        $ordenes = DB::table('detalles_ordenes   as deto')
+            ->join('insumos           as i', 'deto.insumo_id', '=', 'i.id_insumo')
+            ->join('ordenes_compras   as oc', 'deto.orden_id', '=', 'oc.id_orden_compra')
+            ->leftJoin('usuarios        as u', 'u.id_usuario', '=', 'oc.aprobado_por') // ← NUEVO
+            ->whereIn('oc.estado', ['ordenado', 'aprobado'])
             ->select(
-                'oc.id_orden_compra as id_orden',
+                'oc.id_orden_compra   as id_orden',
                 'oc.estado',
+                DB::raw("CONCAT(u.nombres_usuario,' ',u.apellidos_usuario) as aprobador"), // ← NUEVO
                 'i.nombre_insumo',
-                'i.cantidad_insumo as cantidad_actual',
+                'i.cantidad_insumo   as cantidad_actual',
                 'i.fecha_vencimiento',
                 'i.umbral_alerta',
                 'deto.cantidad_insumo as cantidad_ordenada',
@@ -208,39 +216,79 @@ class ApiDuenoController extends Controller
             )
             ->get();
 
+
         $agrupado = $ordenes->groupBy('id_orden')->map(function ($items, $id_orden) {
             return [
                 'id_orden' => $id_orden,
                 'estado' => $items[0]->estado,
-                'insumos' => $items->map(function ($item) {
-                    return [
-                        'nombre_insumo' => $item->nombre_insumo,
-                        'cantidad_actual' => $item->cantidad_actual,
-                        'cantidad_ordenada' => $item->cantidad_ordenada,
-                        'fecha_vencimiento' => $item->fecha_vencimiento,
-                        'umbral_alerta' => $item->umbral_alerta,
-                        'total' => $item->total,
-                    ];
-                })->values()
+                'aprobador' => $items[0]->aprobador,  // ← NUEVO
+                'insumos' => $items->map(fn($i) => [
+                    'nombre_insumo' => $i->nombre_insumo,
+                    'cantidad_actual' => $i->cantidad_actual,
+                    'cantidad_ordenada' => $i->cantidad_ordenada,
+                    'fecha_vencimiento' => $i->fecha_vencimiento,
+                    'umbral_alerta' => $i->umbral_alerta,
+                    'total' => $i->total,
+                ])->values()
             ];
         })->values();
 
-        if ($request->wantsJson()) {
-            return response()->json($agrupado);
-        }
 
-        return view('dueno.ordenar-insumos');
+        return $request->wantsJson()
+            ? response()->json($agrupado)
+            : view('dueno.ordenar-insumos');
     }
+
 
 
     public function aprobar($id)
     {
-        DB::table('ordenes_compras')
-            ->where('id_orden_compra', $id)
-            ->update(['estado' => 'aprobado']);
+        $orden = OrdenCompra::with('detalles')->findOrFail($id);
 
-        return response()->json(['mensaje' => 'Orden aprobada.']);
+        if ($orden->estado !== 'ordenado') {
+            return response()->json(['mensaje' => 'Ya fue procesada'], 422);
+        }
+
+        DB::transaction(function () use ($orden) {
+
+            /* 1️⃣  Cambiamos estado + firmamos */
+            $orden->update([
+                'estado' => 'aprobado',
+                'aprobado_por' => auth()->id(),
+            ]);
+
+            /* 2️⃣  Averiguamos a qué proveedor(es) hay que avisar   */
+            $proveedores = DB::table('proveedores')
+                ->join('proveedores_insumos', 'proveedores.nit', '=', 'proveedores_insumos.proveedor_id')
+                ->whereIn('proveedores_insumos.insumo_id', $orden->detalles->pluck('insumo_id'))
+                ->select('proveedores.*')
+                ->distinct()
+                ->get();
+
+            /* 3️⃣  Enviamos correo a cada uno */
+            foreach ($proveedores as $prov) {
+                $datos = [
+                    'insumo' => 'Detalle adjunto',
+                    'cantidad' => $orden->detalles
+                        ->whereIn('insumo_id', function ($q) use ($prov) {
+                            $q->select('insumo_id')
+                                ->from('proveedores_insumos')
+                                ->where('proveedor_id', $prov->nit);
+                        })
+                        ->sum('cantidad_insumo'),
+                    'fecha' => now()->format('d/m/Y'),
+                    'nombre_proveedor' => $prov->nombre_proveedor,
+                ];
+
+                Mail::to($prov->correo_proveedor)
+                    ->send(new NotificacionProveedor($datos));
+            }
+        });
+
+        return response()->json(['mensaje' => 'Orden aprobada y correos enviados']);
     }
+
+
 
     public function rechazar($id)
     {
@@ -251,27 +299,46 @@ class ApiDuenoController extends Controller
         return response()->json(['mensaje' => 'Orden rechazada.']);
     }
 
-    public function configuracion(Request $request)
+    public function marcarEntregada(int $id)
     {
-        // Si es POST, guardamos en sesión de Laravel
-        if ($request->isMethod('post')) {
-            session([
-                'dueno.nombre' => $request->input('nombre'),
-                'dueno.telefono' => $request->input('telefono'),
-                'dueno.email' => $request->input('email'),
-            ]);
-            return redirect('api/dueno');
+        $orden = OrdenCompra::with('detalles.insumo')->findOrFail($id);
+
+        if ($orden->estado !== 'aprobado') {
+            return response()->json(['mensaje' => 'Solo las órdenes aprobadas pueden cerrarse'], 422);
         }
 
-        // Valores por defecto
-        $datos = [
-            'nombre' => session('dueno.nombre', '(Nombre)'),
-            'telefono' => session('dueno.telefono', '+57 34567890'),
-            'email' => session('dueno.email', 'gerencia@dentalflow.com'),
-            'especialidad' => 'Dueño',
-        ];
+        DB::transaction(function () use ($orden) {
 
-        return view('dueno.dueno-configuracion', $datos);
+            /*subimos stock */
+            foreach ($orden->detalles as $det) {
+                $det->insumo->aumentarStock($det->cantidad_insumo);
+            }
+
+            /* cerramos orden */
+            $orden->update([
+                'estado' => 'entregado',
+                'entregada_at' => now(),            //  ← opcional (ver migración abajo)
+            ]);
+        });
+
+        return response()->json(['mensaje' => 'Orden marcada como entregada']);
     }
+
+    public function entregar($id)
+    {
+        $orden = OrdenCompra::findOrFail($id);
+
+        if ($orden->estado !== 'aprobado') {
+            return response()->json(['mensaje' => 'Sólo puede entregarse una orden aprobada'], 422);
+        }
+
+        $orden->update([
+            'estado' => 'entregado',
+            'entregada_at' => now(),
+        ]);
+
+        return response()->json(['mensaje' => 'Orden marcada como recibida']);
+    }
+
 
 }

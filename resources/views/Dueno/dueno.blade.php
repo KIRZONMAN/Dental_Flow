@@ -24,11 +24,6 @@
         <div class="d-flex align-items-center">
             <!-- NOTIFICACIONES -->
             <div class="dropdown me-3">
-                <button class="btn btn-link position-relative p-0 text-white" id="notifToggle"
-                    data-bs-toggle="dropdown">
-                    <i class="fas fa-bell fa-lg"></i>
-                    <!--<span class="notification-count">3</span>-->
-                </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifToggle">
                     <li><span class="dropdown-item">Sin notificaciones</span></li>
                 </ul>
@@ -69,7 +64,7 @@
         </div>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a href="{{ route('dueno') }}" class="nav-link {{ request()->routeIs('dueno') ? 'active' : '' }}">
+                <a href="{{ route('dueno.dashboard') }}" class="nav-link {{ request()->routeIs('dueno.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-home me-2"></i>Página
                     principal
                 </a>

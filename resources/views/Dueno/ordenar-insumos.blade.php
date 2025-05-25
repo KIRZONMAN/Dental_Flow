@@ -27,6 +27,8 @@
             </div>
         </section>
 
+
+
         <section class="final-section">
             <button id="regresarBtn" class="btn btn-regresar">
                 Regresar a Inicio <i class="fas fa-arrow-left"></i>
@@ -41,8 +43,10 @@
 
         function cargarDatos(url, esJson = false) {
             fetch(url, {
-                headers: esJson ? { 'Accept': 'application/json' } : {}
-            })
+                    headers: esJson ? {
+                        'Accept': 'application/json'
+                    } : {}
+                })
                 .then(res => res.json())
                 .then(data => {
                     mostrarTabla(data);
@@ -51,6 +55,7 @@
                     document.getElementById('tabla-solicitudes').innerHTML = '<p>Error cargando datos.</p>';
                 });
         }
+
         function cargarSolicitudes() {
             cargarDatos('/api/ordenar-insumos', true);
         }
@@ -58,26 +63,34 @@
 
         function mostrarTabla(data) {
             if (!data || !Array.isArray(data) || data.length === 0) {
-                document.getElementById('tabla-solicitudes').innerHTML = '<p>No hay órdenes para mostrar.</p>';
+                document.getElementById('tabla-solicitudes').innerHTML =
+                    '<p>No hay órdenes para mostrar.</p>';
                 return;
             }
 
             let html = `<table class="styled-table">
-            <thead>
-                <tr>
-                    <th>Insumos</th>
-                    <th>Cantidad actual</th>
-                    <th>Fecha de vencimiento</th>
-                    <th>Cantidad ordenada</th>
-                    <th>Costo</th>
-                    <th>Estado de la orden</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>`;
+        <thead>
+            <tr>
+                <th>Insumos</th>
+                <th>Cantidad actual</th>
+                <th>Fecha de vencimiento</th>
+                <th>Cantidad ordenada</th>
+                <th>Costo</th>
+                <th>Estado / Entrega</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
 
             data.forEach(orden => {
-                let nombres = '', cantidades = '', fechas = '', ordenadas = '', costos = '';
+
+                /* ── columnas multi-insumo ────────────────────────── */
+                let nombres = '',
+                    cantidades = '',
+                    fechas = '',
+                    ordenadas = '',
+                    costos = '';
                 orden.insumos.forEach(insumo => {
                     const color = insumo.cantidad_actual <= insumo.umbral_alerta ? 'bajo' : 'suficiente';
                     nombres += `<div>${insumo.nombre_insumo}</div>`;
@@ -87,37 +100,58 @@
                     costos += `<div>$${parseFloat(insumo.total).toFixed(2)}</div>`;
                 });
 
+                /* ── etiqueta del aprobador (si existe) ───────────── */
+                const aprobadorLabel = orden.aprobador ?
+                    `<br><small class="text-muted">Aprobó: ${orden.aprobador}</small>` : '';
+
+                /* ── botones dinámicos ────────────────────────────── */
+                const botonesOrdenado = `
+        <button class="btn btn-outline-success" title="Aceptar"
+                onclick="aprobarOrden(${orden.id_orden})">
+            <i class="bi bi-check2"></i>
+        </button>
+        <button class="btn btn-outline-danger"  title="Rechazar"
+                onclick="rechazarOrden(${orden.id_orden})">
+            <i class="bi bi-x-circle"></i>
+        </button>`;
+
+                const botonRecibido = `
+        <button class="btn btn-outline-primary" title="Recibido"
+                onclick="entregarOrden(${orden.id_orden})">
+            <i class="bi bi-box-arrow-in-down"></i>
+        </button>`;
+
+                /* solo mostramos lo que aplica según el estado */
+                const botones =
+                    orden.estado === 'ordenado' ? botonesOrdenado :
+                    orden.estado === 'aprobado' ? botonRecibido :
+                    '';
+
+                /* ── fila HTML final ──────────────────────────────── */
                 html += `<tr>
-                <td>${nombres}</td>
-                <td>${cantidades}</td>
-                <td>${fechas}</td>
-                <td>${ordenadas}</td>
-                <td>${costos}</td>
-                <td><span class="badge badge-enviado">${orden.estado}</span></td>
-                <td>
-                    <div class="btn-group">
-                        <button class="btn btn-outline-success" title="Aceptar" onclick="aprobarOrden(${orden.id_orden})">
-                            <i class="bi bi-check2"></i>
-                        </button>
-                    <button class="btn btn-outline-danger" title="Rechazar" onclick="rechazarOrden(${orden.id_orden})">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    </div>
-                </td>
-            </tr>`;
+        <td>${nombres}</td>
+        <td>${cantidades}</td>
+        <td>${fechas}</td>
+        <td>${ordenadas}</td>
+        <td>${costos}</td>
+        <td><span class="badge badge-enviado">${orden.estado}</span>${aprobadorLabel}</td>
+        <td><div class="btn-group">${botones}</div></td>
+    </tr>`;
             });
+
 
             html += `</tbody></table>`;
             document.getElementById('tabla-solicitudes').innerHTML = html;
         }
+
         function aprobarOrden(id) {
             fetch(`/api/ordenes/${id}/aprobar`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                    'Content-Type': 'application/json'
-                }
-            })
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': getCsrfToken(),
+                        'Content-Type': 'application/json'
+                    }
+                })
                 .then(res => {
                     if (!res.ok) throw res;
                     return res.json();
@@ -138,12 +172,12 @@
 
         function rechazarOrden(id) {
             fetch(`/api/ordenes/${id}/rechazar`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                    'Content-Type': 'application/json'
-                }
-            })
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': getCsrfToken(),
+                        'Content-Type': 'application/json'
+                    }
+                })
                 .then(res => {
                     if (!res.ok) throw res;
                     return res.json();
@@ -163,19 +197,55 @@
                 });
         }
 
+        function entregarOrden(id) {
+            fetch(`/api/ordenes/${id}/entregar`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': getCsrfToken(),
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(r => {
+                    if (!r.ok) throw r;
+                    return r.json();
+                })
+                .then(d => {
+                    alert(d.mensaje);
+                    cargarSolicitudes(); // refresca la tabla
+                })
+                .catch(() => alert('Error al marcar entregada'));
+        }
+
+
         function getCsrfToken() {
             return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         }
-
     </script>
 
 
     <script>
-        document.getElementById("regresarBtn").addEventListener("click", function () {
-            const rol = @json(Auth::user()->rol_id) || null;
-            console.log(rol);
-            if (rol === 5 || rol === 1) {
-                window.location.href = "/api/dueno";
+        document.getElementById("limpiarBtn").addEventListener("click", function() {
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Deseas limpiar el formulario?',
+                showCancelButton: true,
+                confirmButtonColor: '#00c3a5',
+                cancelButtonColor: '#ff6b6b',
+                confirmButtonText: 'Sí, limpiar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("formInsumos").reset();
+                }
+            });
+        });
+
+        document.getElementById("regresarBtn").addEventListener("click", function() {
+            const rol = @json(session('rol'));
+            if (rol === 'odontologo') {
+                window.location.href = "/odontologo";
+            } else if (rol === 'cajero') {
+                window.location.href = "/cajero";
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -184,6 +254,79 @@
                     confirmButtonColor: '#e53935',
                 });
             }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("/api/proveedores/listar")
+                .then(response => response.json())
+                .then(data => {
+                    const proveedorSelect = document.getElementById("proveedor");
+                    proveedorSelect.innerHTML = `<option value="">Seleccione un proveedor</option>`;
+                    data.forEach(proveedor => {
+                        proveedorSelect.innerHTML += `
+                            <option value="${proveedor.nit}">
+                                ${proveedor.nombre_proveedor} (${proveedor.correo_proveedor})
+                            </option>`;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar proveedores:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudieron cargar los proveedores disponibles.',
+                        confirmButtonColor: '#e53935',
+                    });
+                });
+        });
+
+        document.getElementById("formInsumos").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const tipo = document.getElementById("tipo").value;
+            const cantidad = document.getElementById("cantidad").value;
+            const proveedor = document.getElementById("proveedor").value;
+
+            fetch("http://127.0.0.1:8000/api/solicitar-insumo", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                    body: JSON.stringify({
+                        tipo: tipo,
+                        cantidad: cantidad,
+                        proveedor: proveedor,
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || "Error al enviar la solicitud.");
+                        });
+                    }
+                    return response.json();
+                })
+
+                .then(data => {
+                    console.log("Respuesta:", data);
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Solicitud enviada!',
+                        text: 'El proveedor ha sido notificado correctamente.',
+                        confirmButtonColor: '#00c3a5',
+                    });
+                    document.getElementById("formInsumos").reset();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo enviar la solicitud.',
+                        confirmButtonColor: '#e53935',
+                    });
+                });
         });
     </script>
 
@@ -213,23 +356,28 @@
             });
 
         document.querySelectorAll('.update-status').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function() {
                 const citaId = this.dataset.id;
                 const nuevoEstado = this.dataset.status;
-                const estadoActual = document.getElementById(`estado-cita-${citaId}`).textContent.trim().toLowerCase();
+                const estadoActual = document.getElementById(`estado-cita-${citaId}`).textContent.trim()
+                    .toLowerCase();
 
                 fetch(`citas/${citaId}/actualizar-estado`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ estado: nuevoEstado })
-                })
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            estado: nuevoEstado
+                        })
+                    })
                     .then(response => response.json())
                     .then(data => {
                         const estadoTd = document.getElementById(`estado-cita-${citaId}`);
-                        estadoTd.classList.remove('text-success', 'text-warning', 'text-danger', 'text-primary');
+                        estadoTd.classList.remove('text-success', 'text-warning', 'text-danger',
+                            'text-primary');
                         estadoTd.classList.add(obtenerClasePorEstado(nuevoEstado));
                         estadoTd.textContent = nuevoEstado;
 
@@ -244,8 +392,10 @@
                         fetch('resumen-citas')
                             .then(response => response.json())
                             .then(data => {
-                                const resumenCitasContainer = document.getElementById('resumen-citas');
-                                let htmlContent = '<h5 class="text-muted">Citas Hoy</h5><h2 class="text-primary">';
+                                const resumenCitasContainer = document.getElementById(
+                                    'resumen-citas');
+                                let htmlContent =
+                                    '<h5 class="text-muted">Citas Hoy</h5><h2 class="text-primary">';
 
                                 data.forEach(contar => {
                                     const estado = contar.estado_cita;
@@ -270,7 +420,6 @@
                     });
             });
         });
-
     </script>
 </body>
 
