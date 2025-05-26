@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Registrar Paciente</title>
     <link rel="stylesheet" href="{{ asset('css/ARegistro.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -32,11 +33,11 @@
                     </div>
                     <div class="form-group">
                         <label for="nombre"><i class="fas fa-user"></i> Nombre:</label>
-                        <input type="text" id="nombre" name="nombres_paciente" required>
+                        <input type="text" id="nombre" name="nombres_paciente" maxlength="50" required>
                     </div>
                     <div class="form-group">
                         <label for="apellidos"><i class="fas fa-user-tag"></i> Apellidos:</label>
-                        <input type="text" id="apellidos" name="apellidos_paciente" required>
+                        <input type="text" id="apellidos" name="apellidos_paciente" maxlength="50" required>
                     </div>
                     <div class="form-group">
                         <label for="edad"><i class="fas fa-hourglass-half"></i> Edad:</label>
@@ -52,15 +53,15 @@
                     </div>
                     <div class="form-group">
                         <label for="telefono"><i class="fas fa-phone"></i> Teléfono:</label>
-                        <input type="number" id="telefono" name="telefono_paciente" required>
+                        <input type="number" id="telefono" name="telefono_paciente" maxlength="50" required>
                     </div>
                     <div class="form-group">
                         <label for="direccion"><i class="fas fa-map-marker-alt"></i> Dirección:</label>
-                        <input type="text" id="direccion" name="direccion" required>
+                        <input type="text" id="direccion" name="direccion" maxlength="100" required>
                     </div>
                     <div class="form-group">
                         <label for="correo"><i class="fas fa-envelope"></i> Correo Electrónico:</label>
-                        <input type="email" id="correo" name="correo_paciente" required>
+                        <input type="email" id="correo" name="correo_paciente" maxlength="100" required>
                     </div>
                     <div class="form-group">
                         <label for="telefono"><i class="fa-solid fa-droplet"></i> Tipo de Sangre:</label>

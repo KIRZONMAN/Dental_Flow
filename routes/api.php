@@ -18,20 +18,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     //Citas
     Route::prefix('citas')->group(function () {
-        Route::get('/', [CitasControllerApi::class, 'index'])->name('api.citas.index');
+        Route::apiResource('citas', CitasControllerApi::class)->names('api.citas');
         Route::get('/hoy', [CitasControllerApi::class, 'indexHoy'])->name('api.citas.hoy');
         Route::get('/{id}', [CitasControllerApi::class, 'show'])
             ->where('id', '[0-9]+')
             ->name('api.citas.show');
-        Route::post('/', [CitasControllerApi::class, 'store'])->name('api.citas.store');
-        Route::put('/{id}', [CitasControllerApi::class, 'update'])
-            ->where('id', '[0-9]+')
-            ->name('api.citas.update');
-        Route::delete('/{id}', [CitasControllerApi::class, 'delete'])
-            ->where('id', '[0-9]+')
-            ->name('api.citas.delete');
+        //Route::post('/', [CitasControllerApi::class, 'store'])->name('api.citas.store');
+        //Route::delete('/{id}', [CitasControllerApi::class, 'delete'])->where('id', '[0-9]+')->name('api.citas.delete');
     });
-
+    //Registrar Paciente
+    Route::post('/postaregistro', [CitasControllerApi::class, 'storePaciente'])->name('postaregistro');
     // Ruta de búsqueda de paciente (mantener)
     Route::get('/buscar-paciente/{input}', [CitasControllerApi::class, 'buscarPaciente']);
 
@@ -39,12 +35,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/proveedores', [GestorInsumosControllerApi::class, 'index']);
     Route::post('/proveedores', [GestorInsumosControllerApi::class, 'store']);
     Route::put('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'update']);
-    Route::delete('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'destroy']);
-    Route::get('/proveedores/listar', [GestorInsumosControllerApi::class, 'listarProveedores']);
-    Route::post('/solicitar-insumo', [GestorInsumosControllerApi::class, 'solicitarInsumo']);
-
-    //ruta adicional de proveedores
     Route::get('/proveedores/listar', [ProveedorController::class, 'index']);
+    Route::delete('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'destroy']);
+    Route::post('/solicitar-insumo', [GestorInsumosControllerApi::class, 'solicitarInsumo']);
 
     // Pedidos
     Route::get('/pedidos', [GestorInsumosControllerApi::class, 'listarPedidos']);
@@ -89,5 +82,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/testeoContra', [ApiAdministradorController::class, 'login'])->name('login.post');
     Route::post('/citas/{id}/procedimiento', [CitasControllerApi::class, 'addProcedure'])->name('api.citas.addProcedure');
     Route::delete('/citas/{id}/procedimiento/{pcId}', [CitasControllerApi::class, 'removeProcedure'])->name('api.citas.removeProcedure');
-
 });

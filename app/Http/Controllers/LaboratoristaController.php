@@ -88,15 +88,6 @@ class LaboratoristaController extends Controller
         return back()->with('success', 'Producto agregado.');
     }
 
-    public function insumos()
-    {
-        // Traigo todos los insumos
-        $insumos = \App\Models\Insumo::all();
-
-        // Los paso a la vista gestionInsumos.blade.php
-        return view('gestionInsumos', compact('insumos'));
-    }
-
     public function config()
     {
         // Pantalla de configuración de notificac. y perfiles

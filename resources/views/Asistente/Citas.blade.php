@@ -91,7 +91,7 @@
                                 <button type="submit" class="btn btn-success">✍🏿</button>
                         </td>
                         <td>
-                            <form action="{{ route('api.citas.delete', $cita->id_cita) }}" method="POST"
+                            <form action="{{ route('api.citas.destroy', $cita->id_cita) }}" method="POST"
                                 style="display:inline;"
                                 onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta Cita?');">
                                 @csrf

@@ -11,12 +11,12 @@
 
 <body>
     <div class="header-container-2">
-        <a href="{{ route('asistente.volver') }}" class="btn custom-btn-outline2"><i class="fas fa-arrow-left"></i>
+        <a href="{{ route('asistente.citas.view') }}" class="btn custom-btn-outline2"><i class="fas fa-arrow-left"></i>
             Volver</a>
         <h2>Editor de citas</h2>
     </div>
     <div class="card">
-        <form id="form-cita" action="{{ route('citas.update', $cita->id_cita) }}" method="POST">
+        <form id="form-cita" action="{{ route('api.citas.update', $cita->id_cita) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="form-row">

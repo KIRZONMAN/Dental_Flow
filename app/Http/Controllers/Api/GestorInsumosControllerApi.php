@@ -67,16 +67,6 @@ class GestorInsumosControllerApi extends Controller
         return response()->json(['message' => 'Proveedor eliminado con éxito']);
     }
 
-    //Listaciones 2
-    public function listarProveedores()
-    {
-        try {
-            $proveedores = DB::select("CALL pa_ObtenerProveedores()");
-            return response()->json($proveedores);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener proveedores: ' . $e->getMessage()], 500);
-        }
-    }
 
     //Correos Electronicos
 

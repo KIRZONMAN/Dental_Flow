@@ -1,17 +1,17 @@
 <?php
 
-use App\Http\Controllers\Api\ApiDuenoController;
-use App\Http\Controllers\CitaController;
+use App\Http\Controllers\CitasController;
 use App\Http\Controllers\OdontologoController;
 use App\Http\Controllers\pa_ActProveedorController;
-use App\Http\Controllers\Api\CitasControllerApi;
 use Illuminate\Support\Facades\Route;
 use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\AsistenteController;
 use App\Http\Controllers\LaboratoristaController;
 use App\Http\Controllers\HistoriaClinicaController;
 use App\Http\Controllers\ProcedimientoController;
-use App\Http\Controllers\Api\ApiAdministradorController;
+use App\Http\Controllers\AdministradorController;
+use App\Http\Controllers\DuenoController;
+use App\Http\Controllers\GeneralController;
 // Añadido Fortify:
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
@@ -54,14 +54,13 @@ Route::middleware(['auth'])->group(function () {
             // Dashboard principal
             Route::get('/', fn() => view('administrador.administrador'))
                 ->name('dashboard');
-
             // Gestión de usuarios (vista estática)
             Route::get('gestionUsuarios', fn() => view('administrador.gestionUsuarios'))
                 ->name('usuarios');
 
             // Configuración Administrador
-            Route::match(['get', 'post'], '/configuracion3', [ApiAdministradorController::class, 'configuracion3'])
-                ->name('administrador.configuracion3');
+            Route::match(['get', 'post'], '/configuracion3', [AdministradorController::class, 'configuracion3'])
+                ->name('configuracion3');
 
             // Gestión de proveedores (vista estática o blade)
             Route::get('gestionProveedores', fn() => view('gestionProveedores'))
@@ -76,18 +75,17 @@ Route::middleware(['auth'])->group(function () {
                 ->name('procedimientos.destroy');
 
             // Registro de usuario
-            Route::get('usuarios/create', [ApiAdministradorController::class, 'VistaAgregarUsuario']);
-            Route::post('usuarios', [ApiAdministradorController::class, 'agregarUsuario']);
+            Route::get('usuarios', [AdministradorController::class, 'VistaAgregarUsuario'])->name('usuarios.create');
+            Route::post('usuarios', [AdministradorController::class, 'agregarUsuario'])->name('usuarios.store');
 
             // Mostrar formulario de edición
-            Route::get('usuarios/{id}/edit', [ApiAdministradorController::class, 'edit'])
+            Route::get('usuarios/{id}/edit', [AdministradorController::class, 'edit'])
                 ->name('usuarios.edit');
             // Procesar la actualización
-            Route::put('usuarios/{id}', [ApiAdministradorController::class, 'update'])
+            Route::put('usuarios/{id}', [AdministradorController::class, 'update'])
                 ->name('usuarios.update');
-
             //Eliminar usuario
-            Route::delete('gestionUsuarios/{id}', [ApiAdministradorController::class, 'eliminarUsuario']);
+            Route::delete('usuarios/{id}', [AdministradorController::class, 'usuarios.destroy']);
         });
 
     // ODONTÓLOGO
@@ -107,99 +105,78 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/solicitud', [OdontologoController::class, 'storeSolicitud'])
                 ->name('odontologo.solicitud.store');
 
-            // Agenda, historias y configuración, que ya tenías
-            Route::get('/agenda', [CitasControllerApi::class, 'indexAgendaBusqueda'])
+            // Agenda, historias y configuración
+            Route::get('/agenda', [CitasController::class, 'indexAgendaBusqueda'])
                 ->name('odontologo.agenda');
-            Route::get('/odontologo/historias/{cedula}', [CitasControllerApi::class, 'indexHistorias'])
+            Route::get('/historias/{cedula}', [CitasController::class, 'indexHistorias'])
                 ->name('odontologo.historias');
             // Listado de historias clínicas de un paciente
-            Route::get('/odontologo/historias/{cedula}/list', [HistoriaClinicaController::class, 'index'])
+            Route::get('/historias/{cedula}/list', [HistoriaClinicaController::class, 'index'])
                 ->middleware(['auth', 'role:2'])->name('odontologo.historias.list');
 
-            // Borrado de una historia concreta (dispara trigger 17)
+            // Borrado de una historia concreta (dispara trigger 17)(PENDIENTE)
             Route::delete('/historias/{id}', [HistoriaClinicaController::class, 'destroy'])
                 ->name('odontologo.historias.destroy');
             // Configuración Odontologo
             Route::match(['get', 'post'], '/configuracion', [OdontologoController::class, 'configuracion'])
                 ->name('odontologo.configuracion');
+            Route::get('/pedidos/{id}', [OdontologoController::class, 'showPedido']);
+            Route::delete('/pedidos/{id}', [OdontologoController::class, 'destroyPedido']);
 
             // Gestión de Pedidos
             Route::view('/gestionPedidos', 'odontologo.GestionPedidos')
                 ->name('odontologo.pedidos');
+            Route::get('/pedidos', [OdontologoController::class, 'listarPedidos']);
         });
 
     // ASISTENTE
-    Route::middleware(['auth','role:3'])->prefix('asistente')->group(function () {
+    Route::middleware(['auth','role:1,3'])->prefix('asistente')->group(function () {
         Route::get('/', [AsistenteController::class, 'index'])
             ->name('asistente');
-        Route::get('citas', [CitasControllerApi::class, 'indexCitas'])
+        Route::get('citas', [CitasController::class, 'indexCitas'])
             ->name('asistente.citas.view');
-        Route::get('citas/edit/{id}', [CitasControllerApi::class, 'edit'])
+        Route::get('citas/edit/{id}', [CitasController::class, 'edit'])
             ->name('asistente.citas.edit');
-        // Aquí llamamos al controlador que prepara $pacientes:
-        Route::get('ahistorial', [CitasControllerApi::class, 'indexAhistorialPacientes'])
+        Route::get('ahistorial', [CitasController::class, 'indexAhistorialPacientes'])
             ->name('asistente.ahistorial');
-        Route::view('aregistro', 'asistente.Aregistro')
+        Route::view('/aregistro', 'asistente.Aregistro')
             ->name('asistente.aregistro');
-        // descarga la historia clínica en PDF
         Route::get('historial/{cedula}/pdf', [AsistenteController::class, 'descargarPDF'])
             ->name('asistente.historial.pdf');
         Route::match(['get', 'post'], 'configuracion2', [AsistenteController::class, 'configuracion2'])
             ->name('asistente.configuracion2');
     });
 
-
-    // Configuración Dueño
-    Route::middleware(['auth','role:5'])->match(['get', 'post'], 'api/dueno/configuracion', [ApiDuenoController::class, 'configuracion'])
-        ->name('dueno-configuracion');
-});
-
-
-
-
-// Registro / Historial pacientes (API → web)
-Route::post('/postaregistro', [CitasControllerApi::class, 'storePaciente'])->name('postaregistro');
-Route::get(
-    '/aregistro',
-    [\App\Http\Controllers\Api\CitasControllerApi::class, 'indexAregistro']
-);
-
-
-// Rutas Laboratorista
-Route::prefix('laboratorista')
-    ->middleware(['auth', 'role:1,4'])
-    ->group(function () {
-        Route::get('/', [LaboratoristaController::class, 'index'])
-            ->name('laboratorista.dashboard');
-        Route::get('/ordenes', [LaboratoristaController::class, 'ordenesHoy'])
-            ->name('laboratorista.ordenes.hoy');
-        Route::get('/orden/{id}', [LaboratoristaController::class, 'show'])
-            ->name('laboratorista.orden.show');
-        Route::post('/orden/{id}/estado', [LaboratoristaController::class, 'updateEstado'])
-            ->name('laboratorista.orden.estado');
-        Route::get('/insumos', [LaboratoristaController::class, 'insumos'])
-            ->name('laboratorista.insumos');
-        Route::post('/orden/{id}/producto', [LaboratoristaController::class, 'addProducto'])
-            ->name('laboratorista.orden.producto');
-        Route::get('/ordenes/todos', [LaboratoristaController::class, 'all'])
-            ->name('laboratorista.ordenes.todos');
-        // Mostrar formulario de edición
-        Route::get('usuarios/{id}/edit', [ApiAdministradorController::class, 'edit'])
-            ->name('usuarios.edit');
-        // Procesar la actualización
-        Route::put('usuarios/{id}', [ApiAdministradorController::class, 'update'])
-            ->name('usuarios.update');
-        // Configuración Laboratorista
-        Route::match(['get', 'post'], '/configuracion4', [LaboratoristaController::class, 'configuracion'])
-            ->name('laboratorista.configuracion');
+    // Rutas Laboratorista
+    Route::prefix('laboratorista')
+        ->middleware(['auth', 'role:1,4'])
+        ->group(function () {
+            Route::get('/', [LaboratoristaController::class, 'index'])
+                ->name('laboratorista.dashboard');
+            Route::get('/ordenes', [LaboratoristaController::class, 'ordenesHoy'])
+                ->name('laboratorista.ordenes.hoy');
+            Route::get('/orden/{id}', [LaboratoristaController::class, 'show'])
+                ->name('laboratorista.orden.show');
+            Route::post('/orden/{id}/estado', [LaboratoristaController::class, 'updateEstado'])
+                ->name('laboratorista.orden.estado');
+            Route::post('/orden/{id}/producto', [LaboratoristaController::class, 'addProducto'])
+                ->name('laboratorista.orden.producto');
+            Route::get('/ordenes/todos', [LaboratoristaController::class, 'all'])
+                ->name('laboratorista.ordenes.todos');
+            // Configuración Laboratorista
+            Route::match(['get', 'post'], '/configuracion4', [LaboratoristaController::class, 'configuracion'])
+                ->name('laboratorista.configuracion');
     });
 
-// Gestión de insumos(Administrador,odontologo y laboratorista)
-Route::get('/gestionInsumos',[LaboratoristaController::class, 'insumos'])
-    ->middleware(['auth', 'role:1,2,4'])
-    ->name('gestion.insumos');
+    //Dueño
+    // Configuración Dueño
+    Route::middleware(['auth','role:5'])->match(['get', 'post'], 'api/dueno/configuracion', [DuenoController::class, 'configuracion'])
+        ->name('dueno-configuracion');
 
-//Falta catalogar
-Route::get('pedidos', [OdontologoController::class, 'listarPedidos']);
-Route::get('pedidos/{id}', [OdontologoController::class, 'showPedido']);
-Route::delete('pedidos/{id}', [OdontologoController::class, 'destroyPedido']);
+    //RUTAS PROTEGIDAS GENERALES
+
+    // Gestión de insumos(Administrador,odontologo y laboratorista)
+    Route::get('/gestionInsumos',[GeneralController::class, 'insumos'])
+        ->middleware(['auth', 'role:1,2,4'])
+        ->name('gestion.insumos');
+});

@@ -52,8 +52,8 @@
                             @foreach ($citas as $c)
                                 <option value="{{ $c->id_cita }}">
                                     {{ \Carbon\Carbon::parse($c->fecha_cita)->format('d/m/Y') }} •
-                                    {{ substr($c->hora_cita, 0, 5) }}
-                                    – {{ $c->paciente->nombre_completo_paciente }}
+                                    {{ substr($c->hora_cita, 0, 5) }} •
+                                    {{ $c->paciente->nombre_completo_paciente }}
                                 </option>
                             @endforeach
                         </select>
@@ -115,7 +115,7 @@
                 <div class="form-row">
                     <div class="form-field">
                         <label for="paciente">Nombre del Paciente</label>
-                        <input type="text" id="paciente" class="input-field" disabled>
+                        <span id="nombre_paciente" class="form-control bg-light"></span>
                     </div>
                     <div class="form-field">
                         <label for="revisiones">Revisiones</label>
@@ -169,15 +169,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
     <script>
-        // Generamos un objeto { id_cita: nombre_completo_paciente, ... }
+        // Generamos un objeto { cita_id: nombre_completo_paciente, ... }
         // Después
-        const citasData = @json($citas->pluck('paciente.nombre_completo_paciente', 'id_cita'));
+        const citasData = @json(
+            $citas->mapWithKeys(function ($cita) {
+                return [
+                    (string) $cita->id_cita => $cita->paciente->nombre_completo_paciente,
+                ];
+            })
+        )
 
-
-        // Al cambiar la cita, ponemos el nombre
         document.getElementById('cita_id').addEventListener('change', function () {
-            document.getElementById('paciente').value =
-                citasData[this.value] ?? '';
+            const selectedId = this.value;
+            document.getElementById('nombre_paciente').textContent = citasData[selectedId] ?? '';
         });
 
         document.addEventListener("DOMContentLoaded", () => {

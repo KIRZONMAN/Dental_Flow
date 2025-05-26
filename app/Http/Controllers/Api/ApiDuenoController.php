@@ -157,7 +157,6 @@ class ApiDuenoController extends Controller
         ));
     }
 
-
     public function indexHistorialTransacciones()
     {
         $limit = request('limit', 10);
@@ -171,7 +170,6 @@ class ApiDuenoController extends Controller
                 'total_cita as total',
                 DB::raw("'Ingreso' as tipo")
             );
-
 
         $queryEgresos = DB::table('detalles_ordenes')
             ->join('ordenes_compras', 'detalles_ordenes.orden_id', '=', 'ordenes_compras.id_orden_compra')
@@ -287,7 +285,6 @@ class ApiDuenoController extends Controller
 
         return response()->json(['mensaje' => 'Orden aprobada y correos enviados']);
     }
-
 
 
     public function rechazar($id)

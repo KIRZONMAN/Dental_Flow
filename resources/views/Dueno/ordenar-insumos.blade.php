@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Gestión de Insumos</title>
+
     <link rel="stylesheet" href="{{ asset('css/Sgestion.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -15,7 +17,8 @@
 </head>
 
 <body>
-    <div class="main-container">
+    <div class="container my-4">
+
         <header class="header">
             <h1><i class="fas fa-dolly"></i> Gestión de Insumos</h1>
         </header>
@@ -134,7 +137,10 @@
         <td>${fechas}</td>
         <td>${ordenadas}</td>
         <td>${costos}</td>
-        <td><span class="badge badge-enviado">${orden.estado}</span>${aprobadorLabel}</td>
+        <td>
+            <span class="badge bg-info text-dark">${orden.estado}</span>
+            ${aprobadorLabel}
+        </td>
         <td><div class="btn-group">${botones}</div></td>
     </tr>`;
             });

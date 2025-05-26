@@ -25,14 +25,14 @@ class HistoriaClinicaController extends Controller
     }
 
 
-    /** Borra una historia e invoca el trigger 17 */
+    /** Borra una receta de una historia e invoca el trigger 17 */
     public function destroy(int $id)
     {
         try {
-            DB::table('historias_clinicas')
-                ->where('id_historia_clinica', $id)
+            DB::table('recetas_medicas')
+                ->where('historia_clinica_id', $id)
                 ->delete();
-            return response()->json(['message' => 'Historia eliminada'], 200);
+            return response()->json(['message' => 'Receta eliminada'], 200);
         } catch (QueryException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }

@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('insumos', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_insumo');
+            $table->string('nombre_insumo',50);
+            $table->unsignedInteger('cantidad_insumo');
+            $table->decimal('costo_insumo',10,2);
+            $table->date('fecha_vencimiento')->nullable();
+            $table->unsignedInteger('umbral_alerta');
             $table->timestamps();
         });
     }

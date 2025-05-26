@@ -30,10 +30,10 @@ class OdontologoController extends Controller
     {
         // Traemos solo las citas del odontólogo autenticado que estén confirmadas
         $citas = Cita::with('paciente')
-            ->where('usuario_id', Auth::id())
+            ->join('usuarios','id_usuario','=','citas.usuario_id')
+            ->where('correo_usuario', Auth::id())
             ->where('estado_cita', 'completada')
             ->get();
-
         return view('odontologo.solicitud', compact('citas'));
     }
 
@@ -44,7 +44,7 @@ class OdontologoController extends Controller
         // 1) Validamos los campos mínimos
         $data = $request->validate([
             'cita_id' => 'required|exists:citas,id_cita',
-            'fecha_limite' => 'required|date|after_or_equal:today',
+            'fecha_limite' => 'required|date|before_or_equal:today',
             'horario' => 'required|in:Mañana,Tarde',
             'tipo_material' => 'required|array|min:1',
             'tipo_material.*' => 'string|max:50',
