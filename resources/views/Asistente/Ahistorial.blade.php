@@ -96,7 +96,7 @@
             const resultadosDiv = document.getElementById('resultados');
             resultadosDiv.innerHTML = "";
 
-            fetch(`/api/buscar-paciente/${input}`)
+            fetch(`/api/pacientes/${input}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.paciente) {

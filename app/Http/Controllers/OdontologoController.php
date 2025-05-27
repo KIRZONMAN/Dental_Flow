@@ -23,14 +23,20 @@ class OdontologoController extends Controller
             ->limit(5)
             ->get();
 
-        return view('odontologo.odontologo', compact('citas'));
+        $totalCitas = DB::table('citas')
+            ->join('usuarios', 'id_usuario', '=', 'citas.usuario_id')
+            ->where('correo_usuario', $userId)
+            ->whereDate('fecha_cita', Carbon::today())
+            ->count();
+        return view('odontologo.odontologo', compact('citas', 'totalCitas'));
     }
 
     public function showSolicitudForm()
     {
         // Traemos solo las citas del odontólogo autenticado que estén confirmadas
         $citas = Cita::with('paciente')
-            ->where('usuario_id', Auth::id())
+            ->join('usuarios', 'id_usuario', '=', 'citas.usuario_id')
+            ->where('correo_usuario', Auth::id())
             ->where('estado_cita', 'completada')
             ->get();
 

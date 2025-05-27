@@ -12,7 +12,7 @@
     <div class="registro-wrapper">
         <div class="form-card">
             <div class="barra-superior">
-                <a href="/api/gestionUsuarios" class="btn-volver">Volver</a>
+                <a href="/administrador/gestionUsuarios" class="btn-volver">Volver</a>
                 <h2>Registrar Nuevo Usuario</h2>
             </div>
             <form id="form-registro-usuario" action="{{ route('usuarios.store') }}" method="POST">
@@ -103,7 +103,7 @@
                             showConfirmButton: false,
                             timer: 2000
                         }).then(() => {
-                            window.location.href = '/api/gestionUsuarios';
+                            window.location.href = '/administrador/gestionUsuarios';
                         });
                     } else {
                         const data = await response.json();

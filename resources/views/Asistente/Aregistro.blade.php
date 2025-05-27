@@ -22,7 +22,7 @@
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
 
-            <form id="form-registro-paciente" action="{{ route('postaregistro') }}" method="POST">
+            <form id="form-registro-paciente" action="{{ route('post.pacientes') }}" method="POST">
                 @csrf
                 <div class="form-grid">
                     <div class="form-group">
@@ -98,7 +98,7 @@
             const form = e.target;
             const formData = new FormData(form);
 
-            fetch('{{ route("postaregistro") }}', {
+            fetch('{{ route("post.pacientes") }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',

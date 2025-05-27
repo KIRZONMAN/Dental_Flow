@@ -111,7 +111,7 @@
                 const productValue = productFilter.value;
                 const statusValue = statusFilter.value;
 
-                // Sort the rows based on the selected filters
+
                 if (productValue === 'asc' || productValue === 'desc') {
                     sortTable(productValue === 'asc' ? 'product-asc' : 'product-desc');
                 }
@@ -120,7 +120,7 @@
                     sortTable(statusValue === 'asc' ? 'status-asc' : 'status-desc');
                 }
 
-                // Filter the rows based on the selected filters
+
                 filterTable(productValue, statusValue);
             }
 
@@ -161,8 +161,8 @@
                 rows.sort(order[criteria]);
 
                 const tbody = document.querySelector('.tabla-pedidos tbody');
-                tbody.innerHTML = ''; // Clear the current rows
-                rows.forEach(row => tbody.appendChild(row)); // Append all sorted rows
+                tbody.innerHTML = '';
+                rows.forEach(row => tbody.appendChild(row));
             }
 
             function showMenu(event, statusCell) {

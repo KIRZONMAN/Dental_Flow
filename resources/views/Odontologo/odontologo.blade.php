@@ -59,7 +59,7 @@
                         <div class="card stat-card text-center shadow-sm">
                             <div class="card-body">
                                 <h5 class="text-muted">Citas Hoy</h5>
-                                <h2 class="text-primary">5</h2>
+                                <h2 class="text-primary">{{ $totalCitas }}</h2>
                             </div>
                         </div>
                     </div>

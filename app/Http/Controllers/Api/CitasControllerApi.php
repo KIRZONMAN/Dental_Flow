@@ -28,10 +28,8 @@ class CitasControllerApi extends Controller
     public function indexHoy(Request $request)
     {
         $hoy = now()->toDateString();
-        // 1) obtenemos todas las citas de hoy
         $raw = $this->citaService->allHoy($hoy);
 
-        // 2) filtramos solo las del odontólogo autenticado
         $odontologoId = $request->user()->id_usuario;
         $mias = array_filter($raw, fn($c) => $c->id_odontologo == $odontologoId);
 
@@ -45,83 +43,25 @@ class CitasControllerApi extends Controller
         return response()->json(array_values($payload));
     }
 
-
-
-
-    public function indexCitas()
+    public function indexPacientes(Request $request)
     {
-        $citas = DB::table('citas')->join('usuarios', 'citas.usuario_id', '=', 'usuarios.id_usuario')
-            ->where('usuarios.rol_id', 2)
-            ->select(
-                'citas.*',
-                DB::raw("CONCAT(usuarios.nombres_usuario, ' ', usuarios.apellidos_usuario) AS nombre_completo_odontologo")
-            )
-            ->limit(15)->get(); //Limite de 5 citas por página
-        $usuarios = DB::table('usuarios')->where('rol_id', 2)->
-            select(
-                'id_usuario',
-                DB::raw("CONCAT(nombres_usuario, ' ', apellidos_usuario) AS nombre_completo_odontologo")
-            )
-            ->get();
-        return view('asistente.citas', compact('citas', 'usuarios'));
-    }
-
-    public function indexAgendaBusqueda(Request $request)
-    {
-        $q = $request->input('buscar_paciente');
-
-        $query = DB::table('pacientes')
-            ->select(
-                'cedula',
-                DB::raw("CONCAT(nombres_paciente, ' ', apellidos_paciente) AS nombre_completo_paciente"),
-                'telefono_paciente'
-            );
-
-        if ($q) {
-            $query->whereRaw("CONCAT(nombres_paciente,' ',apellidos_paciente) LIKE ?", ["%{$q}%"])
-                ->orWhere('cedula', 'like', "%{$q}%");
-        }
-
-        $pacientes = $query->limit(10)->get();
-
-        return view('odontologo.agenda', compact('pacientes'));
-    }
-
-
-    public function indexHistorias(string $cedula)
-    {
+        // Usamos el SP pa_ObtenerPacientes() para traer todos los pacientes
         $pacientes = DB::table('pacientes')
             ->select(
                 'cedula',
-                DB::raw("CONCAT(nombres_paciente, ' ', apellidos_paciente) AS nombre_completo_paciente"),
-                'telefono_paciente'
+                DB::raw("CONCAT(nombres_paciente,' ',apellidos_paciente) AS nombre_completo_paciente"),
+                'edad',
+                'telefono_paciente',
+                'correo_paciente'
             )
-            ->where('cedula', $cedula)
             ->get();
 
-
-        return view('odontologo.historias_pacientes', compact('pacientes'));
+        return response()->json($pacientes);
     }
-
-
-
-    public function indexAhistorialPacientes()
-    {
-        $pacientes = DB::table('pacientes')
-            ->select(
-                '*',
-                DB::raw("CONCAT(nombres_paciente, ' ', apellidos_paciente) AS nombre_completo_paciente")
-            )
-            ->limit(10)
-            ->get();
-
-        return view('asistente.ahistorial', compact('pacientes'));
-    }
-
     /**
      * Busca un paciente por cédula exacta o por fragmento de nombre.
      */
-    public function buscarPaciente(string $input)
+    public function showPaciente(string $input)
     {
         $paciente = DB::table('pacientes')
             ->select(

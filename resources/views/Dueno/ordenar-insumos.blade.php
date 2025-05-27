@@ -11,7 +11,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -52,7 +51,7 @@
                 });
         }
         function cargarSolicitudes() {
-            cargarDatos('/api/ordenar-insumos', true);
+            cargarDatos('/api/dueno/ordenar-insumos', true);
         }
 
 
@@ -111,9 +110,10 @@
             document.getElementById('tabla-solicitudes').innerHTML = html;
         }
         function aprobarOrden(id) {
-            fetch(`/api/ordenes/${id}/aprobar`, {
+            fetch(`/api/dueno/ordenes/${id}/aprobar`, {
                 method: 'POST',
                 headers: {
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': getCsrfToken(),
                     'Content-Type': 'application/json'
                 }
@@ -137,9 +137,10 @@
         }
 
         function rechazarOrden(id) {
-            fetch(`/api/ordenes/${id}/rechazar`, {
+            fetch(`/api/dueno/ordenes/${id}/rechazar`, {
                 method: 'POST',
                 headers: {
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': getCsrfToken(),
                     'Content-Type': 'application/json'
                 }
@@ -175,7 +176,7 @@
             const rol = @json(Auth::user()->rol_id) || null;
             console.log(rol);
             if (rol === 5 || rol === 1) {
-                window.location.href = "/api/dueno";
+                window.location.href = "/dueno";
             } else {
                 Swal.fire({
                     icon: 'error',

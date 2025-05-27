@@ -9,23 +9,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ApiDuenoController extends Controller
 {
-    public function indexDueno(Request $request)
-    {
-        $fechaLimite = date('Y-m-d H:i:s', strtotime('-30 days'));
-        $gastos = DB::table('detalles_ordenes')
-            ->join('ordenes_compras', 'detalles_ordenes.orden_id', '=', 'ordenes_compras.id_orden_compra')
-            ->select('detalles_ordenes.*', 'ordenes_compras.estado')
-            ->where('ordenes_compras.estado', '=', 'aprobado')
-            ->where('ordenes_compras.fecha_expedicion', '>=', $fechaLimite)
-            ->sum('total');
-
-        $ingresos = DB::table('citas')
-            ->where('estado_cita', 'completada')
-            ->where('fecha_cita', '>=', $fechaLimite)
-            ->sum('total_cita');
-        return view('dueno.dueno', compact('gastos', 'ingresos'));
-    }
-
     public function indexRendimiento(Request $request)
     {
         $limit = request('limit', 5);
@@ -192,10 +175,12 @@ class ApiDuenoController extends Controller
 
     public function indexOrdenarInsumos(Request $request)
     {
-        $ordenes = DB::table('detalles_ordenes as deto')
-            ->join('insumos as i', 'deto.insumo_id', '=', 'i.id_insumo')
-            ->join('ordenes_compras as oc', 'deto.orden_id', '=', 'oc.id_orden_compra')
-            ->where('oc.estado', 'ordenado')
+
+        $ordenes = DB::table('detalles_ordenes   as deto')
+            ->join('insumos           as i', 'deto.insumo_id', '=', 'i.id_insumo')
+            ->join('ordenes_compras   as oc', 'deto.orden_id', '=', 'oc.id_orden_compra')
+            ->leftJoin('usuarios        as u', 'u.id_usuario', '=', 'oc.usuario_id') // ← NUEVO
+            ->whereIn('oc.estado', ['ordenado'])
             ->select(
                 'oc.id_orden_compra as id_orden',
                 'oc.estado',
@@ -231,8 +216,6 @@ class ApiDuenoController extends Controller
 
         return view('dueno.ordenar-insumos');
     }
-
-
     public function aprobar($id)
     {
         DB::table('ordenes_compras')
@@ -253,12 +236,22 @@ class ApiDuenoController extends Controller
 
     public function configuracion(Request $request)
     {
-        // Si es POST, guardamos en sesión de Laravel
-        if ($request->isMethod('post')) {
-            session([
-                'dueno.nombre' => $request->input('nombre'),
-                'dueno.telefono' => $request->input('telefono'),
-                'dueno.email' => $request->input('email'),
+        $orden = OrdenCompra::with('detalles.insumo')->findOrFail($id);
+
+        if ($orden->estado !== 'aprobado') {
+            return response()->json(['mensaje' => 'Solo las órdenes aprobadas pueden cerrarse'], 422);
+        }
+
+        DB::transaction(function () use ($orden) {
+
+            /*subimos stock */
+            foreach ($orden->detalles as $det) {
+                $det->insumo->aumentarStock($det->cantidad_insumo);
+            }
+            /* cerramos orden */
+            $orden->update([
+                'estado' => 'entregado',
+                'entregada_at' => now(),
             ]);
             return redirect('api/dueno');
         }

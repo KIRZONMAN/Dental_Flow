@@ -34,7 +34,7 @@
         </section>
         <div class="row g-4 justify-content-center text-center">
             <div class="col-6 col-md-3">
-                <a href="/api/gestionUsuarios" class="card-menu">
+                <a href="/administrador/gestionUsuarios" class="card-menu">
                     <i class="fas fa-users fa-2x mb-2"></i>
                     <div>Gestión de Usuarios</div>
                 </a>
@@ -58,7 +58,7 @@
                 </a>
             </div>
             <div class="col-6 col-md-3">
-                <a href="/api/dueno" class="card-menu">
+                <a href="/dueno" class="card-menu">
                     <i class="fas fa-briefcase fa-2x mb-2"></i>
                     <div>Dueño</div>
                 </a>
