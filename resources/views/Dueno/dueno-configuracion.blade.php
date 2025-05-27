@@ -15,8 +15,9 @@
             <h1>Configuración del Dueño</h1>
         </div>
 
-        <form method="POST" action="{{ route('dueno-configuracion') }}">
+        <form method="POST" action="{{ route('dueno.configuracion.update') }}">
             @csrf
+            @method('PUT')
             <div class="section">
                 <div class="section-title">Perfil</div>
 

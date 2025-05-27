@@ -7,12 +7,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Administrar Citas</title>
     <link rel="stylesheet" href="{{ asset('css/Citas.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 
 <body>
-    <a href="{{ route('asistente') }}" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i> Volver</a>
+    <a href="{{ route('asistente') }}" class="btn btn-back"><i class="fas fa-arrow-left"></i> Volver</a>
 
     <div class="container my-3">
         @if (session('error'))
@@ -22,45 +23,58 @@
 
     <h2>📅 Administrador de Citas</h2>
 
-    <form id="form-cita">
-        <label for="fecha">Fecha:</label>
-        <input type="date" name="fecha" required>
-
-        <label for="hora">Hora:</label>
-        <input type="time" name="hora" required>
-
-        <label for="estado">Estado:</label>
-        <select name="estado" required>
-            <option value="pendiente">Pendiente</option>
-            <option value="cancelada">Cancelada</option>
-            <option value="confirmada">Confirmada</option>
-            <option value="completada">Completada</option>
-        </select>
-        <label for="motivo">Motivo:</label>
-        <input type="text" name="motivo" required>
-
-        <label for="motivo">Coste Total:</label>
-        <input type="number" name="total" step="any" required>
-
-        <label for="cedula">Cédula:</label>
-        <input type="text" name="cedula" required>
-
-        <label for="odontologo">Odontólogo:</label>
-        <select name="odontologo" id="odontologo" required>
-            <option value="">Seleccionar odontólogo</option>
-            @foreach ($usuarios as $usuario)
-                <option value="{{ $usuario->id_usuario }}">{{ $usuario->nombre_completo_odontologo }}</option>
-            @endforeach
-        </select>
-
-        <button type="submit">Registrar Cita</button>
-
-        </a>
-
+    <form id="form-cita" class="row g-3">
+        <!-- Fecha -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <label for="fecha" class="form-label">Fecha</label>
+            <input id="fecha" type="date" name="fecha" class="form-control" required>
+        </div>
+        <!-- Hora -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <label for="hora" class="form-label">Hora</label>
+            <input id="hora" type="time" name="hora" class="form-control" required>
+        </div>
+        <!-- Estado -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <label for="estado" class="form-label">Estado</label>
+            <select id="estado" name="estado" class="form-select" required>
+                <option value="pendiente">Pendiente</option>
+                <option value="cancelada">Cancelada</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="completada">Completada</option>
+            </select>
+        </div>
+        <!-- Motivo -->
+        <div class="col-12">
+            <label for="motivo" class="form-label">Motivo</label>
+            <input id="motivo" type="text" name="motivo" class="form-control" required>
+        </div>
+        <!-- Coste y Cédula lado a lado -->
+        <div class="col-12 col-md-6">
+            <label for="total" class="form-label">Coste Total</label>
+            <input id="total" type="number" name="total" class="form-control" step="any" required>
+        </div>
+        <div class="col-12 col-md-6">
+            <label for="cedula" class="form-label">Cédula</label>
+            <input id="cedula" type="text" name="cedula" class="form-control" required>
+        </div>
+        <!-- Odontólogo -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <label for="odontologo" class="form-label">Odontólogo</label>
+            <select id="odontologo" name="odontologo" class="form-select" required>
+                <option value="">Seleccionar odontólogo</option>
+                @foreach ($usuarios as $usuario)
+                    <option value="{{ $usuario->id_usuario }}">
+                        {{ $usuario->nombre_completo_odontologo }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <!-- Botón al final -->
+        <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary">Registrar Cita</button>
+        </div>
     </form>
-
-
-
 
     <div class="table-responsive">
         <table class="table table-hover align-middle">
@@ -77,8 +91,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    @foreach ($citas as $cita)
+                @foreach ($citas as $cita)
+                    <tr>
                         <td>{{ $cita->fecha_cita }}</td>
                         <td>{{ $cita->hora_cita }}</td>
                         <td>{{ $cita->estado_cita }}</td>
@@ -89,6 +103,7 @@
                         <td>
                             <a href="{{ route('asistente.citas.edit', $cita->id_cita) }}">
                                 <button type="submit" class="btn btn-success">✍🏿</button>
+                            </a>
                         </td>
                         <td>
                             <form action="{{ route('api.citas.destroy', $cita->id_cita) }}" method="POST"
@@ -99,7 +114,7 @@
                                 <button type="submit" class="btn btn-danger">🗑️</button>
                             </form>
                         </td>
-                </tr>
+                    </tr>
                 @endforeach
             </tbody>
         </table>

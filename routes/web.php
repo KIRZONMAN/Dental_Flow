@@ -76,7 +76,6 @@ Route::middleware(['auth'])->group(function () {
 
             // Registro de usuario
             Route::get('usuarios', [AdministradorController::class, 'VistaAgregarUsuario'])->name('usuarios.create');
-            Route::post('usuarios', [AdministradorController::class, 'agregarUsuario'])->name('usuarios.store');
 
             // Mostrar formulario de edición
             Route::get('usuarios/{id}/edit', [AdministradorController::class, 'edit'])
@@ -84,8 +83,6 @@ Route::middleware(['auth'])->group(function () {
             // Procesar la actualización
             Route::put('usuarios/{id}', [AdministradorController::class, 'update'])
                 ->name('usuarios.update');
-            //Eliminar usuario
-            Route::delete('usuarios/{id}', [AdministradorController::class, 'usuarios.destroy']);
         });
 
     // ODONTÓLOGO
@@ -169,9 +166,15 @@ Route::middleware(['auth'])->group(function () {
     });
 
     //Dueño
-    // Configuración Dueño
-    Route::middleware(['auth','role:5'])->match(['get', 'post'], 'api/dueno/configuracion', [DuenoController::class, 'configuracion'])
-        ->name('dueno-configuracion');
+    Route::prefix('dueno')
+        ->middleware(['auth', 'role:1,5'])
+        ->group(function () {
+            Route::get('/',[DuenoController::class,'indexDueno'])->name('dueno.dashboard');
+            // Configuración Dueño
+            Route::get('/configuracion',[DuenoController::class,'editConfiguracion'])->name('dueno.configuracion.edit');
+            Route::put('/configuracion',[DuenoController::class ,'updateConfiguracion'])->name('dueno.configuracion.update');
+    });
+
 
     //RUTAS PROTEGIDAS GENERALES
 

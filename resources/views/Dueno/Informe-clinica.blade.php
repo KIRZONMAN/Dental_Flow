@@ -14,7 +14,7 @@
     <!-- Encabezado -->
     <header class="headerContable">
         <h1 class="titulo">Informe de la clínica</h1>
-        <a href="dueno" class="back-button">← Volver</a>
+        <a href="{{route('dueno.dashboard')}}" class="back-button">← Volver</a>
     </header>
     <div class="contable-wrapper container-fluid py-4">
         <div class="row justify-content-center">
@@ -38,9 +38,9 @@
                         <div class="col-md-4">
                             <div class="resumen-box bg-light border shadow-sm rounded-3 p-3">
                                 <h5>Saldo Neto</h5>
-                                <p class="fw-bold 
+                                <p class="fw-bold
                                 @if ($ingresos - $gastos < 0)
-                                    text-danger 
+                                    text-danger
                                 @else ($ingresos - $gastos > 0)
                                     text-success
                                 @endif
@@ -247,7 +247,7 @@
     <!-- Script para cargar datos historial de movimientos -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            cargarDatos('/api/historial-movimientos?limit=10&page=1');
+            cargarDatos('/api/dueno/historial-movimientos?limit=10&page=1');
         });
 
         function cargarDatos(url) {

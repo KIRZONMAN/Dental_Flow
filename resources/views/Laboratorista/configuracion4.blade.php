@@ -4,48 +4,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <title>Configuración Laboratorista</title>
-  <!-- Estilos base -->
   <link rel="stylesheet" href="{{ asset('css/Config2.css') }}">
-  <!-- Estilos específicos -->
   <link rel="stylesheet" href="{{ asset('css/Config4.css') }}">
 </head>
 
 <body>
-  <div class="container">
-    <div class="header">
+  <div class="config-container">
+    <div class="config-header">
       <h1>Configuración del Laboratorista</h1>
     </div>
 
     <form method="POST" action="{{ route('laboratorista.configuracion') }}">
       @csrf
-      <div class="section">
-        <div class="section-title">Perfil</div>
+      <div class="config-section">
+        <h2 class="section-title">Perfil</h2>
 
         <div class="form-group">
           <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" name="nombre" value="<?= htmlspecialchars($nombre) ?>">
+          <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $nombre) }}">
         </div>
 
         <div class="form-group">
           <label for="especialidad">Especialidad</label>
-          <input type="text" id="especialidad" value="<?= htmlspecialchars($especialidad) ?>" class="readonly-input"
-            readonly>
+          <input type="text" id="especialidad" value="{{ $especialidad }}" readonly>
         </div>
 
         <div class="form-group">
           <label for="telefono">Teléfono</label>
-          <input type="text" id="telefono" name="telefono" value="<?= htmlspecialchars($telefono) ?>">
+          <input type="text" id="telefono" name="telefono" value="{{ old('telefono', $telefono) }}">
         </div>
 
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" value="<?= htmlspecialchars($email) ?>">
+          <input type="email" id="email" name="email" value="{{ old('email', $email) }}">
         </div>
       </div>
 
-      <button type="submit">Guardar configuración</button>
+      <button type="submit" class="btn-guardar">Guardar configuración</button>
     </form>
   </div>
 </body>

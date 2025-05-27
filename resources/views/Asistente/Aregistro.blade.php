@@ -13,18 +13,20 @@
 </head>
 
 <body>
-    <div class="registro-wrapper">
+    <div class="container my-5 registro-wrapper">
         <div class="form-card">
-            <a href="{{ route('asistente') }}" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i>
-                Volver</a>
+            <a href="{{ route('asistente') }}" class="btn btn-outline-secondary mb-4">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
             <h2><i class="fas fa-user-plus"></i> Registro de Paciente</h2>
 
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
 
-            <form id="form-registro-paciente" action="{{ route('postaregistro') }}" method="POST">
+            <form id="form-registro-paciente" action="{{ route('postaregistro') }}" method="POST" class="row g-3">
                 @csrf
+                <!-- grid de 2 cols en md hacia arriba -->
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="cedula"><i class="fas fa-user"></i> Cédula:</label>
@@ -41,8 +43,8 @@
                     </div>
                     <div class="form-group">
                         <label for="edad"><i class="fas fa-hourglass-half"></i> Edad:</label>
-                        <input type="number" id="edad" name="edad" min="0" required min="0" max="120"
-                            title="La edad debe estar entre 0 y 120 años">
+                        <input type="number" id="edad" name="edad" min="0" required min="0"
+                            max="120" title="La edad debe estar entre 0 y 120 años">
                     </div>
                     <div class="form-group">
                         <label for="genero"><i class="fas fa-venus-mars"></i> Género:</label>
@@ -93,20 +95,20 @@
     </div>
 
     <script>
-        document.getElementById('form-registro-paciente').addEventListener('submit', function (e) {
+        document.getElementById('form-registro-paciente').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const form = e.target;
             const formData = new FormData(form);
 
-            fetch('{{ route("postaregistro") }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
+            fetch('{{ route('postaregistro') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
                 .then(async response => {
                     return response.json().then(data => {
                         if (response.ok) {

@@ -9,7 +9,6 @@
     <!-- Bootstrap + Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="{{ asset('css/Cdueno.css') }}">
 </head>
 
@@ -70,19 +69,19 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('informe-clinica') }}"
+                <a href="{{ route('dueno.informe-clinica') }}"
                     class="nav-link {{ request()->routeIs('informe-clinica') ? 'active' : '' }}">
                     <i class="fas fa-list me-2"></i>Informe de la clínica
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('ordenar-insumos') }}"
+                <a href="{{ route('dueno.ordenar-insumos') }}"
                     class="nav-link {{ request()->routeIs('ordenar-insumos') ? 'active' : '' }}">
                     <i class="fas fa-boxes me-2"></i>Gestionar y ordenar insumos
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('dueno-configuracion') }}"
+                <a href="{{ route('dueno.configuracion.edit') }}"
                     class="nav-link {{ request()->routeIs('dueno-configuracion') ? 'active' : '' }}">
                     <i class="fas fa-cog me-2"></i>Configuración
                 </a>
@@ -127,7 +126,7 @@
                         <section class="card shadow-sm p-4 mb-4">
                             <h4><i class="fas fa-envelope-open-text text-dark"></i> Solicitudes</h4>
                             <p>Gestiona tus solicitudes pendientes</p>
-                            <a href="/api/ordenar-insumos" class="btn btn-outline-info mt-2"><i
+                            <a href="/api/dueno/ordenar-insumos" class="btn btn-outline-info mt-2"><i
                                     class="fas fa-clipboard-list"></i> Ir a
                                 Solicitudes</a>
                         </section>
@@ -348,7 +347,4 @@
     }
 
 </script>
-
-
-
 </html>

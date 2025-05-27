@@ -100,9 +100,6 @@ body {
   transition: margin-left var(--transition);
 }
 
-.sidebar.collapsed~.content {
-  margin-left: 220px;
-}
 
 /* ===================================================
      STATS CARDS
@@ -211,6 +208,7 @@ body {
   color: #fff;
 }
 
+
 /* ===================================================
      RESPONSIVE
      =================================================== */
@@ -268,4 +266,9 @@ body {
   background: #EF4444 !important;
   /* Rojo */
   color: #fff !important;
+}
+
+/* Oculta los SVG de paginación (clases tailwind w-5 h-5) */
+.pagination svg.w-5.h-5 {
+  display: none !important;
 }

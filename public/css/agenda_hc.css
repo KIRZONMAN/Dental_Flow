@@ -1,91 +1,151 @@
-/* ESTILO BASE GLOBAL */
-.agenda-body {
-    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-    font-family: 'Segoe UI', sans-serif;
-    overflow-x: hidden;
+/* ================== RESET & BASE ================== */
+* {
+  box-sizing: border-box;
 }
 
+.agenda-body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ================== TITULARES ================== */
 .agenda-title {
-    font-size: 2.8rem;
-    font-weight: bold;
-    color: #0d6efd;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #0d6efd;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .agenda-subtitle {
-    font-size: 1.2rem;
-    color: #555;
-    margin-top: 10px;
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 10px;
 }
 
-/* FORMULARIO DE BÚSQUEDA */
+/* ================== BÚSQUEDA ================== */
 .agenda-search-input {
-    border: 2px solid #0d6efd;
-    border-radius: 12px;
-    padding: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
+  width: 100%;
+  max-width: none;
+  border: 2px solid #0d6efd;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .agenda-search-input:focus {
-    border-color: #6610f2;
-    box-shadow: 0 0 10px rgba(102, 16, 242, 0.3);
+  border-color: #6610f2;
+  box-shadow: 0 0 10px rgba(102, 16, 242, 0.3);
 }
 
 .agenda-search-button {
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-weight: bold;
-    background: linear-gradient(90deg, #007bff, #6610f2);
-    border: none;
-    transition: background 0.3s ease;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #007bff, #6610f2);
+  border: none;
+  color: #fff;
+  transition: background 0.3s ease;
 }
 
 .agenda-search-button:hover {
-    background: linear-gradient(90deg, #6610f2, #007bff);
+  background: linear-gradient(90deg, #6610f2, #007bff);
 }
 
-/* TABLA DE CITAS */
+/* ================== TABLA ================== */
 .agenda-table {
-    border-radius: 15px;
-    overflow: hidden;
-    font-size: 1rem;
-    animation: fadeIn 1s ease-in-out;
-}
-
-.agenda-table-body tr {
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.agenda-table-body tr:hover {
-    transform: scale(1.02);
-    background-color: #f0f8ff;
+  width: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  font-size: 1rem;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .agenda-table td,
 .agenda-table th {
-    vertical-align: middle;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
-/* ICONOS Y BOTONES */
+.agenda-table-body tr {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.agenda-table-body tr:hover {
+  transform: scale(1.02);
+  background-color: #f0f8ff;
+}
+
+/* ================== BOTONES ESPECIALES ================== */
 .btn-outline-info {
-    border-radius: 10px;
-    transition: all 0.3s ease-in-out;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
 }
 
 .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    color: white;
+  background-color: #0dcaf0;
+  color: #fff;
 }
 
-/* ANIMACIONES */
+/* ================== ANIMACIONES ================== */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================== RESPONSIVE: TABLETS (≤992px) ================== */
+@media (max-width: 992px) {
+  .agenda-title {
+    font-size: 2.4rem;
+  }
+  .agenda-subtitle {
+    font-size: 1.1rem;
+    margin-top: 8px;
+  }
+  .agenda-search-input {
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+  .agenda-search-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+  .agenda-table {
+    font-size: 0.9rem;
+  }
+}
+
+/* ================== RESPONSIVE: MÓVILES (≤576px) ================== */
+@media (max-width: 576px) {
+  .agenda-title {
+    font-size: 2rem;
+  }
+  .agenda-subtitle {
+    font-size: 1rem;
+    margin-top: 6px;
+  }
+  .agenda-search-input {
+    padding: 8px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
+  .agenda-search-button {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
+  .agenda-table {
+    font-size: 0.85rem;
+  }
 }

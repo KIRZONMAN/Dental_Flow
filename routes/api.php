@@ -17,69 +17,78 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return $request->user();
     });
     //Citas
-    Route::prefix('citas')->group(function () {
-        Route::apiResource('citas', CitasControllerApi::class)->names('api.citas');
-        Route::get('/hoy', [CitasControllerApi::class, 'indexHoy'])->name('api.citas.hoy');
-        Route::get('/{id}', [CitasControllerApi::class, 'show'])
-            ->where('id', '[0-9]+')
-            ->name('api.citas.show');
-        //Route::post('/', [CitasControllerApi::class, 'store'])->name('api.citas.store');
-        //Route::delete('/{id}', [CitasControllerApi::class, 'delete'])->where('id', '[0-9]+')->name('api.citas.delete');
-    });
-    //Registrar Paciente
-    Route::post('/postaregistro', [CitasControllerApi::class, 'storePaciente'])->name('postaregistro');
-    // Ruta de búsqueda de paciente (mantener)
-    Route::get('/buscar-paciente/{input}', [CitasControllerApi::class, 'buscarPaciente']);
+        Route::prefix('citas')->group(function () {
+            Route::apiResource('/',CitasControllerApi::class)->names('api.citas');
+            Route::get('/hoy',[CitasControllerApi::class,'indexHoy'])->name('api.citas.hoy');
+            Route::get('/{id}',[CitasControllerApi::class,'show'])->where('id', '[0-9]+')->name('api.citas.show');
+        });
+    Route::controller(CitasControllerApi::class)->group(function () {
+        //Pacientes
+        Route::prefix('pacientes')->group(function () {
+            Route::post('/','storePaciente')->name('post.pacientes'); //postaregistro
+            Route::get('/{input}', 'showPaciente')->where('input', '[0-9]+')->name('api.pacientes.show'); //indexPaciente
+        });
+        // Agenda e Historias
+        Route::get('/agenda','indexAgendaBusqueda');
+        Route::get('/historias','indexHistorias');
+        Route::get('/ahistorial', 'indexAhistorialPacientes');
 
+    });
     // Proveedores
-    Route::get('/proveedores', [GestorInsumosControllerApi::class, 'index']);
-    Route::post('/proveedores', [GestorInsumosControllerApi::class, 'store']);
-    Route::put('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'update']);
-    Route::get('/proveedores/listar', [ProveedorController::class, 'index']);
-    Route::delete('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'destroy']);
+    Route::apiResource('/proveedores', GestorInsumosControllerApi::class)
+        ->parameters(['proveedores' => 'nit'])
+        ->names('api.proveedores');
+    //Route::get('/proveedores', [GestorInsumosControllerApi::class, 'index']);
+    //Route::post('/proveedores', [GestorInsumosControllerApi::class, 'store']);
+    //Route::put('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'update']);
+    //Route::delete('/proveedores/{nit}', [GestorInsumosControllerApi::class, 'destroy']);
+    //Route::get('/proveedores/listar', [ProveedorController::class, 'index']);
     Route::post('/solicitar-insumo', [GestorInsumosControllerApi::class, 'solicitarInsumo']);
 
     // Pedidos
-    Route::get('/pedidos', [GestorInsumosControllerApi::class, 'listarPedidos']);
-    Route::post('/pedidos', [GestorInsumosControllerApi::class, 'insertarPedido']);
-    Route::put('/pedidos/{id}', [GestorInsumosControllerApi::class, 'actualizarPedido']);
-    Route::delete('/pedidos/{id}', [GestorInsumosControllerApi::class, 'eliminarPedido']);
+    Route::apiResource('/pedidos',GestorInsumosControllerApi::class)->names('api.pedidos');
+    //Route::get('/pedidos', [GestorInsumosControllerApi::class, 'listarPedidos']);
+    //Route::post('/pedidos', [GestorInsumosControllerApi::class, 'insertarPedido']);
+    //Route::put('/pedidos/{id}', [GestorInsumosControllerApi::class, 'actualizarPedido']);
+    //Route::delete('/pedidos/{id}', [GestorInsumosControllerApi::class, 'eliminarPedido']);
 
-    // Agenda e Historias
-    Route::get('/agenda', [CitasControllerApi::class, 'indexAgendaBusqueda']);
-    Route::get('/historias', [CitasControllerApi::class, 'indexHistorias']);
-    Route::get('/ahistorial', [CitasControllerApi::class, 'indexAhistorialPacientes']);
 
     /*Dueño*/
-    Route::get('/dueno', [ApiDuenoController::class, 'indexDueno'])->name('dueno.dashboard');
-    Route::get('/dueno/rendimiento', [ApiDuenoController::class, 'indexRendimiento'])->name('dueno.rendimiento');
-    Route::get('/dueno/insumos', [ApiDuenoController::class, 'indexInsumos'])->name('dueno.insumos');
-    Route::get('/dueno-conteo', [ApiDuenoController::class, 'conteoCitas'])->name('dueno.conteo');
-    Route::get('/informe-clinica', [ApiDuenoController::class, 'indexInformeClinica'])->name('informe-clinica');
-    Route::get('/historial-movimientos', [ApiDuenoController::class, 'indexHistorialTransacciones'])->name('historial-movimientos');
-    Route::get('/ordenar-insumos', [ApiDuenoController::class, 'indexOrdenarInsumos'])->name('ordenar-insumos');
-    // Configuración Dueño
-    Route::match(['get', 'post'], '/apiDueno/configuracion', [ApiDuenoController::class, 'configuracion'])
-        ->name('dueno-configuracion');
+    Route::middleware(['auth', 'role:1,5'])->prefix('dueno')->group(function () {
+        Route::controller(ApiDuenoController::class)->group(function () {
+            Route::get('/rendimiento', 'indexRendimiento')->name('dueno.rendimiento');
+            Route::get('/insumos', 'indexInsumos')->name('dueno.insumos');
+            Route::get('/conteo', 'indexCitas')->name('dueno.conteo');
+            Route::get('/informe-clinica', 'indexInformeClinica')->name('dueno.informe-clinica');
+            Route::get('/historial-movimientos', 'indexHistorialTransacciones')->name('dueno.historial-movimientos');
+            Route::get('/ordenar-insumos', 'indexOrdenarInsumos')->name('dueno.ordenar-insumos');
+            Route::get('/insumos-solicitados', 'indexInsumosSolicitados')->name('dueno.insumos-solicitados');
+        });
+    });
+        // Rutas SOLO para el Dueño
+    Route::middleware(['auth', 'role:5'])->prefix('dueno')->group(function () {
+        Route::prefix('ordenes/{id}')->controller(ApiDuenoController::class)->group(function () {
+            Route::post('/aprobar', 'aprobar')->name('dueno.ordenes.aprobar');
+            Route::post('/rechazar', 'rechazar')->name('dueno.ordenes.rechazar');
+            Route::post('/entregar', 'entregar')->name('dueno.ordenes.entregar');
+        });
+    });
 
-    Route::get('/insumos-solicitados', [ApiDuenoController::class, 'indexInsumosSolicitados'])->name('insumos-solicitados');
-    Route::post('/ordenes/{id}/aprobar', [ApiDuenoController::class, 'aprobar']);
-    Route::post('/ordenes/{id}/rechazar', [ApiDuenoController::class, 'rechazar']);
-    // Justo después de aprobar/rechazar:
-    Route::post('/ordenes/{id}/entregar', [ApiDuenoController::class, 'entregar'])
-        ->name('api.ordenes.entregar');
 
     /*Administrador*/
-    Route::get('/usuarios', [ApiAdministradorController::class, 'indexUsuarios']);
-    Route::get('/gestionUsuarios', [ApiAdministradorController::class, 'index'])->name('gestionUsuarios');
-    Route::delete('/gestionUsuarios/{id}', [ApiAdministradorController::class, 'eliminarUsuario']);
-    Route::get('/agregarUsuario', [ApiAdministradorController::class, 'VistaAgregarUsuario']);
-    Route::post('/agregarUsuario', [ApiAdministradorController::class, 'agregarUsuario'])->name('usuarios.store');
-    Route::get('/tablaUsuarios', [ApiAdministradorController::class, 'indexTablaUsuarios']);
-    Route::get('/filtrarUsuario/{input}', [ApiAdministradorController::class, 'filtrarUsuario']);
+    Route::middleware(['auth', 'role:1'])->prefix('administrador')->group(function () {
+        Route::controller(ApiAdministradorController::class)->group(function () {
+            Route::get('/usuarios', 'indexUsuarios')->name('administrador.usuarios');
+            Route::get('/gestionUsuarios', 'index')->name('administrador.gestionUsuarios');
+            Route::delete('/usuarios/{id}', 'destroyUsuario');
+            Route::post('/agregarUsuario', 'agregarUsuario')->name('usuarios.store');
+            Route::get('/tablaUsuarios', 'indexTablaUsuarios');
+            Route::get('/filtrarUsuario/{input}', 'filtrarUsuario');
+        });
+    });
 
-    /*Ruta prueba */
-    Route::post('/testeoContra', [ApiAdministradorController::class, 'login'])->name('login.post');
-    Route::post('/citas/{id}/procedimiento', [CitasControllerApi::class, 'addProcedure'])->name('api.citas.addProcedure');
-    Route::delete('/citas/{id}/procedimiento/{pcId}', [CitasControllerApi::class, 'removeProcedure'])->name('api.citas.removeProcedure');
+        /*Ruta prueba */
+        Route::post('/testeoContra', [ApiAdministradorController::class, 'login'])->name('login.post');
+        Route::post('/citas/{id}/procedimiento', [CitasControllerApi::class, 'addProcedure'])->name('api.citas.addProcedure');
+        Route::delete('/citas/{id}/procedimiento/{pcId}', [CitasControllerApi::class, 'removeProcedure'])->name('api.citas.removeProcedure');
 });

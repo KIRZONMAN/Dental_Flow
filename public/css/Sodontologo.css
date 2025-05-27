@@ -36,12 +36,15 @@ a:hover {
     width: 240px;
     min-height: 100vh;
     position: fixed;
-    left: 0;
+    left: -240px;
     top: 0;
     background-color: var(--white);
     border-right: 1px solid #dee2e6;
     z-index: 1030;
-    transition: all 0.3s ease-in-out;
+    transition: left 0.3s ease-in-out;
+}
+.sidebar.show {
+    left: 0;
 }
 
 .sidebar-heading {
@@ -73,15 +76,27 @@ a:hover {
 
 /* ================== HEADER ================== */
 .odont-header {
+    display: flex;
     background: var(--white);
     border-bottom: 3px solid var(--primary);
     padding: 20px 30px;
+    padding-left: 4.5rem;
     animation: fadeInDown 0.6s ease;
+    justify-content: flex-start;
+    position: relative;
+    align-items: center;
+    z-index: 1090;
 }
 
 .odont-header h4 {
     font-weight: 700;
     color: var(--dark-blue);
+    margin: 0;
+    margin-right: auto;
+}
+
+.odont-header .d-flex.gap-2 {
+    margin-left: auto;
 }
 
 /* ================== WRAPPER ================== */
@@ -90,7 +105,7 @@ a:hover {
 }
 
 #page-content-wrapper {
-    margin-left: 240px;
+    margin-left: 0;
     padding: 0;
     width: 100%;
     transition: margin-left 0.3s ease;
@@ -192,18 +207,39 @@ a:hover {
 
 /* ================== ANIMACIONES ================== */
 @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(10px);}
-    to {opacity: 1; transform: translateY(0);}
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes fadeInUp {
-    from {opacity: 0; transform: translateY(30px);}
-    to {opacity: 1; transform: translateY(0);}
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes fadeInDown {
-    from {opacity: 0; transform: translateY(-30px);}
-    to {opacity: 1; transform: translateY(0);}
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ================== FOOTER ================== */
@@ -216,7 +252,7 @@ footer {
 }
 
 /* ================== RESPONSIVE ================== */
-@media (max-width: 991.98px) {
+/*@media (max-width: 991.98px) {
     .sidebar {
         left: -240px;
     }
@@ -230,8 +266,9 @@ footer {
     }
 
     .odont-header {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
         gap: 10px;
     }
 
@@ -242,10 +279,31 @@ footer {
     .d-flex.flex-wrap.gap-3 {
         flex-direction: column;
     }
-}
+}*/
 
 @media (max-width: 576px) {
     .stat-card h2 {
         font-size: 1.8rem;
     }
+}
+
+/* ================== TOGGLE SIDEBAR ================== */
+#sidebarToggle {
+    position: fixed;
+    top: 0px;
+    left: 20px;
+    z-index: 1100;  /* más alto que .sidebar (1030) y que .odont-header (1090) */
+    margin: 0;      /* elimina margen interno */
+}
+
+
+.odont-header #sidebarToggle {
+    position: relative;  /* deja de ser fixed */
+    margin-right: 1rem;  /* separa el botón del h4 */
+}
+
+/* ================== PAGE CONTENT SHIFT when sidebar open ================== */
+/* Empuja todo el contenido a la derecha al abrir el sidebar */
+#sidebar-wrapper.show + #page-content-wrapper {
+    margin-left: 240px; /* igual al ancho de la sidebar */
 }

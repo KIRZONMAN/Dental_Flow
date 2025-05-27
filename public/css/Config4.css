@@ -1,30 +1,29 @@
-/* Importamos todo el estilo de Config2.css */
+/*Importa la base de estilos de Config2 */
 @import url('Config2.css');
 
-/* --- Afinamos los colores para el rol Laboratorista --- */
-body {
-  background-color: #eef6f9; /* un tono más suave de fondo */
+/* --- Ajustes de color para Laboratorista --- */
+.config-header h1 {
+  color: #0b3c5d;           /* Azul oscuro más profundo */
 }
-.header h1 {
-  color: #0b3c5d; /* azul oscuro más profundo */
+.config-section {
+  border-left-color: #008080; /* Acento verde azulado */
 }
-.section {
-  border-left-color: #008080; /* acento verde azulado */
-}
-button[type="submit"] {
+.btn-guardar {
   background-color: #008080;
   box-shadow: 0 5px 16px rgba(0,128,128,0.3);
 }
-button[type="submit"]:hover {
+.btn-guardar:hover {
   background-color: #006f6f;
   transform: translateY(-2px);
 }
 
-/* Ajustes de tipografía */
-label {
-  color: #0b3c5d;
-}
-.input, input {
-  border-color: #a0d6d3;
+/* Mantén input readonly con estilo ligeramente distinto */
+.form-group input[readonly] {
+  background-color: #e9eef5;
+  cursor: not-allowed;
 }
 
+/* Ajustes tipográficos */
+.form-group label {
+  color: #0b3c5d;
+}

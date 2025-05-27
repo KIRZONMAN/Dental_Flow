@@ -22,7 +22,7 @@
                 <button type="submit" class="search-button" onclick="buscarUsuario()">Buscar</button>
             </div>
             <div id="btnAddUser">
-                <a href="/api/agregarUsuario" id="btn-addUser">Agregar Usuarios</a>
+                <a href="/administrador/usuarios" id="btn-addUser">Agregar Usuarios</a>
             </div>
         </div>
         <div id="tabla-usuarios" class="table-responsive"></div>
@@ -39,7 +39,7 @@
         });
 
         function cargarTablaUsuarios(pagina) {
-            fetch(`/api/tablaUsuarios?limit=${usuariosPorPagina}&page=${pagina}`)
+            fetch(`/api/administrador/tablaUsuarios?limit=${usuariosPorPagina}&page=${pagina}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('tabla-usuarios').innerHTML = construirTablaUsuarios(data.data);
@@ -130,7 +130,7 @@
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            fetch(`/api/gestionUsuarios/${id}`, {
+                            fetch(`/api/administrador/usuarios/${id}`, {
                                 method: 'DELETE',
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -176,7 +176,7 @@
                 return;
             }
 
-            fetch(`/api/filtrarUsuario/${input}?page=${pagina}`)
+            fetch(`/api/administrador/filtrarUsuario/${input}?page=${pagina}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('tabla-usuarios').innerHTML = construirTablaUsuarios(data.data);

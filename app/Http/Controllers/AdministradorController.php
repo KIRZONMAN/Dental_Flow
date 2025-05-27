@@ -84,44 +84,4 @@ class AdministradorController extends Controller
         return view('administrador.agregarUsuario', compact('roles'));
     }
 
-        public function agregarUsuario(Request $request)
-    {
-        $validated = $request->validate([
-            'nombres_usuario' => 'required|string|max:255',
-            'apellidos_usuario' => 'required|string|max:255',
-            'correo_usuario' => 'required|email|unique:usuarios,correo_usuario',
-            'contrasena_usuario' => 'required|string|min:8',
-            'telefono_usuario' => 'required|string|max:50',
-            'direccion_usuario' => 'required|string|max:255',
-            'estado_usuario' => 'required|in:activo,inactivo',
-            'rol_id' => 'required|exists:roles,id_rol',
-            'especialidad_usuario' => 'nullable|string|max:255',
-        ], [
-            /* Mensajes personalizados */
-            'contrasena_usuario.min' => 'El campo contraseña requiere al menos 8 caracteres.',
-            'correo_usuario.unique' => 'El correo ya está registrado'
-        ]);
-
-        DB::table('usuarios')->insert([
-            'nombres_usuario' => $validated['nombres_usuario'],
-            'apellidos_usuario' => $validated['apellidos_usuario'],
-            'correo_usuario' => $validated['correo_usuario'],
-            'contrasena_usuario' => bcrypt($validated['contrasena_usuario']),
-            'telefono_usuario' => $validated['telefono_usuario'],
-            'direccion_usuario' => $validated['direccion_usuario'],
-            'estado_usuario' => $validated['estado_usuario'],
-            'especialidad_usuario' => $validated['especialidad_usuario'] ?? null,
-            'rol_id' => $validated['rol_id'],
-        ]);
-
-        return redirect()->route('gestionUsuarios')->with('success', 'Usuario registrado correctamente');
-    }
-
-    //Borrar un usuario
-        public function eliminarUsuario($id)
-    {
-        DB::table('usuarios')->where('id_usuario', $id)->delete();
-
-        return redirect()->route('gestionUsuarios')->with('success', 'Usuario registrado correctamente');
-    }
 }

@@ -3,45 +3,59 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Historia Clínica de {{ $paciente->nombre }}</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<body class="p-5">
+<body class="bg-light">
+    <div class="container py-5">
 
-    <h1 class="mb-4">📝 Historia Clínica de {{ $paciente->nombre }}</h1>
+        <h1 class="mb-4">📝 Historia Clínica de {{ $paciente->nombre }}</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Antecedentes</th>
-                <th>Tratamientos realizados</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($historias as $h)
-                <tr id="fila-{{ $h->id_historia_clinica }}">
-                    <td>{{ $h->antecedentes_medicos }}</td>
-                    <td>{{ $h->tratamiento_realizados }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger btn-eliminar" data-id="{{ $h->id_historia_clinica }}">
-                            🗑
-                        </button>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+        <div class="table-responsive mb-4">
+            <table class="table table-striped table-hover align-middle shadow-sm bg-white rounded">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Antecedentes</th>
+                        <th>Tratamientos realizados</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($historias as $h)
+                        <tr id="fila-{{ $h->id_historia_clinica }}">
+                            <td>{{ $h->antecedentes_medicos }}</td>
+                            <td>{{ $h->tratamiento_realizados }}</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-danger btn-eliminar"
+                                    data-id="{{ $h->id_historia_clinica }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-3">
+                                No hay historias registradas.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
+        <a href="{{ route('odontologo.agenda') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Volver a Agenda
+        </a>
 
-    <a href="{{ route('odontologo.agenda') }}" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left"></i> Volver a Agenda
-    </a>
+    </div>
 
-    {{-- SweetAlert2 --}}
+    <!-- SweetAlert2 & Bootstrap JS -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.querySelectorAll('.btn-eliminar').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -51,6 +65,7 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Sí, bórrala',
+                    cancelButtonText: 'Cancelar'
                 }).then(({
                     isConfirmed
                 }) => {
@@ -61,19 +76,18 @@
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             }
                         })
-                        .then(r => r.ok ? r.json() : r.json().then(e => Promise.reject(e)))
+                        .then(res => res.ok ? res.json() : Promise.reject())
                         .then(() => {
                             document.getElementById(`fila-${id}`).remove();
                             Swal.fire('Eliminada', '', 'success');
                         })
-                        .catch(e => {
-                            Swal.fire('Error', e.error || e.message, 'error');
+                        .catch(() => {
+                            Swal.fire('Error', 'No se pudo eliminar la historia.', 'error');
                         });
                 });
             });
         });
     </script>
-
 </body>
 
 </html>
